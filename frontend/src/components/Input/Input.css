@@ -1,0 +1,49 @@
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.input-group label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.input-required {
+  color: var(--color-accent);
+  margin-left: 0.2rem;
+}
+
+.input-group input {
+  width: 100%;
+  min-height: 48px;
+
+  padding: 0.75rem 0.9rem;
+
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  background-color: var(--color-surface);
+  color: var(--color-text);
+
+  outline: none;
+
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.input-group input::placeholder {
+  color: #8a9395;
+}
+
+.input-group input:hover {
+  border-color: #b8c1c2;
+}
+
+.input-group input:focus {
+  border-color: var(--color-primary);
+
+  box-shadow: 0 0 0 3px rgba(91, 109, 147, 0.15);
+}

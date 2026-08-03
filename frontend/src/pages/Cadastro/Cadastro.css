@@ -1,0 +1,207 @@
+.cadastro-page {
+  min-height: 100vh;
+  padding: 2rem;
+
+  background-color: var(--color-background);
+}
+
+.cadastro-header {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.cadastro-header .logo {
+  width: 90px;
+  height: auto;
+}
+
+.cadastro-content {
+  width: min(100%, 1000px);
+  margin: 0 auto;
+  padding: 5rem 0 3rem;
+}
+
+.cadastro-intro {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.cadastro-eyebrow {
+  display: block;
+  margin-bottom: 0.75rem;
+
+  color: var(--color-accent);
+
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cadastro-intro h1 {
+  margin-bottom: 0.75rem;
+
+  color: var(--color-text);
+
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+}
+
+.cadastro-intro p {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.cadastro-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.cadastro-option {
+  min-height: 340px;
+
+  padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+
+  background-color: var(--color-surface);
+
+  border: 1px solid rgba(54, 64, 66, 0.06);
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-card);
+
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.cadastro-option:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 35px rgba(54, 64, 66, 0.12);
+}
+
+.cadastro-option--partner {
+  background-color: var(--color-background-warm);
+}
+
+.cadastro-option-icon {
+  width: 52px;
+  height: 52px;
+  margin-bottom: 1.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--radius-md);
+
+  background-color: var(--color-secondary);
+
+  font-size: 1.5rem;
+}
+
+.cadastro-option h2 {
+  margin-bottom: 0.75rem;
+
+  font-size: 1.5rem;
+  color: var(--color-text);
+}
+
+.cadastro-option p {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.cadastro-option-button {
+  margin-top: auto;
+
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--radius-md);
+
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+
+  font-weight: 600;
+
+  transition:
+    background-color var(--transition-fast),
+    outline var(--transition-fast);
+}
+
+.cadastro-option--partner .cadastro-option-button {
+  background-color: var(--color-accent);
+}
+
+.cadastro-option-button:hover {
+  background-color: #4f6084;
+}
+
+.cadastro-option--partner .cadastro-option-button:hover {
+  background-color: #bd7259;
+}
+
+.cadastro-option-button:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.cadastro-login {
+  margin-top: 2rem;
+
+  text-align: center;
+
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.cadastro-login a {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.cadastro-login a:hover {
+  color: var(--color-accent);
+}
+
+@media (max-width: 700px) {
+  .cadastro-page {
+    padding: 1.5rem;
+  }
+
+  .cadastro-content {
+    padding-top: 3rem;
+  }
+
+  .cadastro-options {
+    grid-template-columns: 1fr;
+  }
+
+  .cadastro-option {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 400px) {
+  .cadastro-page {
+    padding: 1rem;
+  }
+
+  .cadastro-content {
+    padding-top: 2.5rem;
+  }
+
+  .cadastro-option {
+    padding: 1.5rem;
+  }
+}

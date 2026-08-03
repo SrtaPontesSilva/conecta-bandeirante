@@ -1,53 +1,76 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../../services/api";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
+import Logo from '../../components/Logo/Logo';
+import Input from '../../components/Input/Input';
+import Button from '../../components/Button/Button';
+import api from '../../services/api';
+
+import './Login.css';
 
 function Login() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [formulario, setFormulario] = useState({
+    email: '',
+    senha: ''
+  });
 
-  const [erro, setErro] = useState("");
+  const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+
+    setFormulario((estadoAnterior) => ({
+      ...estadoAnterior,
+      [name]: value
+    }));
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
 
-    setErro("");
+    setErro('');
+
+    if (!formulario.email || !formulario.senha) {
+      setErro('Preencha seu e-mail e sua senha.');
+      return;
+    }
+
     setCarregando(true);
 
     try {
-      const resposta = await api.post("/auth/login", {
-        email,
-        senha,
-      });
+      const resposta = await api.post(
+        '/auth/login',
+        formulario
+      );
 
-      const dados = resposta.data;
-
-      if (dados.usuario) {
+      if (resposta.data.usuario) {
         localStorage.setItem(
-          "usuario",
-          JSON.stringify(dados.usuario)
+          'usuario',
+          JSON.stringify(resposta.data.usuario)
         );
 
-        navigate("/inicio");
+        localStorage.removeItem('parceiro');
       }
 
-      if (dados.parceiro) {
+      if (resposta.data.parceiro) {
         localStorage.setItem(
-          "parceiro",
-          JSON.stringify(dados.parceiro)
+          'parceiro',
+          JSON.stringify(resposta.data.parceiro)
         );
 
-        navigate("/inicio");
+        localStorage.removeItem('usuario');
       }
+
+      navigate('/inicio');
     } catch (error) {
       if (error.response?.data?.erro) {
         setErro(error.response.data.erro);
       } else {
         setErro(
-          "Não foi possível conectar ao servidor."
+          'Não foi possível realizar o login. Tente novamente.'
         );
       }
     } finally {
@@ -56,75 +79,88 @@ function Login() {
   }
 
   return (
-    <main>
-      <h1>Conecta Bandeirante</h1>
+    <main className="login-page">
+      <section className="login-brand">
+        <Logo />
 
-      <h2>Entrar</h2>
+        <div className="login-brand-content">
+          <span className="login-eyebrow">
+            Comunidade • Educação • Circularidade
+          </span>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">
-            E-mail
-          </label>
+          <h1>
+            Conectando pessoas,
+            <br />
+            materiais e oportunidades.
+          </h1>
 
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(event) =>
-              setEmail(event.target.value)
-            }
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="senha">
-            Senha
-          </label>
-
-          <input
-            id="senha"
-            type="password"
-            value={senha}
-            onChange={(event) =>
-              setSenha(event.target.value)
-            }
-            required
-          />
-        </div>
-
-        {erro && (
-          <p role="alert">
-            {erro}
+          <p>
+            Uma plataforma para compartilhar, trocar e encontrar
+            recursos dentro da comunidade do Núcleo Bandeirante.
           </p>
-        )}
+        </div>
+      </section>
 
-        <button
-          type="submit"
-          disabled={carregando}
-        >
-          {carregando ? "Entrando..." : "Entrar"}
-        </button>
-      </form>
+      <section className="login-content">
+        <div className="login-card">
+          <div className="login-header">
+            <h2>Entrar</h2>
 
-      <hr />
+            <p>
+              Acesse sua conta para continuar no Conecta Bandeirante.
+            </p>
+          </div>
 
-      <button
-        type="button"
-        onClick={() => navigate("/cadastro")}
-      >
-        Criar conta
-      </button>
+          <form onSubmit={handleSubmit} className="login-form">
+            <Input
+              label="E-mail"
+              name="email"
+              type="email"
+              value={formulario.email}
+              onChange={handleChange}
+              placeholder="seuemail@exemplo.com"
+              required
+              autoComplete="email"
+            />
 
-      <button
-        type="button"
-        onClick={() =>
-          navigate("/cadastro/parceiro")
-        }
-      >
-        Sou um parceiro
-      </button>
+            <Input
+              label="Senha"
+              name="senha"
+              type="password"
+              value={formulario.senha}
+              onChange={handleChange}
+              placeholder="Digite sua senha"
+              required
+              autoComplete="current-password"
+            />
+
+            {erro && (
+              <div
+                className="login-error"
+                role="alert"
+                aria-live="assertive"
+              >
+                {erro}
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              disabled={carregando}
+            >
+              {carregando ? 'Entrando...' : 'Entrar'}
+            </Button>
+          </form>
+
+          <div className="login-register">
+            <span>Ainda não possui uma conta?</span>
+
+            <Link to="/cadastro">
+              Criar conta
+            </Link>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

@@ -1,0 +1,56 @@
+:root {
+  /* Cores principais */
+  --color-primary: #5B6D93;
+  --color-secondary: #D5E3E6;
+
+  /* Fundos */
+  --color-background: #EEEEE4;
+  --color-background-warm: #EFE2D2;
+  --color-surface: #FFFFFF;
+
+  /* Destaques */
+  --color-accent: #D18166;
+
+  /* Texto */
+  --color-text: #364042;
+  --color-text-secondary: #667174;
+  --color-text-light: #FFFFFF;
+
+  /* Estados */
+  --color-success: #5F8068;
+  --color-error: #B85C5C;
+  --color-warning: #C28A4B;
+
+  /* Bordas */
+  --color-border: #D9DEDD;
+
+  /* Tipografia */
+  --font-family: "Inter", "Segoe UI", Arial, sans-serif;
+
+  /* Tamanhos */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.75rem;
+  --font-size-2xl: 2.25rem;
+
+  /* Espaçamentos */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Bordas */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Sombras */
+  --shadow-card: 0 8px 30px rgba(54, 64, 66, 0.08);
+
+  /* Transições */
+  --transition-fast: 0.2s ease;
+}

@@ -1,7 +1,9 @@
 from flask import Flask
+
 from flask_migrate import Migrate
 from flask_cors import CORS
 from dotenv import load_dotenv
+
 import os
 
 from .extensions import db
@@ -12,8 +14,12 @@ def create_app():
 
     app = Flask(__name__)
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+        "DATABASE_URL"
+    )
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
     CORS(app)
@@ -23,17 +29,24 @@ def create_app():
     Migrate(app, db)
 
     # Importação dos modelos
-    from .models import Usuario, Parceiro
+    from .models import (
+        Usuario,
+        Parceiro,
+        Anuncio,
+        AnuncioDisponibilidade
+    )
 
     # Importação das rotas
     from .routes.usuarios import usuarios_bp
     from .routes.parceiros import parceiros_bp
     from .routes.auth import auth_bp
+    from .routes.anuncios import anuncios_bp
 
     # Registro das rotas
     app.register_blueprint(usuarios_bp)
     app.register_blueprint(parceiros_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(anuncios_bp)
 
     @app.get("/api/health")
     def health():

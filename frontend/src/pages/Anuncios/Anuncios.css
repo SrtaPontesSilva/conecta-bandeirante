@@ -1,0 +1,538 @@
+.anuncios-page {
+  min-height: 100vh;
+  padding-bottom: 100px;
+
+  background-color: var(--color-background);
+}
+
+.market-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  background-color: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.market-header-inner {
+  width: min(1180px, calc(100% - 32px));
+  min-height: 70px;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.market-logo {
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+
+  background: none;
+  border: none;
+}
+
+.market-logout {
+  padding: 7px 12px;
+
+  color: var(--color-text-secondary);
+  background: none;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-sm);
+}
+
+.market-logout:hover {
+  color: var(--color-text);
+  background-color: var(--color-secondary);
+}
+
+/* CONTEÚDO */
+
+.market-content {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 2.25rem 0;
+}
+
+.market-welcome {
+  margin-bottom: var(--space-lg);
+}
+
+.market-welcome span {
+  color: var(--color-primary);
+
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.market-welcome h1 {
+  margin-top: 5px;
+
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  line-height: 1.15;
+}
+
+.market-welcome p {
+  max-width: 650px;
+  margin-top: 8px;
+
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* BUSCA */
+
+.market-search {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  margin-bottom: var(--space-md);
+}
+
+.market-search input {
+  width: 100%;
+  height: 52px;
+
+  padding: 0 45px;
+
+  color: var(--color-text);
+  background-color: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+
+  outline: none;
+
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.market-search input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(91, 109, 147, 0.12);
+}
+
+.market-search-icon {
+  position: absolute;
+  left: 16px;
+
+  pointer-events: none;
+}
+
+.market-search-clear {
+  position: absolute;
+  right: 12px;
+
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+
+  font-size: 1.4rem;
+}
+
+/* FILTROS */
+
+.market-filters {
+  display: flex;
+  gap: 8px;
+
+  margin-bottom: 2rem;
+
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.market-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.market-filter {
+  padding: 9px 17px;
+
+  flex-shrink: 0;
+
+  color: var(--color-text-secondary);
+  background-color: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.market-filter:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.market-filter--active {
+  color: var(--color-text-light);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.market-filter--active.market-filter--donation {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+/* RESULTADOS */
+
+.market-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: var(--space-md);
+}
+
+.market-results-header h2 {
+  font-size: var(--font-size-lg);
+}
+
+.market-results-header span {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* GRID */
+
+.market-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.product-card {
+  overflow: hidden;
+
+  cursor: pointer;
+
+  background-color: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card);
+}
+
+.product-image {
+  position: relative;
+
+  aspect-ratio: 1 / 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--color-secondary);
+
+  font-size: 3rem;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.product-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+
+  padding: 5px 8px;
+
+  color: var(--color-text);
+  background-color: rgba(255, 255, 255, 0.94);
+
+  border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.product-badge--doacao {
+  color: var(--color-success);
+}
+
+.product-badge--troca {
+  color: var(--color-primary);
+}
+
+.product-badge--venda {
+  color: #92503d;
+}
+
+.product-info {
+  padding: 14px;
+}
+
+.product-category {
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.product-info h3 {
+  margin-top: 5px;
+
+  font-size: var(--font-size-md);
+  line-height: 1.3;
+}
+
+.product-info p {
+  display: -webkit-box;
+  overflow: hidden;
+
+  min-height: 38px;
+  margin-top: 6px;
+
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.product-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 14px;
+}
+
+.product-footer strong {
+  color: var(--color-primary);
+}
+
+.product-footer span {
+  color: var(--color-text-secondary);
+}
+
+/* ESTADOS */
+
+.market-feedback,
+.market-empty {
+  padding: 3rem 1.5rem;
+
+  text-align: center;
+
+  background-color: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.market-feedback {
+  color: var(--color-text-secondary);
+}
+
+.market-feedback--error {
+  color: var(--color-error);
+}
+
+.market-empty-icon {
+  margin-bottom: var(--space-md);
+
+  font-size: 2rem;
+}
+
+.market-empty h2 {
+  font-size: var(--font-size-lg);
+}
+
+.market-empty p {
+  margin-top: 6px;
+
+  color: var(--color-text-secondary);
+}
+
+/* NAVEGAÇÃO INFERIOR */
+
+.bottom-navigation {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 30;
+
+  height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(28px, 8vw, 100px);
+
+  background-color: rgba(255, 255, 255, 0.97);
+
+  border-top: 1px solid var(--color-border);
+}
+
+.bottom-navigation-item {
+  min-width: 58px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+
+  padding: 5px;
+
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+}
+
+.bottom-navigation-item span {
+  font-size: 1.2rem;
+}
+
+.bottom-navigation-item small {
+  font-size: 0.68rem;
+}
+
+.bottom-navigation-item--active {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.bottom-navigation-add {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text-light);
+  background-color: var(--color-accent);
+
+  border: none;
+  border-radius: 50%;
+
+  font-size: 1.8rem;
+  line-height: 1;
+
+  box-shadow: 0 4px 14px rgba(54, 64, 66, 0.18);
+
+  transition:
+    transform var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.bottom-navigation-add:hover {
+  transform: translateY(-2px);
+  background-color: #b96e55;
+}
+
+/* ACESSIBILIDADE */
+
+.sr-only {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;
+
+  border: 0;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 1000px) {
+  .market-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .market-content {
+    padding-top: 1.5rem;
+  }
+
+  .market-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .product-info {
+    padding: 11px;
+  }
+
+  .product-info p {
+    display: none;
+  }
+
+  .product-footer {
+    margin-top: 10px;
+  }
+
+  .bottom-navigation {
+    gap: 20vw;
+  }
+}
+
+@media (max-width: 420px) {
+  .market-grid {
+    gap: 8px;
+  }
+
+  .product-info h3 {
+    font-size: var(--font-size-sm);
+  }
+
+  .product-category {
+    font-size: 0.65rem;
+  }
+
+  .market-header-inner,
+  .market-content {
+    width: calc(100% - 24px);
+  }
+}
