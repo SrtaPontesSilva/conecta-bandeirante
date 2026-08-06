@@ -25,6 +25,9 @@
 }
 
 .market-logo {
+  width: 65px;
+  height: 42px;
+
   padding: 0;
 
   display: flex;
@@ -32,6 +35,14 @@
 
   background: none;
   border: none;
+}
+
+.market-logo .logo {
+  width: 65px;
+  height: auto;
+
+  display: block;
+  object-fit: contain;
 }
 
 .market-logout {
@@ -534,5 +545,13 @@
   .market-header-inner,
   .market-content {
     width: calc(100% - 24px);
+  }
+    .market-logo {
+    width: 55px;
+    height: 38px;
+  }
+
+  .market-logo .logo {
+    width: 55px;
   }
 }

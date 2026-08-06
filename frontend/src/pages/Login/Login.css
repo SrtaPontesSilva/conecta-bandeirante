@@ -25,10 +25,10 @@
   width: 110px;
   height: auto;
 
+  display: block;
+
   object-fit: contain;
   object-position: left;
-
-  filter: brightness(0) invert(1);
 }
 
 .login-brand-content {

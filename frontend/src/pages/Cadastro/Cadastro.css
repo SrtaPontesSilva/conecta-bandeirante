@@ -1,172 +1,324 @@
 .cadastro-page {
+  width: 100%;
   min-height: 100vh;
-  padding: 2rem;
+
+  margin: 0;
+  padding: 0;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
 
   background-color: var(--color-background);
 }
 
+/* ==============================
+   HEADER
+   ============================== */
+
 .cadastro-header {
-  max-width: 1100px;
+  width: 100%;
+  height: auto;
+
+  margin: 0;
+  padding: 0;
+
+  flex: 0 0 auto;
+
+  display: block;
+
+  background-color: var(--color-background);
+}
+
+.cadastro-header-inner {
+  width: min(100% - 2rem, 1180px);
+  min-height: 72px;
+
   margin: 0 auto;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
 }
 
 .cadastro-header .logo {
-  width: 90px;
+  width: 82px;
   height: auto;
+
+  display: block;
 }
+
+/* ==============================
+   CONTEÚDO
+   ============================== */
 
 .cadastro-content {
-  width: min(100%, 1000px);
+  width: min(100% - 2rem, 900px);
+
   margin: 0 auto;
-  padding: 5rem 0 3rem;
+  padding: 4rem 0 2rem;
+
+  flex: 0 0 auto;
+
+  display: block;
+
+  text-align: initial;
 }
 
+/* ==============================
+   INTRODUÇÃO
+   ============================== */
+
 .cadastro-intro {
-  margin-bottom: 3rem;
+  width: 100%;
+
+  margin: 0 0 2.5rem;
+
   text-align: center;
 }
 
 .cadastro-eyebrow {
   display: block;
-  margin-bottom: 0.75rem;
+
+  margin-bottom: 0.65rem;
 
   color: var(--color-accent);
 
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: 700;
-  letter-spacing: 0.05em;
+
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .cadastro-intro h1 {
-  margin-bottom: 0.75rem;
+  margin: 0 0 0.75rem;
 
   color: var(--color-text);
 
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 700;
   line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 
 .cadastro-intro p {
+  max-width: 600px;
+
+  margin: 0 auto;
+
   color: var(--color-text-secondary);
-  line-height: 1.6;
+
+  font-size: var(--font-size-md);
+  line-height: 1.5;
 }
 
+/* ==============================
+   CARDS
+   ============================== */
+
 .cadastro-options {
+  width: 100%;
+
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 1.25rem;
 }
 
 .cadastro-option {
-  min-height: 340px;
+  width: 100%;
+  min-width: 0;
 
-  padding: 2rem;
+  padding: 1.5rem;
 
   display: flex;
   flex-direction: column;
 
   background-color: var(--color-surface);
 
-  border: 1px solid rgba(54, 64, 66, 0.06);
-  border-radius: var(--radius-lg);
-
-  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
 
   transition:
     transform var(--transition-fast),
+    border-color var(--transition-fast),
     box-shadow var(--transition-fast);
 }
 
 .cadastro-option:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 
-  box-shadow:
-    0 12px 35px rgba(54, 64, 66, 0.12);
+  border-color: var(--color-primary);
+
+  box-shadow: var(--shadow-card);
 }
 
 .cadastro-option--partner {
   background-color: var(--color-background-warm);
+
+  border-color: #E1D2C2;
+}
+
+.cadastro-option--partner:hover {
+  border-color: var(--color-accent);
+}
+
+/* ==============================
+   TOPO DO CARD
+   ============================== */
+
+.cadastro-option-top {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 1.75rem;
 }
 
 .cadastro-option-icon {
-  width: 52px;
-  height: 52px;
-  margin-bottom: 1.5rem;
+  width: 44px;
+  height: 44px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: var(--radius-md);
+  flex-shrink: 0;
 
   background-color: var(--color-secondary);
 
-  font-size: 1.5rem;
+  border-radius: var(--radius-sm);
+
+  font-size: 1.1rem;
+}
+
+.cadastro-option--partner .cadastro-option-icon {
+  background-color: #E8D0C2;
+}
+
+.cadastro-option-label {
+  padding: 0.35rem 0.6rem;
+
+  color: var(--color-text-secondary);
+
+  background-color: transparent;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cadastro-option--partner .cadastro-option-label {
+  border-color: #DCC7B7;
+}
+
+/* ==============================
+   CONTEÚDO DO CARD
+   ============================== */
+
+.cadastro-option-content {
+  flex: 1;
 }
 
 .cadastro-option h2 {
-  margin-bottom: 0.75rem;
+  margin: 0 0 0.65rem;
 
-  font-size: 1.5rem;
   color: var(--color-text);
+
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .cadastro-option p {
+  max-width: 420px;
+
+  margin: 0;
+
   color: var(--color-text-secondary);
+
+  font-size: var(--font-size-sm);
   line-height: 1.6;
 }
 
-.cadastro-option-button {
-  margin-top: auto;
+/* ==============================
+   BOTÃO
+   ============================== */
 
-  min-height: 48px;
-  padding: 0.75rem 1rem;
+.cadastro-option-button {
+  width: 100%;
+  min-height: 46px;
+
+  margin-top: 2rem;
+  padding: 0.7rem 1rem;
 
   display: flex;
   align-items: center;
   justify-content: center;
-
-  border-radius: var(--radius-md);
 
   background-color: var(--color-primary);
   color: var(--color-text-light);
 
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-sm);
   font-weight: 600;
 
   transition:
     background-color var(--transition-fast),
-    outline var(--transition-fast);
-}
-
-.cadastro-option--partner .cadastro-option-button {
-  background-color: var(--color-accent);
+    border-color var(--transition-fast);
 }
 
 .cadastro-option-button:hover {
   background-color: #4f6084;
+
+  border-color: #4f6084;
+}
+
+.cadastro-option--partner .cadastro-option-button {
+  background-color: var(--color-accent);
+
+  border-color: var(--color-accent);
 }
 
 .cadastro-option--partner .cadastro-option-button:hover {
   background-color: #bd7259;
+
+  border-color: #bd7259;
 }
 
 .cadastro-option-button:focus-visible {
-  outline: 3px solid var(--color-primary);
+  outline: 3px solid var(--color-secondary);
   outline-offset: 3px;
 }
 
+/* ==============================
+   LOGIN
+   ============================== */
+
 .cadastro-login {
-  margin-top: 2rem;
+  margin: 1.75rem 0 0;
 
   text-align: center;
 
   color: var(--color-text-secondary);
+
   font-size: var(--font-size-sm);
 }
 
 .cadastro-login a {
   color: var(--color-primary);
+
   font-weight: 600;
 }
 
@@ -174,34 +326,180 @@
   color: var(--color-accent);
 }
 
-@media (max-width: 700px) {
-  .cadastro-page {
-    padding: 1.5rem;
+/* ==================================================
+   TABLET
+   ================================================== */
+
+@media (max-width: 900px) {
+  .cadastro-header-inner {
+    width: calc(100% - 3rem);
+
+    min-height: 68px;
   }
 
   .cadastro-content {
+    width: min(100% - 2rem, 760px);
+
+    padding-top: 3.5rem;
+  }
+
+  .cadastro-options {
+    gap: 1rem;
+  }
+
+  .cadastro-option {
+    padding: 1.35rem;
+  }
+}
+
+/* ==================================================
+   TABLET PEQUENO
+   ================================================== */
+
+@media (max-width: 700px) {
+  .cadastro-header-inner {
+    width: calc(100% - 2.5rem);
+
+    min-height: 64px;
+  }
+
+  .cadastro-header .logo {
+    width: 78px;
+  }
+
+  .cadastro-content {
+    width: min(100% - 2rem, 560px);
+
     padding-top: 3rem;
+  }
+
+  .cadastro-intro {
+    margin-bottom: 2rem;
+  }
+
+  .cadastro-intro h1 {
+    font-size: 2.15rem;
   }
 
   .cadastro-options {
     grid-template-columns: 1fr;
+
+    gap: 1rem;
   }
 
   .cadastro-option {
-    min-height: 300px;
+    min-height: 0;
   }
 }
 
-@media (max-width: 400px) {
-  .cadastro-page {
-    padding: 1rem;
+/* ==================================================
+   CELULAR
+   ================================================== */
+
+@media (max-width: 480px) {
+  .cadastro-header-inner {
+    width: calc(100% - 2rem);
+
+    min-height: 60px;
+  }
+
+  .cadastro-header .logo {
+    width: 72px;
   }
 
   .cadastro-content {
+    width: calc(100% - 2rem);
+
     padding-top: 2.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .cadastro-intro {
+    margin-bottom: 1.75rem;
+  }
+
+  .cadastro-eyebrow {
+    margin-bottom: 0.5rem;
+  }
+
+  .cadastro-intro h1 {
+    margin-bottom: 0.65rem;
+
+    font-size: 1.8rem;
+  }
+
+  .cadastro-intro p {
+    font-size: var(--font-size-sm);
+  }
+
+  .cadastro-options {
+    gap: 0.85rem;
   }
 
   .cadastro-option {
-    padding: 1.5rem;
+    padding: 1.25rem;
+  }
+
+  .cadastro-option-top {
+    margin-bottom: 1.5rem;
+  }
+
+  .cadastro-option-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .cadastro-option h2 {
+    font-size: 1.3rem;
+  }
+
+  .cadastro-option p {
+    font-size: var(--font-size-sm);
+  }
+
+  .cadastro-option-button {
+    margin-top: 1.5rem;
+  }
+
+  .cadastro-login {
+    margin-top: 1.5rem;
+  }
+}
+
+/* ==================================================
+   CELULARES MUITO PEQUENOS
+   ================================================== */
+
+@media (max-width: 360px) {
+  .cadastro-header-inner {
+    width: calc(100% - 1.5rem);
+
+    min-height: 56px;
+  }
+
+  .cadastro-header .logo {
+    width: 68px;
+  }
+
+  .cadastro-content {
+    width: calc(100% - 1.5rem);
+
+    padding-top: 2rem;
+  }
+
+  .cadastro-intro h1 {
+    font-size: 1.65rem;
+  }
+
+  .cadastro-option {
+    padding: 1rem;
+  }
+
+  .cadastro-option-top {
+    margin-bottom: 1.25rem;
+  }
+
+  .cadastro-option-button {
+    min-height: 44px;
   }
 }

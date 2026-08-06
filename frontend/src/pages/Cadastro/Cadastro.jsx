@@ -7,9 +7,11 @@ function Cadastro() {
   return (
     <main className="cadastro-page">
       <header className="cadastro-header">
-        <Link to="/login" aria-label="Voltar para o login">
-          <Logo />
-        </Link>
+        <div className="cadastro-header-inner">
+          <Link to="/login" aria-label="Voltar para o login">
+            <Logo />
+          </Link>
+        </div>
       </header>
 
       <section className="cadastro-content">
@@ -18,25 +20,34 @@ function Cadastro() {
             Conecta Bandeirante
           </span>
 
-          <h1>Criar uma conta</h1>
+          <h1>Como você quer participar?</h1>
 
           <p>
-            Escolha como você deseja participar da comunidade.
+            Escolha o tipo de cadastro que melhor representa você.
           </p>
         </div>
 
         <div className="cadastro-options">
           <article className="cadastro-option">
-            <div className="cadastro-option-icon" aria-hidden="true">
-              👤
+            <div className="cadastro-option-top">
+              <span
+                className="cadastro-option-icon"
+                aria-hidden="true"
+              >
+                👤
+              </span>
+
+              <span className="cadastro-option-label">
+                Comunidade
+              </span>
             </div>
 
-            <div>
+            <div className="cadastro-option-content">
               <h2>Usuário</h2>
 
               <p>
-                Para quem deseja encontrar, doar, trocar ou
-                comprar materiais usados dentro da comunidade.
+                Encontre, doe, troque ou compre materiais
+                usados dentro da comunidade.
               </p>
             </div>
 
@@ -49,16 +60,25 @@ function Cadastro() {
           </article>
 
           <article className="cadastro-option cadastro-option--partner">
-            <div className="cadastro-option-icon" aria-hidden="true">
-              🏪
+            <div className="cadastro-option-top">
+              <span
+                className="cadastro-option-icon"
+                aria-hidden="true"
+              >
+                🏪
+              </span>
+
+              <span className="cadastro-option-label">
+                Comércio
+              </span>
             </div>
 
-            <div>
+            <div className="cadastro-option-content">
               <h2>Parceiro</h2>
 
               <p>
-                Para comércios que desejam participar da rede
-                e oferecer benefícios à comunidade.
+                Cadastre seu comércio e participe da rede
+                oferecendo benefícios à comunidade.
               </p>
             </div>
 
