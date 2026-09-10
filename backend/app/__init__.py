@@ -29,10 +29,9 @@ def create_app():
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
     app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
 
-    # 2. Configuração de CORS segura e flexível
-    # Permite rodar localmente (localhost) e aceita a URL da Vercel vinda das Variáveis de Ambiente
-    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173") # 5173 se usar Vite ou 3000 se usar CRA
-    CORS(app, origins=[frontend_url, "http://localhost:5173", "http://localhost:3000"])
+    # 2. Configuração de CORS Ampla para Testes e Produção
+    # Libera de forma ampla para evitar bloqueios de preflight do navegador caso as rotas retornem erro ou 404
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
     db.init_app(app)
     Migrate(app, db)
@@ -64,17 +63,19 @@ def create_app():
     )
 
     # =========================================
-    # ROUTES
+    # ROUTES (Mapeadas para alinhar com o React)
     # =========================================
     from .routes.usuarios import usuarios_bp
     from .routes.parceiros import parceiros_bp
     from .routes.auth import auth_bp
     from .routes.anuncios import anuncios_bp
 
-    app.register_blueprint(usuarios_bp)
-    app.register_blueprint(parceiros_bp)
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(anuncios_bp)
+    # Se suas rotas no arquivo de rotas já possuírem o prefixo /api manualmente, 
+    # mantenha o registro simples. Caso contrário, adicione url_prefix="/api" como abaixo:
+    app.register_blueprint(usuarios_bp, url_prefix="/api")
+    app.register_blueprint(parceiros_bp, url_prefix="/api")
+    app.register_blueprint(auth_bp, url_prefix="/api")
+    app.register_blueprint(anuncios_bp, url_prefix="/api")
 
     # =========================================
     # HEALTH
