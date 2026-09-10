@@ -17,6 +17,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         {/* ================================
             ROTAS PÚBLICAS
         ================================= */}
@@ -42,10 +43,12 @@ function App() {
         />
 
         {/* ================================
-            ROTAS PROTEGIDAS
+            ROTAS PARA QUALQUER
+            USUÁRIO AUTENTICADO
         ================================= */}
 
         <Route element={<ProtectedRoute />}>
+
           <Route
             path="/inicio"
             element={<Anuncios />}
@@ -56,10 +59,23 @@ function App() {
             element={<Anuncios />}
           />
 
+        </Route>
+
+        {/* ================================
+            ROTAS EXCLUSIVAS DE USUÁRIO
+        ================================= */}
+
+        <Route
+          element={
+            <ProtectedRoute tipoPermitido="usuario" />
+          }
+        >
+
           <Route
             path="/anuncios/novo"
             element={<NovoAnuncio />}
           />
+
         </Route>
 
         {/* ================================
@@ -75,6 +91,7 @@ function App() {
             />
           }
         />
+
       </Routes>
     </BrowserRouter>
   );

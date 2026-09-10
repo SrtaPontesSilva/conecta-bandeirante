@@ -7,7 +7,8 @@ const api = axios.create({
   },
 });
 
-// Adiciona o token JWT automaticamente às requisições
+// Adiciona o token JWT automaticamente
+// em todas as requisições.
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -19,6 +20,26 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Trata sessões inválidas ou expiradas.
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("usuario");
+      localStorage.removeItem("parceiro");
+
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    }
+
     return Promise.reject(error);
   }
 );
