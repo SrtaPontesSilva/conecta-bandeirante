@@ -18,6 +18,7 @@ function CadastroUsuario() {
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
   const [carregando, setCarregando] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   function formatarCPF(valor) {
     const numeros = valor.replace(/\D/g, "").slice(0, 11);
@@ -199,15 +200,16 @@ function CadastroUsuario() {
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="senha">
-                Senha
-              </label>
+          <div className="form-group">
+            <label htmlFor="senha">
+              Senha
+            </label>
 
+            <div className="password-input">
               <input
                 id="senha"
                 name="senha"
-                type="password"
+                type={mostrarSenha ? "text" : "password"}
                 value={formulario.senha}
                 onChange={handleChange}
                 placeholder="Crie uma senha"
@@ -216,10 +218,43 @@ function CadastroUsuario() {
                 required
               />
 
-              <small className="field-hint">
-                Mínimo de 8 caracteres.
-              </small>
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setMostrarSenha(!mostrarSenha)}
+                aria-label={
+                  mostrarSenha
+                    ? "Ocultar senha"
+                    : "Visualizar senha"
+                }
+              >
+                {mostrarSenha ? (
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z" />
+                    <path d="M9 9l6 6" />
+                    <path d="M15 9l-6 6" />
+                  </svg>
+                ) : (
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z" />
+                    <circle cx="12" cy="12" r="2.8" />
+                  </svg>
+                )}
+              </button>
             </div>
+
+            <small className="field-hint">
+              Mínimo de 8 caracteres.
+            </small>
+          </div>
+
+          {/* FECHA A SEÇÃO 02 */}
           </div>
 
           <div className="form-section">

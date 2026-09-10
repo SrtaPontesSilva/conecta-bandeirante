@@ -109,9 +109,11 @@ function obterDiasDoMes(data) {
 
 function formatarDataAPI(data) {
   const ano = data.getFullYear();
+
   const mes = String(
     data.getMonth() + 1
   ).padStart(2, "0");
+
   const dia = String(
     data.getDate()
   ).padStart(2, "0");
@@ -119,7 +121,10 @@ function formatarDataAPI(data) {
   return `${ano}-${mes}-${dia}`;
 }
 
-function dataJaSelecionada(data, datasSelecionadas) {
+function dataJaSelecionada(
+  data,
+  datasSelecionadas
+) {
   return datasSelecionadas.includes(
     formatarDataAPI(data)
   );
@@ -141,13 +146,18 @@ function NovoAnuncio() {
     new Date()
   );
 
-  const [datasSelecionadas, setDatasSelecionadas] =
-    useState([]);
+  const [
+    datasSelecionadas,
+    setDatasSelecionadas
+  ] = useState([]);
 
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
-  const [carregando, setCarregando] =
-    useState(false);
+
+  const [
+    carregando,
+    setCarregando
+  ] = useState(false);
 
   const usuario = JSON.parse(
     localStorage.getItem("usuario")
@@ -247,7 +257,6 @@ function NovoAnuncio() {
           formulario.modalidade === "venda"
             ? formulario.preco
             : null,
-        usuario_id: usuario.id,
         datas: datasSelecionadas,
       };
 

@@ -2,6 +2,7 @@ from flask import Flask
 
 from flask_migrate import Migrate
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 
 import os
@@ -14,21 +15,52 @@ def create_app():
 
     app = Flask(__name__)
 
+    # =========================================
+    # CONFIGURAÇÃO DO BANCO DE DADOS
+    # =========================================
+
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
         "DATABASE_URL"
     )
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+    # =========================================
+    # CONFIGURAÇÃO DE SEGURANÇA
+    # =========================================
+
+    app.config["SECRET_KEY"] = os.getenv(
+        "SECRET_KEY"
+    )
+
+    app.config["JWT_SECRET_KEY"] = os.getenv(
+        "SECRET_KEY"
+    )
+
+    # =========================================
+    # CONFIGURAÇÃO DO CORS
+    # =========================================
 
     CORS(app)
 
-    # Inicialização do banco e das migrations
+    # =========================================
+    # INICIALIZAÇÃO DO BANCO E MIGRATIONS
+    # =========================================
+
     db.init_app(app)
+
     Migrate(app, db)
 
-    # Importação dos modelos
+    # =========================================
+    # INICIALIZAÇÃO DO JWT
+    # =========================================
+
+    JWTManager(app)
+
+    # =========================================
+    # IMPORTAÇÃO DOS MODELOS
+    # =========================================
+
     from .models import (
         Usuario,
         Parceiro,
@@ -36,17 +68,27 @@ def create_app():
         AnuncioDisponibilidade
     )
 
-    # Importação das rotas
+    # =========================================
+    # IMPORTAÇÃO DAS ROTAS
+    # =========================================
+
     from .routes.usuarios import usuarios_bp
     from .routes.parceiros import parceiros_bp
     from .routes.auth import auth_bp
     from .routes.anuncios import anuncios_bp
 
-    # Registro das rotas
+    # =========================================
+    # REGISTRO DAS ROTAS
+    # =========================================
+
     app.register_blueprint(usuarios_bp)
     app.register_blueprint(parceiros_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(anuncios_bp)
+
+    # =========================================
+    # HEALTH CHECK DA API
+    # =========================================
 
     @app.get("/api/health")
     def health():
@@ -54,6 +96,10 @@ def create_app():
             "status": "ok",
             "message": "Conecta Bandeirante API funcionando"
         }
+
+    # =========================================
+    # HEALTH CHECK DO BANCO
+    # =========================================
 
     @app.get("/api/health/database")
     def database_health():

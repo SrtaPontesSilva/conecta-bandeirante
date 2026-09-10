@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import create_access_token
 from werkzeug.security import check_password_hash
 
 from ..models.usuario import Usuario
@@ -29,12 +30,28 @@ def login():
             "erro": "E-mail e senha são obrigatórios."
         }), 400
 
-    # Primeiro procura entre usuários
-    usuario = Usuario.query.filter_by(email=email).first()
+    # =========================================
+    # LOGIN DE USUÁRIO
+    # =========================================
 
-    if usuario and check_password_hash(usuario.senha_hash, senha):
+    usuario = Usuario.query.filter_by(
+        email=email
+    ).first()
+
+    if usuario and check_password_hash(
+        usuario.senha_hash,
+        senha
+    ):
+        token = create_access_token(
+            identity=str(usuario.id),
+            additional_claims={
+                "tipo": "usuario"
+            }
+        )
+
         return jsonify({
             "mensagem": "Login realizado com sucesso.",
+            "token": token,
             "usuario": {
                 "id": usuario.id,
                 "nome": usuario.nome,
@@ -44,12 +61,28 @@ def login():
             }
         }), 200
 
-    # Depois procura entre parceiros
-    parceiro = Parceiro.query.filter_by(email=email).first()
+    # =========================================
+    # LOGIN DE PARCEIRO
+    # =========================================
 
-    if parceiro and check_password_hash(parceiro.senha_hash, senha):
+    parceiro = Parceiro.query.filter_by(
+        email=email
+    ).first()
+
+    if parceiro and check_password_hash(
+        parceiro.senha_hash,
+        senha
+    ):
+        token = create_access_token(
+            identity=str(parceiro.id),
+            additional_claims={
+                "tipo": "parceiro"
+            }
+        )
+
         return jsonify({
             "mensagem": "Login realizado com sucesso.",
+            "token": token,
             "parceiro": {
                 "id": parceiro.id,
                 "nome_estabelecimento": parceiro.nome_estabelecimento,
@@ -58,6 +91,10 @@ def login():
                 "tipo": "parceiro"
             }
         }), 200
+
+    # =========================================
+    # CREDENCIAIS INVÁLIDAS
+    # =========================================
 
     return jsonify({
         "erro": "E-mail ou senha inválidos."

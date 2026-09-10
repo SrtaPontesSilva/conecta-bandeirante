@@ -5,11 +5,13 @@ import Logo from '../../components/Logo/Logo';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
 import api from '../../services/api';
+import { useAuth } from '../../auth/AuthContext';
 
 import './Login.css';
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [formulario, setFormulario] = useState({
     email: '',
@@ -46,23 +48,9 @@ function Login() {
         formulario
       );
 
-      if (resposta.data.usuario) {
-        localStorage.setItem(
-          'usuario',
-          JSON.stringify(resposta.data.usuario)
-        );
-
-        localStorage.removeItem('parceiro');
-      }
-
-      if (resposta.data.parceiro) {
-        localStorage.setItem(
-          'parceiro',
-          JSON.stringify(resposta.data.parceiro)
-        );
-
-        localStorage.removeItem('usuario');
-      }
+      // Centraliza o armazenamento da sessão
+      // através do AuthContext.
+      login(resposta.data);
 
       navigate('/inicio');
     } catch (error) {

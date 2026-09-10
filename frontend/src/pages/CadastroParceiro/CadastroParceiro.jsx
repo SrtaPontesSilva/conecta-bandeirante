@@ -17,6 +17,7 @@ function CadastroParceiro() {
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
   const [carregando, setCarregando] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   function formatarTelefone(valor) {
     const numeros = valor
@@ -266,17 +267,49 @@ function CadastroParceiro() {
                 Senha
               </label>
 
-              <input
-                id="senha"
-                name="senha"
-                type="password"
-                minLength={8}
-                value={formulario.senha}
-                onChange={handleChange}
-                placeholder="Crie uma senha"
-                autoComplete="new-password"
-                required
-              />
+              <div className="password-input">
+                <input
+                  id="senha"
+                  name="senha"
+                  type={mostrarSenha ? "text" : "password"}
+                  minLength={8}
+                  value={formulario.senha}
+                  onChange={handleChange}
+                  placeholder="Crie uma senha"
+                  autoComplete="new-password"
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setMostrarSenha(!mostrarSenha)}
+                  aria-label={
+                    mostrarSenha
+                      ? "Ocultar senha"
+                      : "Visualizar senha"
+                  }
+                >
+                  {mostrarSenha ? (
+                    <svg
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z" />
+                      <path d="M9 9l6 6" />
+                      <path d="M15 9l-6 6" />
+                    </svg>
+                  ) : (
+                    <svg
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z" />
+                      <circle cx="12" cy="12" r="2.8" />
+                    </svg>
+                  )}
+                </button>
+              </div>
 
               <small className="field-hint">
                 Mínimo de 8 caracteres.

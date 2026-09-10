@@ -1,6 +1,11 @@
 from datetime import datetime
 
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity,
+    get_jwt
+)
 
 from ..extensions import db
 from ..models.anuncio import (
@@ -31,7 +36,50 @@ CONDICOES_VALIDAS = {
 
 
 @anuncios_bp.post("")
+@jwt_required()
 def cadastrar_anuncio():
+    usuario_id = get_jwt_identity()
+    tipo = get_jwt().get("tipo")
+
+    # =========================================
+    # VERIFICAÇÃO DO TIPO DE CONTA
+    # =========================================
+
+    if tipo != "usuario":
+        return jsonify({
+            "erro": "Apenas usuários podem publicar anúncios."
+        }), 403
+
+    if not usuario_id:
+        return jsonify({
+            "erro": "Usuário não identificado."
+        }), 401
+
+    try:
+        usuario_id = int(usuario_id)
+    except (TypeError, ValueError):
+        return jsonify({
+            "erro": "Identificação do usuário inválida."
+        }), 401
+
+    # =========================================
+    # VERIFICAÇÃO DO USUÁRIO
+    # =========================================
+
+    usuario = db.session.get(
+        Usuario,
+        usuario_id
+    )
+
+    if not usuario:
+        return jsonify({
+            "erro": "Usuário não encontrado."
+        }), 404
+
+    # =========================================
+    # DADOS DO ANÚNCIO
+    # =========================================
+
     dados = request.get_json(silent=True)
 
     if not dados:
@@ -45,8 +93,11 @@ def cadastrar_anuncio():
     modalidade = dados.get("modalidade", "").strip().lower()
     condicao = dados.get("condicao", "").strip().lower()
     preco = dados.get("preco")
-    usuario_id = dados.get("usuario_id")
     datas = dados.get("datas", [])
+
+    # =========================================
+    # VALIDAÇÕES
+    # =========================================
 
     if not titulo:
         return jsonify({
@@ -73,25 +124,14 @@ def cadastrar_anuncio():
             "erro": "Condição do item inválida."
         }), 400
 
-    if not usuario_id:
-        return jsonify({
-            "erro": "Usuário é obrigatório."
-        }), 400
-
-    usuario = db.session.get(
-        Usuario,
-        usuario_id
-    )
-
-    if not usuario:
-        return jsonify({
-            "erro": "Usuário não encontrado."
-        }), 404
-
     if not isinstance(datas, list) or not datas:
         return jsonify({
             "erro": "Selecione pelo menos uma data disponível."
         }), 400
+
+    # =========================================
+    # PREÇO
+    # =========================================
 
     if modalidade == "venda":
         if preco is None or preco == "":
@@ -114,6 +154,10 @@ def cadastrar_anuncio():
     else:
         preco = None
 
+    # =========================================
+    # DATAS
+    # =========================================
+
     datas_convertidas = []
 
     try:
@@ -131,6 +175,10 @@ def cadastrar_anuncio():
         return jsonify({
             "erro": "Uma ou mais datas são inválidas."
         }), 400
+
+    # =========================================
+    # CRIAÇÃO DO ANÚNCIO
+    # =========================================
 
     anuncio = Anuncio(
         titulo=titulo,
@@ -153,6 +201,10 @@ def cadastrar_anuncio():
         db.session.add(disponibilidade)
 
     db.session.commit()
+
+    # =========================================
+    # RESPOSTA
+    # =========================================
 
     return jsonify({
         "mensagem": "Anúncio publicado com sucesso.",

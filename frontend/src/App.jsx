@@ -11,11 +11,16 @@ import CadastroUsuario from "./pages/CadastroUsuario/CadastroUsuario";
 import CadastroParceiro from "./pages/CadastroParceiro/CadastroParceiro";
 import Anuncios from "./pages/Anuncios/Anuncios";
 import NovoAnuncio from "./pages/NovoAnuncio/NovoAnuncio";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* ================================
+            ROTAS PÚBLICAS
+        ================================= */}
+
         <Route
           path="/login"
           element={<Login />}
@@ -36,20 +41,30 @@ function App() {
           element={<CadastroParceiro />}
         />
 
-        <Route
-          path="/inicio"
-          element={<Anuncios />}
-        />
+        {/* ================================
+            ROTAS PROTEGIDAS
+        ================================= */}
 
-        <Route
-          path="/anuncios"
-          element={<Anuncios />}
-        />
+        <Route element={<ProtectedRoute />}>
+          <Route
+            path="/inicio"
+            element={<Anuncios />}
+          />
 
-        <Route
-          path="/anuncios/novo"
-          element={<NovoAnuncio />}
-        />
+          <Route
+            path="/anuncios"
+            element={<Anuncios />}
+          />
+
+          <Route
+            path="/anuncios/novo"
+            element={<NovoAnuncio />}
+          />
+        </Route>
+
+        {/* ================================
+            ROTA PADRÃO
+        ================================= */}
 
         <Route
           path="*"
