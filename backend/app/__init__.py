@@ -14,7 +14,6 @@ def create_app():
     app = Flask(__name__)
 
     # 1. Correção para bancos PostgreSQL na nuvem e uso do driver moderno (psycopg v3)
-    # Evita o erro 'ModuleNotFoundError: No module named psycopg2' forçando o uso do pacote psycopg já instalado
     database_url = os.getenv("DATABASE_URL")
     if database_url:
         if database_url.startswith("postgres://"):
@@ -29,8 +28,8 @@ def create_app():
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
     app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
 
-    # 2. Configuração de CORS Ampla para Testes e Produção
-    # Libera de forma ampla para evitar bloqueios de preflight do navegador caso as rotas retornem erro ou 404
+    # 2. Configuração de CORS Ampla para Produção
+    # Libera todas as rotas, origens e métodos para aceitar requisições diretas do React
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
     db.init_app(app)
@@ -63,19 +62,24 @@ def create_app():
     )
 
     # =========================================
-    # ROUTES (Mapeadas para alinhar com o React)
+    # ROUTES (Mapeamento Duplo para evitar Erro 404)
     # =========================================
     from .routes.usuarios import usuarios_bp
     from .routes.parceiros import parceiros_bp
     from .routes.auth import auth_bp
     from .routes.anuncios import anuncios_bp
 
-    # Se suas rotas no arquivo de rotas já possuírem o prefixo /api manualmente, 
-    # mantenha o registro simples. Caso contrário, adicione url_prefix="/api" como abaixo:
-    app.register_blueprint(usuarios_bp, url_prefix="/api")
-    app.register_blueprint(parceiros_bp, url_prefix="/api")
-    app.register_blueprint(auth_bp, url_prefix="/api")
-    app.register_blueprint(anuncios_bp, url_prefix="/api")
+    # Registro 1: Com o prefixo /api (Caso o React use a URL base com /api)
+    app.register_blueprint(usuarios_bp, url_prefix="/api", name="usuarios_api")
+    app.register_blueprint(parceiros_bp, url_prefix="/api", name="parceiros_api")
+    app.register_blueprint(auth_bp, url_prefix="/api", name="auth_api")
+    app.register_blueprint(anuncios_bp, url_prefix="/api", name="anuncios_api")
+
+    # Registro 2: Sem o prefixo (Alinhado com a sua variável atual da Vercel)
+    app.register_blueprint(usuarios_bp, url_prefix="/")
+    app.register_blueprint(parceiros_bp, url_prefix="/")
+    app.register_blueprint(auth_bp, url_prefix="/")
+    app.register_blueprint(anuncios_bp, url_prefix="/")
 
     # =========================================
     # HEALTH
