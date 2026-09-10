@@ -13,11 +13,14 @@ def create_app():
 
     app = Flask(__name__)
 
-    # 1. Correção para bancos PostgreSQL na nuvem (como Render/Supabase)
-    # Algumas plataformas fornecem a URL começando com 'postgres://', mas o SQLAlchemy exige 'postgresql://'
+    # 1. Correção para bancos PostgreSQL na nuvem e uso do driver moderno (psycopg v3)
+    # Evita o erro 'ModuleNotFoundError: No module named psycopg2' forçando o uso do pacote psycopg já instalado
     database_url = os.getenv("DATABASE_URL")
-    if database_url and database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    if database_url:
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql+psycopg://", 1)
+        elif database_url.startswith("postgresql://"):
+            database_url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = database_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
