@@ -41,6 +41,11 @@ def create_app():
     # =========================================
     secret_key = os.getenv("SECRET_KEY")
 
+    if not secret_key:
+        raise RuntimeError(
+            "A variável de ambiente SECRET_KEY não foi configurada."
+        )
+
     app.config["SECRET_KEY"] = secret_key
     app.config["JWT_SECRET_KEY"] = secret_key
 
