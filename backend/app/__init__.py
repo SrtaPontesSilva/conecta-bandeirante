@@ -57,7 +57,9 @@ def create_app():
         resources={
             r"/api/*": {
                 "origins": [
-                    "https://conecta-bandeirante-2026.vercel.app"
+                    "https://conecta-bandeirante-2026.vercel.app",
+                    "http://localhost:5173",
+                    "http://127.0.0.1:5173"
                 ]
             }
         },

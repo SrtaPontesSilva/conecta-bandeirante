@@ -5,7 +5,6 @@ __pycache__/
 
 # Environment
 .env
-backend/.env
 
 # Node
 frontend/node_modules/
