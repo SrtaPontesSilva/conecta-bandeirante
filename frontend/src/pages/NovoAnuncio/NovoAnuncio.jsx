@@ -1,6 +1,18 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import MarketplaceNavbar from "../../components/MarketplaceNavbar/MarketplaceNavbar";
+import {
+  IconArrowLeft,
+  IconChevronLeft,
+  IconChevronRight,
+  IconCalendar,
+  IconMapPin,
+  IconGift,
+  IconRepeat,
+  IconTag,
+  IconCheck,
+} from "../../components/Icons/Icons";
 import api from "../../services/api";
 
 import "./NovoAnuncio.css";
@@ -36,20 +48,56 @@ const MODALIDADES = [
     label: "Doação",
     description:
       "Quero disponibilizar este item gratuitamente.",
+    Icon: IconGift,
   },
   {
     value: "troca",
     label: "Troca",
     description:
       "Quero trocar este item por outro da comunidade.",
+    Icon: IconRepeat,
   },
   {
     value: "venda",
     label: "Venda",
     description:
       "Quero vender este item por um valor acessível.",
+    Icon: IconTag,
   },
 ];
+
+const DIAS_SEMANA = [
+  "Dom",
+  "Seg",
+  "Ter",
+  "Qua",
+  "Qui",
+  "Sex",
+  "Sáb",
+];
+
+/*
+ * ============================================================
+ * DATAS
+ * ============================================================
+ */
+
+function obterAmanha() {
+  const data = new Date();
+
+  data.setHours(0, 0, 0, 0);
+  data.setDate(data.getDate() + 1);
+
+  return data;
+}
+
+function inicioDoMes(data) {
+  return new Date(
+    data.getFullYear(),
+    data.getMonth(),
+    1
+  );
+}
 
 function formatarMes(data) {
   return data.toLocaleDateString("pt-BR", {
@@ -58,50 +106,39 @@ function formatarMes(data) {
   });
 }
 
+function formatarDataCurta(dataIso) {
+  const [ano, mes, dia] = dataIso
+    .split("-")
+    .map(Number);
+
+  return new Date(
+    ano,
+    mes - 1,
+    dia
+  ).toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "short",
+  });
+}
+
 function obterDiasDoMes(data) {
   const ano = data.getFullYear();
   const mes = data.getMonth();
 
-  const primeiroDia = new Date(
-    ano,
-    mes,
-    1
-  );
+  const primeiroDia = new Date(ano, mes, 1);
+  const ultimoDia = new Date(ano, mes + 1, 0);
 
-  const ultimoDia = new Date(
-    ano,
-    mes + 1,
-    0
-  );
-
-  const primeiroDiaSemana =
-    primeiroDia.getDay();
-
-  const quantidadeDias =
-    ultimoDia.getDate();
+  const primeiroDiaSemana = primeiroDia.getDay();
+  const quantidadeDias = ultimoDia.getDate();
 
   const dias = [];
 
-  for (
-    let i = 0;
-    i < primeiroDiaSemana;
-    i++
-  ) {
+  for (let i = 0; i < primeiroDiaSemana; i++) {
     dias.push(null);
   }
 
-  for (
-    let dia = 1;
-    dia <= quantidadeDias;
-    dia++
-  ) {
-    dias.push(
-      new Date(
-        ano,
-        mes,
-        dia
-      )
-    );
+  for (let dia = 1; dia <= quantidadeDias; dia++) {
+    dias.push(new Date(ano, mes, dia));
   }
 
   return dias;
@@ -110,21 +147,17 @@ function obterDiasDoMes(data) {
 function formatarDataAPI(data) {
   const ano = data.getFullYear();
 
-  const mes = String(
-    data.getMonth() + 1
-  ).padStart(2, "0");
+  const mes = String(data.getMonth() + 1).padStart(
+    2,
+    "0"
+  );
 
-  const dia = String(
-    data.getDate()
-  ).padStart(2, "0");
+  const dia = String(data.getDate()).padStart(2, "0");
 
   return `${ano}-${mes}-${dia}`;
 }
 
-function dataJaSelecionada(
-  data,
-  datasSelecionadas
-) {
+function dataJaSelecionada(data, datasSelecionadas) {
   return datasSelecionadas.includes(
     formatarDataAPI(data)
   );
@@ -132,6 +165,8 @@ function dataJaSelecionada(
 
 function NovoAnuncio() {
   const navigate = useNavigate();
+
+  const amanha = obterAmanha();
 
   const [formulario, setFormulario] = useState({
     titulo: "",
@@ -142,77 +177,155 @@ function NovoAnuncio() {
     preco: "",
   });
 
-  const [mesAtual, setMesAtual] = useState(
-    new Date()
+  const [mesAtual, setMesAtual] = useState(() =>
+    inicioDoMes(amanha)
   );
 
-  const [
-    datasSelecionadas,
-    setDatasSelecionadas
-  ] = useState([]);
+  const [datasSelecionadas, setDatasSelecionadas] =
+    useState([]);
+
+  const [calendarioAberto, setCalendarioAberto] =
+    useState(false);
 
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
 
-  const [
-    carregando,
-    setCarregando
-  ] = useState(false);
+  const [carregando, setCarregando] = useState(false);
+
+  const calendarioRef = useRef(null);
 
   const usuario = JSON.parse(
     localStorage.getItem("usuario")
   );
 
-  function handleChange(event) {
-    const {
-      name,
-      value,
-    } = event.target;
+  const parceiro = JSON.parse(
+    localStorage.getItem("parceiro")
+  );
 
-    setFormulario(
-      (estadoAnterior) => ({
-        ...estadoAnterior,
-        [name]: value,
-      })
+  const pessoa = usuario || parceiro;
+
+  /*
+   * ============================================================
+   * BUSCA DA NAVBAR
+   * ------------------------------------------------------------
+   * Esta tela não filtra anúncios, mas a navbar compartilhada
+   * exige um campo controlado. Mantemos um estado local apenas
+   * para satisfazer o componente.
+   * ============================================================
+   */
+
+  const [busca, setBusca] = useState("");
+  const [filtro, setFiltro] = useState("todos");
+
+  /*
+   * ============================================================
+   * FECHAR CALENDÁRIO AO CLICAR FORA / ESC
+   * ============================================================
+   */
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        calendarioRef.current &&
+        !calendarioRef.current.contains(
+          event.target
+        )
+      ) {
+        setCalendarioAberto(false);
+      }
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        setCalendarioAberto(false);
+      }
+    }
+
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
     );
+
+    document.addEventListener(
+      "keydown",
+      handleKeyDown
+    );
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+
+      document.removeEventListener(
+        "keydown",
+        handleKeyDown
+      );
+    };
+  }, []);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+
+    setFormulario((estadoAnterior) => ({
+      ...estadoAnterior,
+      [name]: value,
+    }));
+  }
+
+  function diaDesabilitado(data) {
+    return data < amanha;
   }
 
   function selecionarData(data) {
-    if (!data) {
+    if (!data || diaDesabilitado(data)) {
       return;
     }
 
-    const dataFormatada =
-      formatarDataAPI(data);
+    const dataFormatada = formatarDataAPI(data);
 
-    setDatasSelecionadas(
-      (datasAnteriores) => {
-        if (
-          datasAnteriores.includes(
-            dataFormatada
-          )
-        ) {
-          return datasAnteriores.filter(
-            (item) =>
-              item !== dataFormatada
-          );
-        }
-
-        return [
-          ...datasAnteriores,
-          dataFormatada,
-        ].sort();
+    setDatasSelecionadas((datasAnteriores) => {
+      if (datasAnteriores.includes(dataFormatada)) {
+        return datasAnteriores.filter(
+          (item) => item !== dataFormatada
+        );
       }
+
+      return [
+        ...datasAnteriores,
+        dataFormatada,
+      ].sort();
+    });
+  }
+
+  function removerData(dataFormatada) {
+    setDatasSelecionadas((datasAnteriores) =>
+      datasAnteriores.filter(
+        (item) => item !== dataFormatada
+      )
+    );
+  }
+
+  function podeVoltarMes() {
+    return (
+      mesAtual.getFullYear() >
+        amanha.getFullYear() ||
+      (mesAtual.getFullYear() ===
+        amanha.getFullYear() &&
+        mesAtual.getMonth() > amanha.getMonth())
     );
   }
 
   function mudarMes(direcao) {
+    if (direcao === -1 && !podeVoltarMes()) {
+      return;
+    }
+
     setMesAtual(
       (mesAnterior) =>
         new Date(
           mesAnterior.getFullYear(),
-          mesAnterior.getMonth() +
-            direcao,
+          mesAnterior.getMonth() + direcao,
           1
         )
     );
@@ -265,20 +378,14 @@ function NovoAnuncio() {
         payload
       );
 
-      setSucesso(
-        resposta.data.mensagem
-      );
+      setSucesso(resposta.data.mensagem);
 
       setTimeout(() => {
         navigate("/inicio");
       }, 1000);
     } catch (error) {
-      if (
-        error.response?.data?.erro
-      ) {
-        setErro(
-          error.response.data.erro
-        );
+      if (error.response?.data?.erro) {
+        setErro(error.response.data.erro);
       } else {
         setErro(
           "Não foi possível publicar o anúncio."
@@ -289,37 +396,38 @@ function NovoAnuncio() {
     }
   }
 
-  const diasDoMes =
-    obterDiasDoMes(mesAtual);
+  const diasDoMes = obterDiasDoMes(mesAtual);
 
-  const mesAnterior =
-    new Date(
-      mesAtual.getFullYear(),
-      mesAtual.getMonth() - 1,
-      1
-    );
-
-  const mesSeguinte =
-    new Date(
-      mesAtual.getFullYear(),
-      mesAtual.getMonth() + 1,
-      1
-    );
+  const textoTrigger =
+    datasSelecionadas.length === 0
+      ? "Selecionar dias disponíveis"
+      : `${datasSelecionadas.length} ${
+          datasSelecionadas.length === 1
+            ? "dia selecionado"
+            : "dias selecionados"
+        }`;
 
   return (
     <main className="novo-anuncio-page">
+      <MarketplaceNavbar
+        pessoa={pessoa}
+        busca={busca}
+        setBusca={setBusca}
+        filtro={filtro}
+        setFiltro={setFiltro}
+      />
+
       <header className="novo-anuncio-header">
         <button
           type="button"
           className="novo-anuncio-back"
           onClick={voltarInicio}
         >
-          ← Voltar
+          <IconArrowLeft size={17} />
+          <span>Voltar</span>
         </button>
 
-        <h1>
-          Novo anúncio
-        </h1>
+        <h1>Novo anúncio</h1>
 
         <div />
       </header>
@@ -333,9 +441,7 @@ function NovoAnuncio() {
             <span>01</span>
 
             <div>
-              <h2>
-                Sobre o item
-              </h2>
+              <h2>Sobre o item</h2>
 
               <p>
                 Conte um pouco sobre o que você
@@ -346,9 +452,7 @@ function NovoAnuncio() {
 
           <div className="anuncio-form-grid">
             <div className="form-group form-group--full">
-              <label htmlFor="titulo">
-                Título
-              </label>
+              <label htmlFor="titulo">Título</label>
 
               <input
                 id="titulo"
@@ -377,16 +481,14 @@ function NovoAnuncio() {
                   Selecione uma categoria
                 </option>
 
-                {CATEGORIAS.map(
-                  (categoria) => (
-                    <option
-                      key={categoria}
-                      value={categoria}
-                    >
-                      {categoria}
-                    </option>
-                  )
-                )}
+                {CATEGORIAS.map((categoria) => (
+                  <option
+                    key={categoria}
+                    value={categoria}
+                  >
+                    {categoria}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -406,16 +508,14 @@ function NovoAnuncio() {
                   Selecione a condição
                 </option>
 
-                {CONDICOES.map(
-                  (condicao) => (
-                    <option
-                      key={condicao.value}
-                      value={condicao.value}
-                    >
-                      {condicao.label}
-                    </option>
-                  )
-                )}
+                {CONDICOES.map((condicao) => (
+                  <option
+                    key={condicao.value}
+                    value={condicao.value}
+                  >
+                    {condicao.label}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -431,8 +531,13 @@ function NovoAnuncio() {
                 onChange={handleChange}
                 placeholder="Descreva o estado do item, tamanho, série, edição ou outras informações importantes."
                 rows={5}
+                maxLength={600}
                 required
               />
+
+              <small className="char-counter">
+                {formulario.descricao.length}/600
+              </small>
             </div>
           </div>
         </section>
@@ -453,8 +558,10 @@ function NovoAnuncio() {
           </div>
 
           <div className="modalidade-options">
-            {MODALIDADES.map(
-              (modalidade) => (
+            {MODALIDADES.map((modalidade) => {
+              const Icon = modalidade.Icon;
+
+              return (
                 <label
                   key={modalidade.value}
                   className={
@@ -467,9 +574,7 @@ function NovoAnuncio() {
                   <input
                     type="radio"
                     name="modalidade"
-                    value={
-                      modalidade.value
-                    }
+                    value={modalidade.value}
                     checked={
                       formulario.modalidade ===
                       modalidade.value
@@ -478,7 +583,9 @@ function NovoAnuncio() {
                     required
                   />
 
-                  <span className="modalidade-radio" />
+                  <span className="modalidade-icon">
+                    <Icon size={19} />
+                  </span>
 
                   <span className="modalidade-content">
                     <strong>
@@ -486,27 +593,24 @@ function NovoAnuncio() {
                     </strong>
 
                     <small>
-                      {
-                        modalidade.description
-                      }
+                      {modalidade.description}
                     </small>
                   </span>
+
+                  <span className="modalidade-check">
+                    <IconCheck size={13} />
+                  </span>
                 </label>
-              )
-            )}
+              );
+            })}
           </div>
 
-          {formulario.modalidade ===
-            "venda" && (
+          {formulario.modalidade === "venda" && (
             <div className="form-group preco-group">
-              <label htmlFor="preco">
-                Preço
-              </label>
+              <label htmlFor="preco">Preço</label>
 
               <div className="price-input">
-                <span>
-                  R$
-                </span>
+                <span>R$</span>
 
                 <input
                   id="preco"
@@ -534,125 +638,173 @@ function NovoAnuncio() {
             <span>03</span>
 
             <div>
-              <h2>
-                Escolha os dias
-              </h2>
+              <h2>Escolha os dias</h2>
 
               <p>
                 Selecione os dias em que você poderá
                 entregar ou receber o item no ponto
-                definido pela escola.
+                definido pela escola. Apenas datas a
+                partir de amanhã ficam disponíveis.
               </p>
             </div>
           </div>
 
-          <div className="calendar-wrapper">
-            <div className="calendar-header">
-              <button
-                type="button"
-                onClick={() =>
-                  mudarMes(-1)
-                }
-                aria-label="Mês anterior"
-              >
-                ‹
-              </button>
-
-              <strong>
-                {formatarMes(mesAtual)}
-              </strong>
-
-              <button
-                type="button"
-                onClick={() =>
-                  mudarMes(1)
-                }
-                aria-label="Próximo mês"
-              >
-                ›
-              </button>
-            </div>
-
-            <div className="calendar-weekdays">
-              {[
-                "Dom",
-                "Seg",
-                "Ter",
-                "Qua",
-                "Qui",
-                "Sex",
-                "Sáb",
-              ].map(
-                (dia) => (
-                  <span key={dia}>
-                    {dia}
-                  </span>
+          <div
+            className="calendar-picker"
+            ref={calendarioRef}
+          >
+            <button
+              type="button"
+              className={
+                calendarioAberto
+                  ? "calendar-trigger calendar-trigger--open"
+                  : "calendar-trigger"
+              }
+              onClick={() =>
+                setCalendarioAberto(
+                  (estado) => !estado
                 )
-              )}
-            </div>
-
-            <div className="calendar-grid">
-              {diasDoMes.map(
-                (data, index) => {
-                  if (!data) {
-                    return (
-                      <span
-                        key={`vazio-${index}`}
-                        className="calendar-day calendar-day--empty"
-                      />
-                    );
-                  }
-
-                  const selecionada =
-                    dataJaSelecionada(
-                      data,
-                      datasSelecionadas
-                    );
-
-                  return (
-                    <button
-                      type="button"
-                      key={data.toISOString()}
-                      className={
-                        selecionada
-                          ? "calendar-day calendar-day--selected"
-                          : "calendar-day"
-                      }
-                      onClick={() =>
-                        selecionarData(
-                          data
-                        )
-                      }
-                    >
-                      {data.getDate()}
-                    </button>
-                  );
-                }
-              )}
-            </div>
-
-            <div className="calendar-footer">
-              <span>
-                {datasSelecionadas.length}
-                {" "}
-                {datasSelecionadas.length ===
-                1
-                  ? "dia selecionado"
-                  : "dias selecionados"}
+              }
+              aria-haspopup="dialog"
+              aria-expanded={calendarioAberto}
+            >
+              <span className="calendar-trigger-icon">
+                <IconCalendar size={18} />
               </span>
 
-              {datasSelecionadas.length >
-                0 && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setDatasSelecionadas([])
-                  }
-                >
-                  Limpar
-                </button>
-              )}
-            </div>
+              <span className="calendar-trigger-text">
+                {textoTrigger}
+              </span>
+            </button>
+
+            {datasSelecionadas.length > 0 && (
+              <div className="calendar-chips">
+                {datasSelecionadas.map((data) => (
+                  <span
+                    className="calendar-chip"
+                    key={data}
+                  >
+                    {formatarDataCurta(data)}
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        removerData(data)
+                      }
+                      aria-label={`Remover ${formatarDataCurta(
+                        data
+                      )}`}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {calendarioAberto && (
+              <div
+                className="calendar-popover"
+                role="dialog"
+                aria-label="Selecionar dias disponíveis"
+              >
+                <div className="calendar-header">
+                  <button
+                    type="button"
+                    onClick={() => mudarMes(-1)}
+                    disabled={!podeVoltarMes()}
+                    aria-label="Mês anterior"
+                  >
+                    <IconChevronLeft size={16} />
+                  </button>
+
+                  <strong>
+                    {formatarMes(mesAtual)}
+                  </strong>
+
+                  <button
+                    type="button"
+                    onClick={() => mudarMes(1)}
+                    aria-label="Próximo mês"
+                  >
+                    <IconChevronRight size={16} />
+                  </button>
+                </div>
+
+                <div className="calendar-weekdays">
+                  {DIAS_SEMANA.map((dia) => (
+                    <span key={dia}>{dia}</span>
+                  ))}
+                </div>
+
+                <div className="calendar-grid">
+                  {diasDoMes.map((data, index) => {
+                    if (!data) {
+                      return (
+                        <span
+                          key={`vazio-${index}`}
+                          className="calendar-day calendar-day--empty"
+                        />
+                      );
+                    }
+
+                    const selecionada =
+                      dataJaSelecionada(
+                        data,
+                        datasSelecionadas
+                      );
+
+                    const desabilitada =
+                      diaDesabilitado(data);
+
+                    return (
+                      <button
+                        type="button"
+                        key={data.toISOString()}
+                        className={
+                          selecionada
+                            ? "calendar-day calendar-day--selected"
+                            : desabilitada
+                              ? "calendar-day calendar-day--disabled"
+                              : "calendar-day"
+                        }
+                        disabled={desabilitada}
+                        onClick={() =>
+                          selecionarData(data)
+                        }
+                      >
+                        {data.getDate()}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="calendar-footer">
+                  <button
+                    type="button"
+                    className="calendar-footer-clear"
+                    onClick={() =>
+                      setDatasSelecionadas([])
+                    }
+                    disabled={
+                      datasSelecionadas.length === 0
+                    }
+                  >
+                    Limpar
+                  </button>
+
+                  <button
+                    type="button"
+                    className="calendar-footer-confirm"
+                    onClick={() =>
+                      setCalendarioAberto(false)
+                    }
+                  >
+                    Concluir
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
@@ -661,7 +813,7 @@ function NovoAnuncio() {
             className="delivery-notice-icon"
             aria-hidden="true"
           >
-            📍
+            <IconMapPin size={19} />
           </div>
 
           <div>

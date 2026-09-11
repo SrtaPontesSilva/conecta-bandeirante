@@ -1,0 +1,1612 @@
+/* ============================================================
+   NAVBAR
+============================================================ */
+
+.marketplace-navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 100;
+
+  background-color: var(--color-surface);
+
+  border-bottom:
+    1px solid var(--color-border);
+
+  box-shadow:
+    0 2px 14px rgba(
+      54,
+      64,
+      66,
+      0.06
+    );
+}
+
+.marketplace-navbar-inner {
+  width: min(
+    1280px,
+    calc(100% - 40px)
+  );
+
+  min-height: 84px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+}
+
+
+/* ============================================================
+   LOGO
+============================================================ */
+
+.marketplace-navbar-logo {
+  width: 72px;
+  height: 48px;
+
+  flex: 0 0 72px;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  background: none;
+
+  border: none;
+}
+
+.marketplace-navbar-logo .logo {
+  width: 68px;
+  height: auto;
+
+  display: block;
+
+  object-fit: contain;
+}
+
+
+/* ============================================================
+   BLOCO DO USUÁRIO
+============================================================ */
+
+.marketplace-user-area {
+  min-width: 255px;
+  max-width: 330px;
+
+  padding: 5px 7px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+
+  color: var(--color-text);
+
+  background: none;
+
+  border: none;
+
+  border-radius: var(--radius-md);
+
+  text-align: left;
+}
+
+.marketplace-user-community {
+  margin-top: 3px;
+
+  color: var(--color-primary);
+
+  font-size: 0.68rem;
+  font-weight: 600;
+
+  line-height: 1.2;
+}
+
+
+/* ============================================================
+   AVATAR
+============================================================ */
+
+.marketplace-user-avatar {
+  width: 50px;
+  height: 50px;
+
+  flex: 0 0 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text-light);
+
+  background-color: var(--color-accent);
+
+  border: 2px solid var(--color-secondary);
+
+  border-radius: var(--radius-sm);
+
+  font-size: 0.88rem;
+  font-weight: 800;
+
+  letter-spacing: 0.02em;
+}
+
+
+/* ============================================================
+   SAUDAÇÃO
+============================================================ */
+
+.marketplace-user-greeting {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  line-height: 1.15;
+}
+
+.marketplace-user-greeting strong {
+  overflow: hidden;
+
+  color: var(--color-text);
+
+  font-size: 0.88rem;
+  font-weight: 800;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.marketplace-user-greeting > span {
+  margin-top: 4px;
+
+  color: var(--color-text-secondary);
+
+  font-size: 0.72rem;
+
+  white-space: nowrap;
+}
+
+.marketplace-user-greeting > span b {
+  color: var(--color-primary);
+
+  font-weight: 800;
+
+  text-decoration: underline;
+}
+
+.marketplace-user-greeting small {
+  margin-top: 4px;
+
+  overflow: hidden;
+
+  color: var(--color-text-secondary);
+
+  font-size: 0.64rem;
+  font-weight: 500;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   BUSCA
+============================================================ */
+
+.marketplace-search {
+  position: relative;
+
+  height: 48px;
+
+  flex: 1 1 auto;
+
+  min-width: 260px;
+
+  display: flex;
+  align-items: center;
+
+  background-color: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+
+  border-radius: 8px;
+
+  overflow: visible;
+
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.marketplace-search:focus-within {
+  border-color: var(--color-primary);
+
+  box-shadow:
+    0 0 0 3px rgba(
+      91,
+      109,
+      147,
+      0.10
+    );
+}
+
+
+/* ============================================================
+   FILTRO DA BUSCA
+============================================================ */
+
+.marketplace-search-filter {
+  position: relative;
+
+  height: 100%;
+
+  flex-shrink: 0;
+}
+
+.marketplace-search-filter-button {
+  height: 100%;
+
+  min-width: 86px;
+
+  padding: 0 11px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  color: var(--color-text);
+
+  background-color: #f7f7f5;
+
+  border: none;
+
+  border-radius: 7px 0 0 7px;
+
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.marketplace-search-filter-button:hover {
+  color: var(--color-primary);
+
+  background-color: var(--color-secondary);
+}
+
+.marketplace-search-chevron {
+  font-size: 0.8rem;
+
+  transition:
+    transform var(--transition-fast);
+}
+
+.marketplace-search-chevron--open {
+  transform: rotate(180deg);
+}
+
+.marketplace-search-divider {
+  width: 1px;
+  height: 28px;
+
+  flex-shrink: 0;
+
+  background-color: var(--color-border);
+}
+
+
+/* ============================================================
+   DROPDOWN DO FILTRO
+============================================================ */
+
+.marketplace-filter-dropdown {
+  position: absolute;
+
+  top: calc(100% + 8px);
+  left: 0;
+
+  z-index: 40;
+
+  width: 185px;
+
+  padding: 6px;
+
+  background-color: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+
+  border-radius: var(--radius-sm);
+
+  box-shadow:
+    0 12px 30px rgba(
+      54,
+      64,
+      66,
+      0.12
+    );
+
+  animation:
+    marketplace-dropdown-in 0.14s ease;
+}
+
+.marketplace-filter-dropdown--wide {
+  width: 235px;
+}
+
+
+/* ============================================================
+   SEÇÕES DO DROPDOWN
+============================================================ */
+
+.marketplace-filter-section {
+  padding: 4px;
+}
+
+.marketplace-filter-title {
+  display: block;
+
+  padding: 7px 7px 6px;
+
+  color: var(--color-text-secondary);
+
+  font-size: 0.61rem;
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+}
+
+
+/* ============================================================
+   OPÇÕES
+============================================================ */
+
+.marketplace-filter-options {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.marketplace-filter-option {
+  width: 100%;
+
+  min-height: 36px;
+
+  padding: 0 9px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  color: var(--color-text);
+
+  background: transparent;
+
+  border: 1px solid transparent;
+
+  border-radius: 5px;
+
+  font-size: 0.71rem;
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.marketplace-filter-option:hover {
+  background-color: var(--color-secondary);
+}
+
+.marketplace-filter-option--active {
+  color: var(--color-primary);
+
+  background-color: #f2f3f0;
+
+  border-color: var(--color-border);
+
+  font-weight: 800;
+}
+
+.marketplace-filter-check {
+  color: var(--color-success);
+
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+
+/* ============================================================
+   DIVISÓRIA
+============================================================ */
+
+.marketplace-filter-panel-divider {
+  height: 1px;
+
+  margin: 5px 0;
+
+  background-color: var(--color-border);
+}
+
+
+/* ============================================================
+   ORDENAÇÃO
+============================================================ */
+
+.marketplace-filter-sort {
+  padding-top: 4px;
+}
+
+.marketplace-sort-control {
+  padding: 0 3px 3px;
+}
+
+.marketplace-sort-control select {
+  width: 100%;
+  height: 36px;
+
+  padding: 0 9px;
+
+  color: var(--color-text);
+
+  background-color: var(--color-background);
+
+  border: 1px solid var(--color-border);
+
+  border-radius: 5px;
+
+  outline: none;
+
+  font-size: 0.69rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.marketplace-sort-control select:hover {
+  border-color: var(--color-primary);
+}
+
+.marketplace-sort-control select:focus {
+  border-color: var(--color-primary);
+
+  box-shadow:
+    0 0 0 2px rgba(
+      91,
+      109,
+      147,
+      0.08
+    );
+}
+
+
+/* ============================================================
+   FILTRO DE PONTOS
+============================================================ */
+
+.marketplace-filter-points {
+  padding-top: 4px;
+  padding-bottom: 7px;
+}
+
+.marketplace-filter-points-header {
+  padding: 0 7px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.marketplace-filter-points-header .marketplace-filter-title {
+  padding-right: 0;
+}
+
+.marketplace-filter-points-header strong {
+  min-width: 55px;
+
+  padding: 5px 7px;
+
+  color: var(--color-success);
+
+  background-color: #edf2ed;
+
+  border-radius: 5px;
+
+  font-size: 0.62rem;
+
+  text-align: center;
+}
+
+.marketplace-points-range {
+  width: calc(100% - 14px);
+
+  margin:
+    12px 7px 0;
+
+  accent-color: var(--color-primary);
+
+  cursor: pointer;
+}
+
+.marketplace-points-range-labels {
+  padding: 0 7px;
+
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 2px;
+
+  color: var(--color-text-secondary);
+
+  font-size: 0.54rem;
+}
+
+.marketplace-filter-points-limit {
+  display: block;
+
+  padding: 5px 7px 0;
+
+  color: var(--color-text-secondary);
+
+  font-size: 0.58rem;
+}
+
+
+/* ============================================================
+   INPUT DA BUSCA
+============================================================ */
+
+.marketplace-search input {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+
+  padding: 0 48px 0 13px;
+
+  color: var(--color-text);
+
+  background: transparent;
+
+  border: none;
+
+  outline: none;
+
+  font-size: var(--font-size-sm);
+}
+
+.marketplace-search input::placeholder {
+  color: #858d8f;
+}
+
+.marketplace-search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+
+/* ============================================================
+   LIMPAR BUSCA
+============================================================ */
+
+.marketplace-search-clear {
+  position: absolute;
+
+  right: 50px;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text-secondary);
+
+  background: none;
+
+  border: none;
+
+  border-radius: var(--radius-sm);
+
+  font-size: 1.3rem;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.marketplace-search-clear:hover {
+  color: var(--color-text);
+
+  background-color: var(--color-secondary);
+}
+
+
+/* ============================================================
+   BOTÃO DA BUSCA
+============================================================ */
+
+.marketplace-search-button {
+  width: 48px;
+  height: 46px;
+
+  flex: 0 0 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text-light);
+
+  background-color: var(--color-accent);
+
+  border: none;
+
+  border-radius: 0 7px 7px 0;
+
+  font-size: 1rem;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast);
+}
+
+.marketplace-search-button:hover {
+  background-color: #b47059;
+}
+
+
+/* ============================================================
+   AÇÕES
+============================================================ */
+
+.marketplace-user-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  flex: 0 0 auto;
+}
+
+.marketplace-action-wrapper {
+  position: relative;
+}
+
+.marketplace-action {
+  position: relative;
+
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text);
+
+  background: none;
+
+  border: none;
+
+  border-radius: var(--radius-sm);
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.marketplace-action:hover {
+  background-color: var(--color-secondary);
+}
+
+.marketplace-action-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  line-height: 1;
+}
+
+.marketplace-action-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+
+/* ============================================================
+   PONTOS
+============================================================ */
+
+.marketplace-points-value {
+  position: absolute;
+
+  right: -1px;
+  bottom: 1px;
+
+  min-width: 18px;
+  height: 18px;
+
+  padding: 0 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text-light);
+
+  background-color: var(--color-success);
+
+  border: 2px solid var(--color-surface);
+
+  border-radius: 4px;
+
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+
+
+/* ============================================================
+   NOTIFICAÇÕES
+============================================================ */
+
+.marketplace-notification-count {
+  position: absolute;
+
+  top: 1px;
+  right: 0;
+
+  min-width: 17px;
+  height: 17px;
+
+  padding: 0 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text-light);
+
+  background-color: var(--color-error);
+
+  border: 2px solid var(--color-surface);
+
+  border-radius: 4px;
+
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+
+.marketplace-menu-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  line-height: 1;
+}
+
+.marketplace-menu-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+
+/* ============================================================
+   DROPDOWNS
+============================================================ */
+
+.marketplace-notifications,
+.marketplace-user-menu {
+  position: absolute;
+
+  top: calc(100% + 12px);
+  right: 0;
+
+  background-color: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+
+  border-radius: var(--radius-sm);
+
+  box-shadow:
+    0 14px 36px rgba(
+      54,
+      64,
+      66,
+      0.15
+    );
+
+  animation:
+    marketplace-dropdown-in 0.15s ease;
+}
+
+.marketplace-notifications {
+  width: 350px;
+}
+
+.marketplace-user-menu {
+  width: 270px;
+
+  padding: 8px;
+}
+
+@keyframes marketplace-dropdown-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+
+/* ============================================================
+   CABEÇALHO DAS NOTIFICAÇÕES
+============================================================ */
+
+.marketplace-dropdown-header {
+  padding: 15px 16px;
+
+  border-bottom:
+    1px solid var(--color-border);
+
+  font-size: var(--font-size-sm);
+}
+
+.marketplace-notifications-empty {
+  padding: 30px 22px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+.marketplace-notifications-empty-icon {
+  margin-bottom: 10px;
+
+  color: var(--color-text-secondary);
+}
+
+.marketplace-notifications-empty strong {
+  font-size: var(--font-size-sm);
+}
+
+.marketplace-notifications-empty p {
+  margin-top: 7px;
+
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-xs);
+
+  line-height: 1.5;
+}
+
+
+/* ============================================================
+   MENU DO USUÁRIO
+============================================================ */
+
+.marketplace-user-menu-profile {
+  padding: 10px 8px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.marketplace-user-menu-avatar {
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text-light);
+
+  background-color: var(--color-accent);
+
+  border-radius: var(--radius-sm);
+
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.marketplace-user-menu-profile > div:last-child {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.marketplace-user-menu-profile strong {
+  overflow: hidden;
+
+  font-size: var(--font-size-sm);
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.marketplace-user-menu-profile span {
+  margin-top: 2px;
+
+  overflow: hidden;
+
+  color: var(--color-text-secondary);
+
+  font-size: 0.68rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.marketplace-menu-divider {
+  height: 1px;
+
+  margin: 6px 0;
+
+  background-color: var(--color-border);
+}
+
+.marketplace-menu-option {
+  width: 100%;
+  min-height: 42px;
+
+  padding: 0 10px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  color: var(--color-text);
+
+  background: none;
+
+  border: none;
+
+  border-radius: 4px;
+
+  font-size: var(--font-size-sm);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.marketplace-menu-option:hover {
+  background-color: var(--color-secondary);
+}
+
+.marketplace-menu-option--logout {
+  color: var(--color-error);
+}
+
+.marketplace-menu-option-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text-secondary);
+}
+
+.marketplace-menu-option--logout
+.marketplace-menu-option-icon {
+  color: var(--color-error);
+}
+
+
+/* ============================================================
+   ACESSIBILIDADE
+============================================================ */
+
+.sr-only {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;
+
+  border: 0;
+}
+
+
+/* ============================================================
+   TABLET
+============================================================ */
+
+@media (max-width: 1100px) {
+
+  .marketplace-navbar-inner {
+    width: calc(100% - 28px);
+
+    gap: 9px;
+  }
+
+  .marketplace-navbar-logo {
+    width: 58px;
+
+    flex-basis: 58px;
+  }
+
+  .marketplace-navbar-logo .logo {
+    width: 56px;
+  }
+
+  .marketplace-user-area {
+    min-width: 220px;
+    max-width: 270px;
+
+    gap: 8px;
+  }
+
+  .marketplace-user-avatar {
+    width: 44px;
+    height: 44px;
+
+    flex-basis: 44px;
+  }
+
+  .marketplace-user-greeting strong {
+    font-size: 0.8rem;
+  }
+
+  .marketplace-user-greeting > span {
+    font-size: 0.67rem;
+  }
+
+  .marketplace-user-greeting small {
+    font-size: 0.59rem;
+  }
+
+  .marketplace-search {
+    min-width: 210px;
+  }
+
+  .marketplace-search-filter-button {
+    min-width: 78px;
+
+    padding: 0 8px;
+  }
+
+  .marketplace-action {
+    width: 38px;
+    height: 38px;
+
+    flex-basis: 38px;
+  }
+
+  .marketplace-action-icon {
+    font-size: 1rem;
+  }
+}
+
+
+/* ============================================================
+   TABLET MENOR
+============================================================ */
+
+@media (max-width: 900px) {
+
+  .marketplace-navbar-inner {
+    min-height: 76px;
+
+    gap: 7px;
+  }
+
+  .marketplace-navbar-logo {
+    width: 50px;
+
+    flex-basis: 50px;
+  }
+
+  .marketplace-navbar-logo .logo {
+    width: 48px;
+  }
+
+  .marketplace-user-area {
+    min-width: 185px;
+    max-width: 220px;
+  }
+
+  .marketplace-user-avatar {
+    width: 40px;
+    height: 40px;
+
+    flex-basis: 40px;
+
+    font-size: 0.72rem;
+  }
+
+  .marketplace-user-greeting strong {
+    font-size: 0.75rem;
+  }
+
+  .marketplace-user-greeting > span {
+    font-size: 0.62rem;
+  }
+
+  .marketplace-user-greeting small {
+    display: none;
+  }
+
+  .marketplace-search {
+    min-width: 160px;
+  }
+
+  .marketplace-search input {
+    padding-left: 10px;
+
+    font-size: 0.76rem;
+  }
+
+  .marketplace-search input::placeholder {
+    font-size: 0.7rem;
+  }
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 700px) {
+
+  .marketplace-navbar-inner {
+    width: calc(100% - 16px);
+
+    min-height: 126px;
+
+    padding: 8px 0;
+
+    display: grid;
+
+    grid-template-columns:
+      auto
+      minmax(0, 1fr)
+      auto;
+
+    grid-template-rows:
+      62px
+      44px;
+
+    column-gap: 6px;
+    row-gap: 6px;
+  }
+
+
+  /* ------------------------------------------
+     LOGO
+  ------------------------------------------ */
+
+  .marketplace-navbar-logo {
+    width: 44px;
+    height: 44px;
+
+    flex: none;
+  }
+
+  .marketplace-navbar-logo .logo {
+    width: 42px;
+  }
+
+
+  /* ------------------------------------------
+     USUÁRIO
+  ------------------------------------------ */
+
+  .marketplace-user-area {
+    width: auto;
+    max-width: none;
+    min-width: 0;
+
+    padding: 2px;
+
+    gap: 7px;
+  }
+
+  .marketplace-user-community {
+    display: block;
+
+    overflow: hidden;
+
+    max-width: 100%;
+
+    font-size: 0.58rem;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .marketplace-user-avatar {
+    width: 42px;
+    height: 42px;
+
+    flex-basis: 42px;
+
+    border-width: 2px;
+  }
+
+  .marketplace-user-greeting strong {
+    font-size: 0.75rem;
+  }
+
+  .marketplace-user-greeting > span {
+    margin-top: 3px;
+
+    font-size: 0.61rem;
+  }
+
+  .marketplace-user-greeting small {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 0.55rem;
+  }
+
+
+  /* ------------------------------------------
+     AÇÕES
+  ------------------------------------------ */
+
+  .marketplace-user-actions {
+    gap: 0;
+  }
+
+  .marketplace-action {
+    width: 34px;
+    height: 34px;
+
+    flex-basis: 34px;
+  }
+
+  .marketplace-action-icon {
+    font-size: 0.9rem;
+  }
+
+  .marketplace-points-value {
+    min-width: 16px;
+    height: 16px;
+
+    padding: 0 3px;
+
+    font-size: 0.5rem;
+  }
+
+  .marketplace-notification-count {
+    min-width: 16px;
+    height: 16px;
+
+    font-size: 0.5rem;
+  }
+
+
+  /* ------------------------------------------
+     BUSCA
+  ------------------------------------------ */
+
+  .marketplace-search {
+    grid-column: 1 / -1;
+    grid-row: 2;
+
+    width: 100%;
+
+    max-width: none;
+
+    min-width: 0;
+
+    height: 44px;
+  }
+
+  .marketplace-search-filter-button {
+    min-width: 72px;
+
+    padding: 0 7px;
+
+    font-size: 0.73rem;
+  }
+
+  .marketplace-search input {
+    padding: 0 43px 0 9px;
+
+    font-size: 0.75rem;
+  }
+
+  .marketplace-search input::placeholder {
+    font-size: 0.67rem;
+  }
+
+  .marketplace-search-button {
+    width: 42px;
+    height: 42px;
+
+    flex-basis: 42px;
+  }
+
+  .marketplace-search-clear {
+    right: 43px;
+  }
+
+
+  /* ------------------------------------------
+     DROPDOWN DO FILTRO MOBILE
+  ------------------------------------------ */
+
+  .marketplace-filter-dropdown {
+    width: 205px;
+
+    max-width:
+      calc(100vw - 30px);
+  }
+
+  .marketplace-filter-dropdown--wide {
+    width: 225px;
+
+    max-width:
+      calc(100vw - 30px);
+  }
+
+
+  /* ------------------------------------------
+     NOTIFICAÇÕES MOBILE
+  ------------------------------------------ */
+
+  .marketplace-notifications {
+    position: fixed;
+
+    top: 134px;
+    right: 8px;
+    left: 8px;
+
+    width: auto;
+
+    max-height:
+      calc(100vh - 150px);
+
+    overflow-y: auto;
+  }
+
+
+  /* ------------------------------------------
+     MENU MOBILE
+  ------------------------------------------ */
+
+  .marketplace-user-menu {
+    position: fixed;
+
+    top: 70px;
+    right: 8px;
+
+    width:
+      min(
+        270px,
+        calc(100vw - 16px)
+      );
+  }
+}
+
+
+/* ============================================================
+   MOBILE PEQUENO
+============================================================ */
+
+@media (max-width: 480px) {
+
+  .marketplace-navbar-inner {
+    width: calc(100% - 12px);
+
+    column-gap: 4px;
+  }
+
+  .marketplace-navbar-logo {
+    width: 40px;
+  }
+
+  .marketplace-navbar-logo .logo {
+    width: 39px;
+  }
+
+  .marketplace-user-area {
+    gap: 5px;
+  }
+
+  .marketplace-user-avatar {
+    width: 38px;
+    height: 38px;
+
+    flex-basis: 38px;
+  }
+
+  .marketplace-user-greeting strong {
+    font-size: 0.69rem;
+  }
+
+  .marketplace-user-greeting > span {
+    font-size: 0.57rem;
+  }
+
+  .marketplace-user-greeting small {
+    font-size: 0.51rem;
+  }
+
+  .marketplace-action {
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
+  }
+
+  .marketplace-action-icon {
+    font-size: 0.85rem;
+  }
+
+  .marketplace-search-filter-button {
+    min-width: 64px;
+
+    padding: 0 5px;
+  }
+
+  .marketplace-search-filter-button span:first-child {
+    max-width: 42px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+  }
+
+  .marketplace-search-divider {
+    height: 24px;
+  }
+
+  .marketplace-search input {
+    padding-left: 7px;
+  }
+
+  .marketplace-search input::placeholder {
+    font-size: 0.62rem;
+  }
+
+  .marketplace-search-button {
+    width: 40px;
+    height: 42px;
+
+    flex-basis: 40px;
+  }
+
+  .marketplace-search-clear {
+    right: 41px;
+  }
+
+  .marketplace-filter-dropdown,
+  .marketplace-filter-dropdown--wide {
+    width:
+      min(
+        220px,
+        calc(100vw - 20px)
+      );
+  }
+}
+
+
+/* ============================================================
+   CELULARES MUITO PEQUENOS
+============================================================ */
+
+@media (max-width: 380px) {
+
+  .marketplace-navbar-inner {
+    grid-template-columns:
+      auto
+      minmax(0, 1fr)
+      auto;
+  }
+
+  .marketplace-user-greeting small {
+    display: none;
+  }
+
+  .marketplace-user-greeting > span {
+    display: none;
+  }
+
+  .marketplace-user-greeting strong {
+    font-size: 0.68rem;
+  }
+
+  .marketplace-action {
+    width: 30px;
+    height: 30px;
+
+    flex-basis: 30px;
+  }
+
+  .marketplace-action-icon {
+    font-size: 0.8rem;
+  }
+
+  .marketplace-search-filter-button {
+    min-width: 58px;
+
+    font-size: 0.68rem;
+  }
+
+  .marketplace-search input::placeholder {
+    font-size: 0.58rem;
+  }
+
+  .marketplace-user-community {
+    display: none;
+  }
+
+  .marketplace-filter-dropdown,
+  .marketplace-filter-dropdown--wide {
+    width:
+      calc(100vw - 16px);
+  }
+}

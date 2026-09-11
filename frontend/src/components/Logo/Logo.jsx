@@ -1,9 +1,18 @@
-import logo from '../../assets/logo.png';
+import logoAzul from "../../assets/LogoConectaNB_Azul.png";
+import logoLaranja from "../../assets/LogoNB_Laranja.png";
 
-function Logo({ variant = 'default' }) {
+const logos = {
+  login: logoAzul,
+  navbar: logoLaranja,
+};
+
+function Logo({ variant = "login" }) {
+  const logoSelecionada =
+    logos[variant] || logos.login;
+
   return (
     <img
-      src={logo}
+      src={logoSelecionada}
       alt="Conecta Bandeirante"
       className={`logo logo--${variant}`}
     />

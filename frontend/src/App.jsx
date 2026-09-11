@@ -11,6 +11,7 @@ import CadastroUsuario from "./pages/CadastroUsuario/CadastroUsuario";
 import CadastroParceiro from "./pages/CadastroParceiro/CadastroParceiro";
 import Anuncios from "./pages/Anuncios/Anuncios";
 import NovoAnuncio from "./pages/NovoAnuncio/NovoAnuncio";
+import Resgates from "./pages/Resgates/Resgates";
 import ProtectedRoute from "./auth/ProtectedRoute";
 
 function App() {
@@ -57,6 +58,11 @@ function App() {
           <Route
             path="/anuncios"
             element={<Anuncios />}
+          />
+
+          <Route
+            path="/resgates"
+            element={<Resgates />}
           />
 
         </Route>

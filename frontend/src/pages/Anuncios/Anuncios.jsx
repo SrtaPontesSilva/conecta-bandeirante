@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Logo from "../../components/Logo/Logo";
+import MarketplaceNavbar from "../../components/MarketplaceNavbar/MarketplaceNavbar";
+import BottomNavigation from "../../components/BottomNavigation/BottomNavigation.jsx";
 import api from "../../services/api";
 
 import "./Anuncios.css";
@@ -85,26 +86,13 @@ function Anuncios() {
 
   return (
     <main className="anuncios-page">
-      <header className="market-header">
-        <div className="market-header-inner">
-          <button
-            type="button"
-            className="market-logo"
-            onClick={() => navigate("/inicio")}
-            aria-label="Ir para o início"
-          >
-            <Logo />
-          </button>
-
-          <button
-            type="button"
-            className="market-logout"
-            onClick={handleLogout}
-          >
-            Sair
-          </button>
-        </div>
-      </header>
+      <MarketplaceNavbar
+        pessoa={pessoa}
+        busca={busca}
+        setBusca={setBusca}
+        filtro={filtro}
+        setFiltro={setFiltro}
+      />
 
       <section className="market-content">
         <div className="market-welcome">
@@ -121,96 +109,6 @@ function Anuncios() {
             dentro da nossa comunidade.
           </p>
         </div>
-
-        <div className="market-search">
-          <label
-            htmlFor="busca-anuncios"
-            className="sr-only"
-          >
-            Buscar anúncios
-          </label>
-
-          <span
-            className="market-search-icon"
-            aria-hidden="true"
-          >
-            🔎
-          </span>
-
-          <input
-            id="busca-anuncios"
-            type="search"
-            value={busca}
-            onChange={(event) =>
-              setBusca(event.target.value)
-            }
-            placeholder="Buscar livros, uniformes, materiais..."
-          />
-
-          {busca && (
-            <button
-              type="button"
-              className="market-search-clear"
-              onClick={() => setBusca("")}
-              aria-label="Limpar busca"
-            >
-              ×
-            </button>
-          )}
-        </div>
-
-        <nav
-          className="market-filters"
-          aria-label="Filtrar anúncios"
-        >
-          <button
-            type="button"
-            className={
-              filtro === "todos"
-                ? "market-filter market-filter--active"
-                : "market-filter"
-            }
-            onClick={() => setFiltro("todos")}
-          >
-            Todos
-          </button>
-
-          <button
-            type="button"
-            className={
-              filtro === "doacao"
-                ? "market-filter market-filter--active market-filter--donation"
-                : "market-filter"
-            }
-            onClick={() => setFiltro("doacao")}
-          >
-            Doação
-          </button>
-
-          <button
-            type="button"
-            className={
-              filtro === "troca"
-                ? "market-filter market-filter--active"
-                : "market-filter"
-            }
-            onClick={() => setFiltro("troca")}
-          >
-            Troca
-          </button>
-
-          <button
-            type="button"
-            className={
-              filtro === "venda"
-                ? "market-filter market-filter--active"
-                : "market-filter"
-            }
-            onClick={() => setFiltro("venda")}
-          >
-            Venda
-          </button>
-        </nav>
 
         <div className="market-results-header">
           <h2>
@@ -358,54 +256,7 @@ function Anuncios() {
           )}
       </section>
 
-      <nav
-        className="bottom-navigation"
-        aria-label="Navegação principal"
-      >
-
-        <button
-          type="button"
-          className="bottom-navigation-item"
-          onClick={() =>
-            navigate("/parceiros")
-          }
-        >
-          <span aria-hidden="true">
-            🏪
-          </span>
-
-          <small>
-            Parceiros
-          </small>
-        </button>
-
-        <button
-          type="button"
-          className="bottom-navigation-add"
-          onClick={() =>
-            navigate("/anuncios/novo")
-          }
-          aria-label="Publicar novo anúncio"
-        >
-          +
-        </button>
-
-        <button
-          type="button"
-          className="bottom-navigation-item"
-          onClick={() =>
-            navigate("/perfil")
-          }
-        >
-          <span aria-hidden="true">
-            👤
-          </span>
-
-          <small>
-            Perfil
-          </small>
-        </button>
-      </nav>
+      <BottomNavigation />
     </main>
   );
 }

@@ -1,0 +1,233 @@
+/* =========================================
+   RODAPÉ
+========================================= */
+
+.bottom-navigation {
+  position: fixed;
+
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  z-index: 30;
+
+  min-height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: clamp(28px, 8vw, 100px);
+
+  padding-top: 4px;
+  padding-bottom: env(safe-area-inset-bottom);
+
+  background-color: rgba(255, 255, 255, 0.97);
+
+  border-top: 1px solid var(--color-border);
+}
+
+
+/* =========================================
+   ITEM DO RODAPÉ
+========================================= */
+
+.bottom-navigation-item {
+  min-width: 58px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 3px;
+
+  padding: 5px;
+
+  color: var(--color-text-secondary);
+
+  background: none;
+  border: none;
+
+  transition:
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.bottom-navigation-item:hover {
+  color: var(--color-primary);
+
+  transform: translateY(-1px);
+}
+
+.bottom-navigation-item svg {
+  width: 21px;
+  height: 21px;
+}
+
+.bottom-navigation-item small {
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.bottom-navigation-item--active {
+  color: var(--color-primary);
+
+  font-weight: 700;
+}
+
+
+/* =========================================
+   BOTÃO CENTRAL +
+========================================= */
+
+.bottom-navigation-add {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  color: var(--color-text-light);
+
+  background-color: var(--color-accent);
+
+  border: none;
+  border-radius: var(--radius-md);
+
+  box-shadow:
+    0 4px 14px rgba(54, 64, 66, 0.18);
+
+  transition:
+    transform var(--transition-fast),
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.bottom-navigation-add svg {
+  width: 24px;
+  height: 24px;
+}
+
+.bottom-navigation-add:hover {
+  transform: translateY(-2px);
+
+  background-color: #b96e55;
+
+  box-shadow:
+    0 6px 18px rgba(54, 64, 66, 0.22);
+}
+
+.bottom-navigation-add:active {
+  transform: translateY(0);
+}
+
+
+/* =========================================
+   TABLET PEQUENO
+========================================= */
+
+@media (max-width: 700px) {
+  .bottom-navigation {
+    min-height: 68px;
+
+    gap: 20vw;
+  }
+
+  .bottom-navigation-item {
+    min-width: 52px;
+  }
+
+  .bottom-navigation-add {
+    width: 46px;
+    height: 46px;
+  }
+
+  .bottom-navigation-add svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+
+/* =========================================
+   MOBILE PEQUENO
+========================================= */
+
+@media (max-width: 520px) {
+  .bottom-navigation {
+    min-height: 64px;
+
+    gap: 17vw;
+  }
+
+  .bottom-navigation-item {
+    min-width: 48px;
+
+    gap: 2px;
+  }
+
+  .bottom-navigation-item svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .bottom-navigation-item small {
+    font-size: 0.62rem;
+  }
+
+  .bottom-navigation-add {
+    width: 44px;
+    height: 44px;
+  }
+
+  .bottom-navigation-add svg {
+    width: 21px;
+    height: 21px;
+  }
+}
+
+
+/* =========================================
+   MOBILE MUITO PEQUENO
+========================================= */
+
+@media (max-width: 420px) {
+  .bottom-navigation {
+    min-height: 60px;
+
+    gap: 14vw;
+  }
+
+  .bottom-navigation-item svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .bottom-navigation-item small {
+    font-size: 0.58rem;
+  }
+
+  .bottom-navigation-add {
+    width: 42px;
+    height: 42px;
+  }
+
+  .bottom-navigation-add svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+
+/* =========================================
+   CELULAR MUITO ESTREITO
+========================================= */
+
+@media (max-width: 350px) {
+  .bottom-navigation {
+    gap: 10vw;
+  }
+}
