@@ -9,7 +9,7 @@ function Cadastro() {
       <header className="cadastro-header">
         <div className="cadastro-header-inner">
           <Link to="/login" aria-label="Voltar para o login">
-            <Logo />
+            <Logo variant="white" />
           </Link>
         </div>
       </header>

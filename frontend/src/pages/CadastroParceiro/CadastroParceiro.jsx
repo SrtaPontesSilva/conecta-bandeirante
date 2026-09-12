@@ -106,7 +106,7 @@ function CadastroParceiro() {
     <main className="cadastro-page">
 
       <div className="cadastro-logo">
-        <Logo variant="square" />
+        <Logo variant="navbar" />
       </div>
 
       <section className="cadastro-card">
@@ -319,7 +319,10 @@ function CadastroParceiro() {
           </div>
 
           {erro && (
-            <p className="form-message form-error">
+            <p
+              className="form-message form-error"
+              role="alert"
+            >
               {erro}
             </p>
           )}

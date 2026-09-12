@@ -1,0 +1,25 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+const titles = {
+  "/login": "ConectaNB",
+  "/inicio": "ConectaNB",
+  "/anuncios": "Anúncios | ConectaNB",
+  "/anuncios/novo": "Novo anúncio | ConectaNB",
+  "/resgates": "Resgates | ConectaNB",
+  "/cadastro": "Cadastro | ConectaNB",
+  "/cadastro/usuario": "Cadastro de usuário | ConectaNB",
+  "/cadastro/parceiro": "Cadastro de parceiro | ConectaNB",
+};
+
+function PageTitle() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    document.title = titles[pathname] || "ConectaNB";
+  }, [pathname]);
+
+  return null;
+}
+
+export default PageTitle;

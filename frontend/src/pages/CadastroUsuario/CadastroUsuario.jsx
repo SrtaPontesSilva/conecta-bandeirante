@@ -89,7 +89,7 @@ function CadastroUsuario() {
     <main className="cadastro-page">
 
       <div className="cadastro-logo">
-        <Logo variant="square" />
+        <Logo variant="navbar" />
       </div>
 
       <section className="cadastro-card">
@@ -295,13 +295,19 @@ function CadastroUsuario() {
           </div>
 
           {erro && (
-            <p className="form-message form-error">
+            <p
+              className="form-message form-error"
+              role="alert"
+            >
               {erro}
             </p>
           )}
 
           {sucesso && (
-            <p className="form-message form-success">
+            <p
+              className="form-message form-success"
+              role="status"
+            >
               {sucesso}
             </p>
           )}

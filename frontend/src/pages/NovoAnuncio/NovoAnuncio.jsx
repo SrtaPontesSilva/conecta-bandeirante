@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 import MarketplaceNavbar from "../../components/MarketplaceNavbar/MarketplaceNavbar";
 import {
-  IconArrowLeft,
   IconChevronLeft,
   IconChevronRight,
   IconCalendar,
@@ -206,19 +205,6 @@ function NovoAnuncio() {
 
   /*
    * ============================================================
-   * BUSCA DA NAVBAR
-   * ------------------------------------------------------------
-   * Esta tela não filtra anúncios, mas a navbar compartilhada
-   * exige um campo controlado. Mantemos um estado local apenas
-   * para satisfazer o componente.
-   * ============================================================
-   */
-
-  const [busca, setBusca] = useState("");
-  const [filtro, setFiltro] = useState("todos");
-
-  /*
-   * ============================================================
    * FECHAR CALENDÁRIO AO CLICAR FORA / ESC
    * ============================================================
    */
@@ -411,26 +397,9 @@ function NovoAnuncio() {
     <main className="novo-anuncio-page">
       <MarketplaceNavbar
         pessoa={pessoa}
-        busca={busca}
-        setBusca={setBusca}
-        filtro={filtro}
-        setFiltro={setFiltro}
+        tituloPagina="Novo anúncio"
+        aoVoltarPagina={voltarInicio}
       />
-
-      <header className="novo-anuncio-header">
-        <button
-          type="button"
-          className="novo-anuncio-back"
-          onClick={voltarInicio}
-        >
-          <IconArrowLeft size={17} />
-          <span>Voltar</span>
-        </button>
-
-        <h1>Novo anúncio</h1>
-
-        <div />
-      </header>
 
       <form
         className="novo-anuncio-content"

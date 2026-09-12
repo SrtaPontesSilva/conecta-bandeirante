@@ -12,93 +12,110 @@ import CadastroParceiro from "./pages/CadastroParceiro/CadastroParceiro";
 import Anuncios from "./pages/Anuncios/Anuncios";
 import NovoAnuncio from "./pages/NovoAnuncio/NovoAnuncio";
 import Resgates from "./pages/Resgates/Resgates";
+
 import ProtectedRoute from "./auth/ProtectedRoute";
+import PageTitle from "./components/PageTitle/PageTitle";
+
+import AccessibilityButton from "./components/Accessibility/AccessibilityButton";
+import { AccessibilityProvider } from "./contexts/AccessibilityContext";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
+      <AccessibilityProvider>
 
-        {/* ================================
-            ROTAS PÚBLICAS
-        ================================= */}
+        <PageTitle />
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+        <Routes>
 
-        <Route
-          path="/cadastro"
-          element={<Cadastro />}
-        />
-
-        <Route
-          path="/cadastro/usuario"
-          element={<CadastroUsuario />}
-        />
-
-        <Route
-          path="/cadastro/parceiro"
-          element={<CadastroParceiro />}
-        />
-
-        {/* ================================
-            ROTAS PARA QUALQUER
-            USUÁRIO AUTENTICADO
-        ================================= */}
-
-        <Route element={<ProtectedRoute />}>
+          {/* ================================
+              ROTAS PÚBLICAS
+          ================================= */}
 
           <Route
-            path="/inicio"
-            element={<Anuncios />}
+            path="/login"
+            element={<Login />}
           />
 
           <Route
-            path="/anuncios"
-            element={<Anuncios />}
+            path="/cadastro"
+            element={<Cadastro />}
           />
 
           <Route
-            path="/resgates"
-            element={<Resgates />}
+            path="/cadastro/usuario"
+            element={<CadastroUsuario />}
           />
-
-        </Route>
-
-        {/* ================================
-            ROTAS EXCLUSIVAS DE USUÁRIO
-        ================================= */}
-
-        <Route
-          element={
-            <ProtectedRoute tipoPermitido="usuario" />
-          }
-        >
 
           <Route
-            path="/anuncios/novo"
-            element={<NovoAnuncio />}
+            path="/cadastro/parceiro"
+            element={<CadastroParceiro />}
           />
 
-        </Route>
+          {/* ================================
+              ROTAS PARA QUALQUER
+              USUÁRIO AUTENTICADO
+          ================================= */}
 
-        {/* ================================
-            ROTA PADRÃO
-        ================================= */}
+          <Route element={<ProtectedRoute />}>
 
-        <Route
-          path="*"
-          element={
-            <Navigate
-              to="/login"
-              replace
+            <Route
+              path="/inicio"
+              element={<Anuncios />}
             />
-          }
-        />
 
-      </Routes>
+            <Route
+              path="/anuncios"
+              element={<Anuncios />}
+            />
+
+            <Route
+              path="/resgates"
+              element={<Resgates />}
+            />
+
+          </Route>
+
+          {/* ================================
+              ROTAS EXCLUSIVAS DE USUÁRIO
+          ================================= */}
+
+          <Route
+            element={
+              <ProtectedRoute tipoPermitido="usuario" />
+            }
+          >
+
+            <Route
+              path="/anuncios/novo"
+              element={<NovoAnuncio />}
+            />
+
+          </Route>
+
+          {/* ================================
+              ROTA PADRÃO
+          ================================= */}
+
+          <Route
+            path="*"
+            element={
+              <Navigate
+                to="/login"
+                replace
+              />
+            }
+          />
+
+        </Routes>
+
+        {/* =====================================
+            ACESSIBILIDADE GLOBAL
+        ====================================== */}
+
+        <AccessibilityButton />
+
+      </AccessibilityProvider>
     </BrowserRouter>
   );
 }

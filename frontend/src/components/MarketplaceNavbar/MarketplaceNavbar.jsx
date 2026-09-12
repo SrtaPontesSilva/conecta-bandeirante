@@ -10,6 +10,7 @@ import {
   IconUser,
   IconClipboard,
   IconLogout,
+  IconArrowLeft,
 } from "../Icons/Icons";
 
 import "./MarketplaceNavbar.css";
@@ -25,6 +26,8 @@ function MarketplaceNavbar({
   setOrdenacao: setOrdenacaoExterna,
   pontosMax: pontosMaxExterno,
   setPontosMax: setPontosMaxExterno,
+  tituloPagina,
+  aoVoltarPagina,
 }) {
   const navigate = useNavigate();
 
@@ -32,6 +35,18 @@ function MarketplaceNavbar({
   const [menuAberto, setMenuAberto] = useState(false);
   const [notificacoesAbertas, setNotificacoesAbertas] =
     useState(false);
+
+  /*
+   * ============================================================
+   * MODO DA NAVBAR
+   * ------------------------------------------------------------
+   * Quando `tituloPagina` é informado, a navbar exibe um botão
+   * de voltar + o título da tela no lugar da barra de busca.
+   * Usado em telas de formulário, como "Novo anúncio".
+   * ============================================================
+   */
+
+  const modoTitulo = Boolean(tituloPagina);
 
   /*
    * ============================================================
@@ -203,6 +218,20 @@ function MarketplaceNavbar({
 
   /*
    * ============================================================
+   * VOLTAR (MODO TÍTULO)
+   * ============================================================
+   */
+
+  function handleVoltarPagina() {
+    if (aoVoltarPagina) {
+      aoVoltarPagina();
+    } else {
+      navigate(-1);
+    }
+  }
+
+  /*
+   * ============================================================
    * LOGOUT
    * ============================================================
    */
@@ -351,228 +380,247 @@ function MarketplaceNavbar({
         </button>
 
         {/* ====================================================
-            BUSCA
+            BUSCA (padrão) OU TÍTULO DA PÁGINA (formulários)
         ===================================================== */}
 
-        <form
-          className="marketplace-search"
-          onSubmit={handleSubmitBusca}
-        >
-          <div
-            className="marketplace-search-filter"
-            ref={filtroRef}
-          >
+        {modoTitulo ? (
+          <div className="marketplace-page-title-block">
             <button
               type="button"
-              className="marketplace-search-filter-button"
-              onClick={() =>
-                setFiltroAberto(
-                  (estado) => !estado
-                )
-              }
-              aria-haspopup="dialog"
-              aria-expanded={filtroAberto}
+              className="marketplace-page-back"
+              onClick={handleVoltarPagina}
+              aria-label="Voltar"
             >
-              <span>
-                {filtroSelecionado.label}
-              </span>
-
-              <span
-                className={
-                  filtroAberto
-                    ? "marketplace-search-chevron marketplace-search-chevron--open"
-                    : "marketplace-search-chevron"
-                }
-                aria-hidden="true"
-              >
-                ▾
-              </span>
+              <IconArrowLeft size={18} />
             </button>
 
-            {filtroAberto && (
-              <div
-                className={
-                  contexto === "resgates"
-                    ? "marketplace-filter-dropdown marketplace-filter-dropdown--wide"
-                    : "marketplace-filter-dropdown"
+            <div className="marketplace-page-title-divider" />
+
+            <h1 className="marketplace-page-title">
+              {tituloPagina}
+            </h1>
+          </div>
+        ) : (
+          <form
+            className="marketplace-search"
+            onSubmit={handleSubmitBusca}
+          >
+            <div
+              className="marketplace-search-filter"
+              ref={filtroRef}
+            >
+              <button
+                type="button"
+                className="marketplace-search-filter-button"
+                onClick={() =>
+                  setFiltroAberto(
+                    (estado) => !estado
+                  )
                 }
-                role="dialog"
-                aria-label="Filtros"
+                aria-haspopup="dialog"
+                aria-expanded={filtroAberto}
               >
+                <span>
+                  {filtroSelecionado.label}
+                </span>
 
-                {/* ==================================================
-                    OPÇÕES DE NICHO / TIPO
-                =================================================== */}
+                <span
+                  className={
+                    filtroAberto
+                      ? "marketplace-search-chevron marketplace-search-chevron--open"
+                      : "marketplace-search-chevron"
+                  }
+                  aria-hidden="true"
+                >
+                  ▾
+                </span>
+              </button>
 
-                <div className="marketplace-filter-section marketplace-filter-niches">
-                  <span className="marketplace-filter-title">
-                    {contexto === "resgates"
-                      ? "Nicho"
-                      : "Tipo de anúncio"}
-                  </span>
+              {filtroAberto && (
+                <div
+                  className={
+                    contexto === "resgates"
+                      ? "marketplace-filter-dropdown marketplace-filter-dropdown--wide"
+                      : "marketplace-filter-dropdown"
+                  }
+                  role="dialog"
+                  aria-label="Filtros"
+                >
 
-                  <div className="marketplace-filter-options">
-                    {filtros.map((item) => (
-                      <button
-                        key={item.valor}
-                        type="button"
-                        className={
-                          filtro === item.valor
-                            ? "marketplace-filter-option marketplace-filter-option--active"
-                            : "marketplace-filter-option"
-                        }
-                        onClick={() =>
-                          selecionarFiltro(
-                            item.valor
-                          )
-                        }
-                      >
-                        <span>
-                          {item.label}
+                  {/* ==================================================
+                      OPÇÕES DE NICHO / TIPO
+                  =================================================== */}
+
+                  <div className="marketplace-filter-section marketplace-filter-niches">
+                    <span className="marketplace-filter-title">
+                      {contexto === "resgates"
+                        ? "Nicho"
+                        : "Tipo de anúncio"}
+                    </span>
+
+                    <div className="marketplace-filter-options">
+                      {filtros.map((item) => (
+                        <button
+                          key={item.valor}
+                          type="button"
+                          className={
+                            filtro === item.valor
+                              ? "marketplace-filter-option marketplace-filter-option--active"
+                              : "marketplace-filter-option"
+                          }
+                          onClick={() =>
+                            selecionarFiltro(
+                              item.valor
+                            )
+                          }
+                        >
+                          <span>
+                            {item.label}
+                          </span>
+
+                          {filtro === item.valor && (
+                            <span
+                              aria-hidden="true"
+                              className="marketplace-filter-check"
+                            >
+                              ✓
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* ==================================================
+                      FILTROS DE RESGATES
+                  =================================================== */}
+
+                  {contexto === "resgates" && (
+                    <>
+                      <div className="marketplace-filter-panel-divider" />
+
+                      {/* ============================================
+                          ORDENAÇÃO
+                      ============================================= */}
+
+                      <div className="marketplace-filter-section marketplace-filter-sort">
+                        <span className="marketplace-filter-title">
+                          Ordenar
                         </span>
 
-                        {filtro === item.valor && (
-                          <span
-                            aria-hidden="true"
-                            className="marketplace-filter-check"
+                        <div className="marketplace-sort-control">
+                          <select
+                            value={ordenacao}
+                            onChange={(event) =>
+                              alterarOrdenacao(
+                                event.target.value
+                              )
+                            }
+                            aria-label="Ordenar benefícios"
                           >
-                            ✓
+                            <option value="recentes">
+                              Mais recentes
+                            </option>
+
+                            <option value="menor_pontos">
+                              Menor pontuação
+                            </option>
+
+                            <option value="maior_pontos">
+                              Maior pontuação
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* ============================================
+                          LIMITE DE PONTOS
+                      ============================================= */}
+
+                      <div className="marketplace-filter-section marketplace-filter-points">
+                        <div className="marketplace-filter-points-header">
+                          <span className="marketplace-filter-title">
+                            Quanto você quer gastar?
                           </span>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
 
-                {/* ==================================================
-                    FILTROS DE RESGATES
-                =================================================== */}
+                          <strong>
+                            {pontosMax} pts
+                          </strong>
+                        </div>
 
-                {contexto === "resgates" && (
-                  <>
-                    <div className="marketplace-filter-panel-divider" />
-
-                    {/* ============================================
-                        ORDENAÇÃO
-                    ============================================= */}
-
-                    <div className="marketplace-filter-section marketplace-filter-sort">
-                      <span className="marketplace-filter-title">
-                        Ordenar
-                      </span>
-
-                      <div className="marketplace-sort-control">
-                        <select
-                          value={ordenacao}
+                        <input
+                          type="range"
+                          min="0"
+                          max="500"
+                          step="10"
+                          value={pontosMax}
                           onChange={(event) =>
-                            alterarOrdenacao(
+                            alterarPontosMax(
                               event.target.value
                             )
                           }
-                          aria-label="Ordenar benefícios"
-                        >
-                          <option value="recentes">
-                            Mais recentes
-                          </option>
+                          className="marketplace-points-range"
+                          aria-label="Quantidade máxima de pontos"
+                        />
 
-                          <option value="menor_pontos">
-                            Menor pontuação
-                          </option>
+                        <div className="marketplace-points-range-labels">
+                          <span>0 pts</span>
 
-                          <option value="maior_pontos">
-                            Maior pontuação
-                          </option>
-                        </select>
-                      </div>
-                    </div>
+                          <span>
+                            500 pts
+                          </span>
+                        </div>
 
-                    {/* ============================================
-                        LIMITE DE PONTOS
-                    ============================================= */}
-
-                    <div className="marketplace-filter-section marketplace-filter-points">
-                      <div className="marketplace-filter-points-header">
-                        <span className="marketplace-filter-title">
-                          Quanto você quer gastar?
-                        </span>
-
-                        <strong>
-                          {pontosMax} pts
-                        </strong>
-                      </div>
-
-                      <input
-                        type="range"
-                        min="0"
-                        max="500"
-                        step="10"
-                        value={pontosMax}
-                        onChange={(event) =>
-                          alterarPontosMax(
-                            event.target.value
-                          )
-                        }
-                        className="marketplace-points-range"
-                        aria-label="Quantidade máxima de pontos"
-                      />
-
-                      <div className="marketplace-points-range-labels">
-                        <span>0 pts</span>
-
-                        <span>
-                          500 pts
+                        <span className="marketplace-filter-points-limit">
+                          até {pontosMax} pts
                         </span>
                       </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
 
-                      <span className="marketplace-filter-points-limit">
-                        até {pontosMax} pts
-                      </span>
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
+            <div className="marketplace-search-divider" />
 
-          <div className="marketplace-search-divider" />
-
-          <label
-            htmlFor="marketplace-search-input"
-            className="sr-only"
-          >
-            Pesquisar anúncios
-          </label>
-
-          <input
-            id="marketplace-search-input"
-            type="search"
-            value={busca}
-            onChange={(event) =>
-              setBusca(event.target.value)
-            }
-            placeholder={placeholder}
-            autoComplete="off"
-          />
-
-          {busca && (
-            <button
-              type="button"
-              className="marketplace-search-clear"
-              onClick={() => setBusca("")}
-              aria-label="Limpar pesquisa"
+            <label
+              htmlFor="marketplace-search-input"
+              className="sr-only"
             >
-              ×
-            </button>
-          )}
+              Pesquisar anúncios
+            </label>
 
-          <button
-            type="submit"
-            className="marketplace-search-button"
-            aria-label="Pesquisar"
-          >
-            <IconSearch size={17} />
-          </button>
-        </form>
+            <input
+              id="marketplace-search-input"
+              type="search"
+              value={busca}
+              onChange={(event) =>
+                setBusca(event.target.value)
+              }
+              placeholder={placeholder}
+              autoComplete="off"
+            />
+
+            {busca && (
+              <button
+                type="button"
+                className="marketplace-search-clear"
+                onClick={() => setBusca("")}
+                aria-label="Limpar pesquisa"
+              >
+                ×
+              </button>
+            )}
+
+            <button
+              type="submit"
+              className="marketplace-search-button"
+              aria-label="Pesquisar"
+            >
+              <IconSearch size={17} />
+            </button>
+          </form>
+        )}
 
         {/* ====================================================
             BLOCO DO USUÁRIO

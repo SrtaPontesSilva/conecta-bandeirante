@@ -1,13 +1,27 @@
+/* ============================================================
+   RESET
+============================================================ */
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+
+/* ============================================================
+   HTML
+============================================================ */
+
 html {
   font-size: 16px;
   scroll-behavior: smooth;
 }
+
+
+/* ============================================================
+   BODY
+============================================================ */
 
 body {
   min-width: 320px;
@@ -23,6 +37,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+/* ============================================================
+   ELEMENTOS DE FORMULÁRIO
+============================================================ */
+
 button,
 input {
   font: inherit;
@@ -32,16 +51,197 @@ button {
   cursor: pointer;
 }
 
+
+/* ============================================================
+   LINKS
+============================================================ */
+
 a {
   color: inherit;
   text-decoration: none;
 }
+
+
+/* ============================================================
+   IMAGENS
+============================================================ */
 
 img {
   max-width: 100%;
   display: block;
 }
 
+
+/* ============================================================
+   ROOT
+============================================================ */
+
 #root {
   min-height: 100vh;
+}
+
+
+/* ============================================================
+   ACESSIBILIDADE
+============================================================ */
+
+
+/* ============================================================
+   TAMANHO DO TEXTO
+============================================================ */
+
+/*
+  O tamanho base continua sendo 16px.
+
+  As configurações abaixo alteram o tamanho raiz do documento.
+  Como boa parte do projeto utiliza rem, os elementos que usam
+  rem acompanham automaticamente essa alteração.
+*/
+
+html[data-font-size="large"] {
+  font-size: 112.5%;
+}
+
+html[data-font-size="larger"] {
+  font-size: 125%;
+}
+
+
+/* ============================================================
+   REDUZIR MOVIMENTO
+============================================================ */
+
+/*
+  Remove praticamente todas as animações e transições quando
+  o usuário solicita redução de movimento.
+
+  !important é intencional aqui para que a preferência de
+  acessibilidade tenha prioridade sobre estilos específicos
+  dos componentes.
+*/
+
+html[data-reduced-motion="true"] *,
+html[data-reduced-motion="true"] *::before,
+html[data-reduced-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+
+  transition-duration: 0.01ms !important;
+  transition-delay: 0s !important;
+
+  scroll-behavior: auto !important;
+}
+
+
+/* ============================================================
+   DESTACAR LINKS
+============================================================ */
+
+html[data-highlight-links="true"] a {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+
+/* ============================================================
+   FOCO VISÍVEL
+============================================================ */
+
+/*
+  O foco deve continuar visível para navegação por teclado.
+*/
+
+:focus-visible {
+  outline: 3px solid var(--accessibility-focus);
+  outline-offset: 3px;
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE
+============================================================ */
+
+/*
+  O alto contraste utiliza variáveis próprias definidas no
+  VARIABLES.css.
+
+  Dessa forma, não precisamos alterar a paleta original do
+  Conecta permanentemente.
+*/
+
+html[data-high-contrast="true"] {
+  --color-background: var(--accessibility-background);
+  --color-background-warm: var(--accessibility-background);
+  --color-surface: var(--accessibility-surface);
+
+  --color-text: var(--accessibility-text);
+  --color-text-secondary: var(--accessibility-text-secondary);
+
+  --color-primary: var(--accessibility-primary);
+  --color-secondary: var(--accessibility-secondary);
+
+  --color-accent: var(--accessibility-accent);
+
+  --color-success: var(--accessibility-success);
+  --color-error: var(--accessibility-error);
+  --color-warning: var(--accessibility-warning);
+
+  --color-border: var(--accessibility-border);
+
+  --accessibility-focus: var(--accessibility-focus-high-contrast);
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE — BODY
+============================================================ */
+
+html[data-high-contrast="true"] body {
+  background-color: var(--accessibility-background);
+  color: var(--accessibility-text);
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE — CAMPOS
+============================================================ */
+
+html[data-high-contrast="true"] input,
+html[data-high-contrast="true"] textarea,
+html[data-high-contrast="true"] select {
+  border-color: var(--accessibility-border);
+  background-color: var(--accessibility-surface);
+  color: var(--accessibility-text);
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE — BOTÕES
+============================================================ */
+
+html[data-high-contrast="true"] button {
+  border-color: var(--accessibility-border);
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE — LINKS
+============================================================ */
+
+html[data-high-contrast="true"] a {
+  color: var(--accessibility-link);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE — FOCUS
+============================================================ */
+
+html[data-high-contrast="true"] :focus-visible {
+  outline: 3px solid var(--accessibility-focus-high-contrast);
+  outline-offset: 3px;
 }

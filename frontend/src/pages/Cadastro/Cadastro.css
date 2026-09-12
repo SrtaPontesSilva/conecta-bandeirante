@@ -42,7 +42,7 @@
 }
 
 .cadastro-header .logo {
-  width: 82px;
+  width: 150px;
   height: auto;
 
   display: block;
@@ -364,7 +364,7 @@
   }
 
   .cadastro-header .logo {
-    width: 78px;
+    width: 140px;
   }
 
   .cadastro-content {
@@ -404,7 +404,7 @@
   }
 
   .cadastro-header .logo {
-    width: 72px;
+    width: 120px;
   }
 
   .cadastro-content {
@@ -478,7 +478,7 @@
   }
 
   .cadastro-header .logo {
-    width: 68px;
+    width: 100px;
   }
 
   .cadastro-content {
