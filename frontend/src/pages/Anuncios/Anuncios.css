@@ -40,6 +40,8 @@
 
 .market-welcome {
   margin-bottom: var(--space-lg);
+
+  animation: marketFadeIn 0.25s ease;
 }
 
 .market-welcome span {
@@ -146,25 +148,138 @@
 
 
 /* =========================================
-   RESULTADOS
+   FILTRO / RESULTADOS
 ========================================= */
 
-.market-results-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
+.market-filter-section {
   margin-bottom: var(--space-md);
+
+  animation: marketFadeIn 0.25s ease;
 }
 
-.market-results-header h2 {
+.market-filter-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+
+  margin-bottom: 10px;
+}
+
+.market-filter-heading h2 {
   font-size: var(--font-size-lg);
 }
 
-.market-results-header span {
+.market-filter-count {
   color: var(--color-text-secondary);
 
   font-size: var(--font-size-sm);
+}
+
+
+/* =========================================
+   FEEDBACK DE BUSCA ATIVA
+========================================= */
+
+.market-search-feedback {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-bottom: 12px;
+}
+
+.market-filter-subtitle {
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-sm);
+}
+
+.market-filter-subtitle strong {
+  color: var(--color-text);
+}
+
+.market-clear-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 4px 10px;
+
+  color: var(--color-text-secondary);
+
+  background-color: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.market-clear-search span {
+  font-size: 0.7rem;
+}
+
+.market-clear-search:hover {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.market-clear-search:focus-visible {
+  outline: 3px solid var(--accessibility-focus);
+  outline-offset: 2px;
+}
+
+
+/* =========================================
+   TAGS DE FILTRO
+========================================= */
+
+.market-filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-tag {
+  padding: 7px 14px;
+
+  color: var(--color-text-secondary);
+
+  background-color: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.filter-tag:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.filter-tag--active {
+  color: var(--color-text-light);
+
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.filter-tag:focus-visible {
+  outline: 3px solid var(--accessibility-focus);
+  outline-offset: 2px;
 }
 
 
@@ -179,6 +294,8 @@
     repeat(4, minmax(0, 1fr));
 
   gap: 16px;
+
+  animation: marketFadeIn 0.25s ease;
 }
 
 
@@ -506,6 +623,8 @@
 
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+
+  animation: marketFadeIn 0.25s ease;
 }
 
 .market-feedback {
@@ -534,7 +653,46 @@
 .market-empty p {
   margin-top: 6px;
 
+  max-width: 420px;
+
+  margin-left: auto;
+  margin-right: auto;
+
   color: var(--color-text-secondary);
+}
+
+
+/* =========================================
+   TRANSIÇÃO DE ENTRADA
+========================================= */
+
+@keyframes marketFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+  A regra global em global.css já neutraliza
+  animações quando data-reduced-motion="true".
+  Este media query cobre também quem tem a
+  preferência do sistema operacional ativa mas
+  ainda não passou pelo toggle interno do app.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .market-welcome,
+  .market-filter-section,
+  .market-grid,
+  .market-feedback,
+  .market-empty {
+    animation: none;
+  }
 }
 
 
@@ -622,18 +780,36 @@
 
 
   /* =======================================
-     RESULTADOS
+     FILTRO / RESULTADOS
   ======================================= */
 
-  .market-results-header {
+  .market-filter-section {
     margin-bottom: 12px;
   }
 
-  .market-results-header h2 {
+  .market-filter-heading {
+    margin-bottom: 8px;
+  }
+
+  .market-filter-heading h2 {
     font-size: var(--font-size-md);
   }
 
-  .market-results-header span {
+  .market-filter-count {
+    font-size: var(--font-size-xs);
+  }
+
+  .market-search-feedback {
+    margin-bottom: 10px;
+  }
+
+  .market-filter-subtitle {
+    font-size: var(--font-size-xs);
+  }
+
+  .filter-tag {
+    padding: 6px 11px;
+
     font-size: var(--font-size-xs);
   }
 
@@ -773,6 +949,25 @@
   ======================================= */
 
   .market-grid {
+    gap: 8px;
+  }
+
+
+  /* =======================================
+     FILTRO / RESULTADOS
+  ======================================= */
+
+  .market-filter-tags {
+    gap: 6px;
+  }
+
+  .filter-tag {
+    padding: 5px 9px;
+
+    font-size: 0.68rem;
+  }
+
+  .market-search-feedback {
     gap: 8px;
   }
 
@@ -934,4 +1129,18 @@ html[data-high-contrast="true"] {
 
 html[data-high-contrast="true"] .product-condition {
   border-color: var(--accessibility-border);
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE — TAGS DE FILTRO E LIMPAR BUSCA
+============================================================ */
+
+html[data-high-contrast="true"] .filter-tag,
+html[data-high-contrast="true"] .market-clear-search {
+  border-color: var(--accessibility-border);
+}
+
+html[data-high-contrast="true"] .filter-tag--active {
+  color: var(--accessibility-background);
 }

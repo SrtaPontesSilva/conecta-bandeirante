@@ -1,11 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import MarketplaceNavbar from "../../components/MarketplaceNavbar/MarketplaceNavbar";
 import BottomNavigation from "../../components/BottomNavigation/BottomNavigation.jsx";
+import CuponsCarousel from "../../components/CuponsCarousel/CuponsCarousel.jsx";
 import api from "../../services/api";
 
 import "./Anuncios.css";
+
+const MODALIDADES = [
+  { valor: "todos", rotulo: "Todos" },
+  { valor: "doacao", rotulo: "Doação" },
+  { valor: "troca", rotulo: "Troca" },
+  { valor: "venda", rotulo: "Venda" },
+];
 
 function Anuncios() {
   const navigate = useNavigate();
@@ -49,8 +57,11 @@ function Anuncios() {
     }
   }
 
+  const termoBusca = busca.trim();
+  const estaBuscando = termoBusca.length > 0;
+
   function anuncioVisivel(anuncio) {
-    const termo = busca.trim().toLowerCase();
+    const termo = termoBusca.toLowerCase();
 
     const correspondeBusca =
       !termo ||
@@ -146,6 +157,34 @@ function Anuncios() {
     return "Não informado";
   }
 
+  /*
+   * Mensagem de estado vazio muda de acordo com o
+   * contexto: busca sem resultado, filtro de categoria
+   * sem itens, ou marketplace realmente sem anúncios.
+   * Isso evita instruções genéricas que não ajudam
+   * a pessoa a entender o que fazer a seguir.
+   */
+  const mensagemVazio = useMemo(() => {
+    if (estaBuscando) {
+      return {
+        titulo: "Nenhum resultado encontrado",
+        texto: `Não encontramos itens para "${termoBusca}". Tente outro termo ou revise o filtro selecionado.`,
+      };
+    }
+
+    if (filtro !== "todos") {
+      return {
+        titulo: "Nenhum item nessa categoria",
+        texto: 'Experimente outra categoria ou volte para "Todos".',
+      };
+    }
+
+    return {
+      titulo: "Nenhum item disponível",
+      texto: "Ainda não há anúncios publicados na comunidade.",
+    };
+  }, [estaBuscando, termoBusca, filtro]);
+
   return (
     <main className="anuncios-page">
       <MarketplaceNavbar
@@ -157,44 +196,99 @@ function Anuncios() {
       />
 
       <section className="market-content">
-        <div className="market-welcome">
-          <span>
-            Conecta Bandeirante
-          </span>
+        {!estaBuscando && <CuponsCarousel />}
 
-          <h1>
-            Encontre o que precisa.
-          </h1>
-
-          <p>
-            Materiais que podem ganhar um novo uso
-            dentro da nossa comunidade.
-          </p>
-        </div>
-
-        <div className="market-results-header">
-          <h2>
-            {filtro === "todos"
-              ? "Itens disponíveis"
-              : filtro === "doacao"
-                ? "Itens para doação"
-                : filtro === "troca"
-                  ? "Itens para troca"
-                  : "Itens à venda"}
-          </h2>
-
-          {!carregando && (
+        {!estaBuscando && (
+          <div className="market-welcome">
             <span>
-              {anunciosFiltrados.length}{" "}
-              {anunciosFiltrados.length === 1
-                ? "item"
-                : "itens"}
+              Conecta Bandeirante
             </span>
+
+            <h1>
+              Encontre o que precisa.
+            </h1>
+
+            <p>
+              Materiais que podem ganhar um novo uso
+              dentro da nossa comunidade.
+            </p>
+          </div>
+        )}
+
+        <div className="market-filter-section">
+          <div className="market-filter-heading">
+            <h2>
+              {estaBuscando
+                ? "Resultados"
+                : "Itens disponíveis"}
+            </h2>
+
+            {!carregando && (
+              <span
+                className="market-filter-count"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                {anunciosFiltrados.length}{" "}
+                {anunciosFiltrados.length === 1
+                  ? "item"
+                  : "itens"}
+              </span>
+            )}
+          </div>
+
+          {estaBuscando && (
+            <div className="market-search-feedback">
+              <p className="market-filter-subtitle">
+                Mostrando resultados para{" "}
+                <strong>"{termoBusca}"</strong>
+              </p>
+
+              <button
+                type="button"
+                className="market-clear-search"
+                onClick={() => setBusca("")}
+              >
+                <span aria-hidden="true">✕</span>
+                Limpar busca
+              </button>
+            </div>
           )}
+
+          <div
+            className="market-filter-tags"
+            role="group"
+            aria-label="Filtrar itens por modalidade"
+          >
+            {MODALIDADES.map((modalidade) => (
+              <button
+                key={modalidade.valor}
+                type="button"
+                className={`filter-tag ${
+                  filtro === modalidade.valor
+                    ? "filter-tag--active"
+                    : ""
+                }`}
+                aria-pressed={
+                  filtro === modalidade.valor
+                }
+                onClick={() =>
+                  setFiltro(modalidade.valor)
+                }
+              >
+                {modalidade.rotulo}
+              </button>
+            ))}
+          </div>
         </div>
 
         {carregando && (
-          <div className="market-feedback">
+          <div
+            className="market-feedback"
+            role="status"
+            aria-live="polite"
+          >
             Carregando itens...
           </div>
         )}
@@ -220,12 +314,11 @@ function Anuncios() {
               </div>
 
               <h2>
-                Nenhum item encontrado
+                {mensagemVazio.titulo}
               </h2>
 
               <p>
-                Tente mudar sua busca ou selecionar
-                outra categoria.
+                {mensagemVazio.texto}
               </p>
             </div>
           )}
