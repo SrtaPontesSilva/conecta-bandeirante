@@ -126,7 +126,11 @@ def serializar_anuncio(anuncio):
         ),
 
         "datas": [
-            disponibilidade.data.isoformat()
+            {
+                "id": disponibilidade.id,
+                "data": disponibilidade.data.isoformat(),
+                "status": disponibilidade.status
+            }
             for disponibilidade
             in anuncio.disponibilidades
         ],

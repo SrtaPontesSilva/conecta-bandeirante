@@ -101,3 +101,10 @@ class AnuncioDisponibilidade(db.Model):
         db.Date,
         nullable=False
     )
+
+    status = db.Column(
+        db.String(20),
+        nullable=False,
+        default="disponivel",
+        server_default="disponivel"
+    )

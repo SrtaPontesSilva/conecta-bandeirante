@@ -157,7 +157,9 @@ def create_app():
         Parceiro,
         Anuncio,
         AnuncioDisponibilidade,
-        AnuncioImagem
+        AnuncioImagem,
+        Solicitacao,
+        Notificacao
     )
 
     # =========================================
@@ -168,6 +170,8 @@ def create_app():
     from .routes.parceiros import parceiros_bp
     from .routes.auth import auth_bp
     from .routes.anuncios import anuncios_bp
+    from .routes.solicitacoes import solicitacoes_bp
+    from .routes.notificacoes import notificacoes_bp
 
     # =========================================
     # REGISTRO COM /api
@@ -191,6 +195,16 @@ def create_app():
     app.register_blueprint(
         anuncios_bp,
         name="anuncios_api"
+    )
+
+    app.register_blueprint(
+        solicitacoes_bp,
+        name="solicitacoes_api"
+    )
+
+    app.register_blueprint(
+        notificacoes_bp,
+        name="notificacoes_api"
     )
 
     # =========================================
