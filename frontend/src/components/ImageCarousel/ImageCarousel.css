@@ -1,0 +1,300 @@
+.image-carousel {
+  width: 100%;
+}
+
+.image-carousel:focus-visible {
+  outline: 3px solid
+    rgba(91, 109, 147, 0.3);
+
+  outline-offset: 4px;
+
+  border-radius: var(--radius-sm);
+}
+
+
+/* =========================================
+   ÁREA PRINCIPAL
+========================================= */
+
+.image-carousel-main {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background-color:
+    var(--color-secondary);
+
+  border-radius: var(--radius-sm);
+}
+
+.image-carousel-main img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: contain;
+}
+
+
+/* =========================================
+   BOTÕES
+========================================= */
+
+.image-carousel-button {
+  position: absolute;
+
+  top: 50%;
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: var(--color-text);
+
+  background-color:
+    rgba(255, 255, 255, 0.94);
+
+  border: 1px solid
+    rgba(54, 64, 66, 0.12);
+
+  border-radius: 50%;
+
+  box-shadow:
+    0 3px 10px
+    rgba(54, 64, 66, 0.12);
+
+  transform: translateY(-50%);
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.image-carousel-button:hover {
+  color: var(--color-primary);
+
+  background-color:
+    var(--color-surface);
+}
+
+.image-carousel-button:focus-visible {
+  outline: 3px solid
+    rgba(91, 109, 147, 0.3);
+
+  outline-offset: 2px;
+}
+
+.image-carousel-button--previous {
+  left: 12px;
+}
+
+.image-carousel-button--next {
+  right: 12px;
+}
+
+
+/* =========================================
+   CONTADOR
+========================================= */
+
+.image-carousel-counter {
+  position: absolute;
+
+  right: 12px;
+  bottom: 12px;
+
+  padding: 5px 9px;
+
+  color: var(--color-text);
+
+  background-color:
+    rgba(255, 255, 255, 0.94);
+
+  border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-xs);
+
+  font-weight: 700;
+}
+
+
+/* =========================================
+   MINIATURAS
+========================================= */
+
+.image-carousel-thumbnails {
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  gap: 8px;
+
+  margin-top: 10px;
+}
+
+.image-carousel-thumbnail {
+  position: relative;
+
+  aspect-ratio: 1 / 1;
+
+  overflow: hidden;
+
+  padding: 0;
+
+  background-color:
+    var(--color-secondary);
+
+  border: 2px solid transparent;
+
+  border-radius: var(--radius-sm);
+
+  opacity: 0.7;
+
+  transition:
+    border-color var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.image-carousel-thumbnail:hover {
+  opacity: 1;
+}
+
+.image-carousel-thumbnail--active {
+  border-color:
+    var(--color-primary);
+
+  opacity: 1;
+}
+
+.image-carousel-thumbnail:focus-visible {
+  outline: 2px solid
+    var(--color-primary);
+
+  outline-offset: 2px;
+}
+
+.image-carousel-thumbnail img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+
+/* =========================================
+   INDICADORES
+========================================= */
+
+.image-carousel-dots {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  margin-top: 10px;
+}
+
+.image-carousel-dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background-color:
+    var(--color-border);
+}
+
+.image-carousel-dot--active {
+  width: 18px;
+
+  border-radius: 4px;
+
+  background-color:
+    var(--color-primary);
+}
+
+
+/* =========================================
+   VAZIO
+========================================= */
+
+.image-carousel--empty {
+  aspect-ratio: 1 / 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  color: var(--color-text-secondary);
+
+  background-color:
+    var(--color-secondary);
+
+  border-radius: var(--radius-sm);
+
+  font-size: 3rem;
+}
+
+.image-carousel--empty p {
+  font-size: var(--font-size-sm);
+
+  color: var(--color-text-secondary);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .image-carousel-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .image-carousel-button--previous {
+    left: 8px;
+  }
+
+  .image-carousel-button--next {
+    right: 8px;
+  }
+
+  .image-carousel-counter {
+    right: 8px;
+    bottom: 8px;
+  }
+
+  .image-carousel-thumbnails {
+    gap: 6px;
+  }
+}

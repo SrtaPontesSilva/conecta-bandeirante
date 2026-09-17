@@ -59,10 +59,26 @@ class Anuncio(db.Model):
         nullable=False
     )
 
+    # =========================================
+    # DISPONIBILIDADES
+    # =========================================
+
     disponibilidades = db.relationship(
         "AnuncioDisponibilidade",
         backref="anuncio",
         cascade="all, delete-orphan",
+        lazy=True
+    )
+
+    # =========================================
+    # IMAGENS
+    # =========================================
+
+    imagens = db.relationship(
+        "AnuncioImagem",
+        back_populates="anuncio",
+        cascade="all, delete-orphan",
+        order_by="AnuncioImagem.ordem",
         lazy=True
     )
 

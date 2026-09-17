@@ -2,7 +2,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  Navigate
+  Navigate,
 } from "react-router-dom";
 
 import Login from "./pages/Login/Login";
@@ -10,6 +10,7 @@ import Cadastro from "./pages/Cadastro/Cadastro";
 import CadastroUsuario from "./pages/CadastroUsuario/CadastroUsuario";
 import CadastroParceiro from "./pages/CadastroParceiro/CadastroParceiro";
 import Anuncios from "./pages/Anuncios/Anuncios";
+import AnuncioDetalhes from "./pages/DetalheAnuncio/DetalheAnuncio";
 import NovoAnuncio from "./pages/NovoAnuncio/NovoAnuncio";
 import Resgates from "./pages/Resgates/Resgates";
 
@@ -52,6 +53,7 @@ function App() {
             element={<CadastroParceiro />}
           />
 
+
           {/* ================================
               ROTAS PARA QUALQUER
               USUÁRIO AUTENTICADO
@@ -70,11 +72,17 @@ function App() {
             />
 
             <Route
+              path="/anuncios/:id"
+              element={<AnuncioDetalhes />}
+            />
+
+            <Route
               path="/resgates"
               element={<Resgates />}
             />
 
           </Route>
+
 
           {/* ================================
               ROTAS EXCLUSIVAS DE USUÁRIO
@@ -82,7 +90,9 @@ function App() {
 
           <Route
             element={
-              <ProtectedRoute tipoPermitido="usuario" />
+              <ProtectedRoute
+                tipoPermitido="usuario"
+              />
             }
           >
 
@@ -92,6 +102,7 @@ function App() {
             />
 
           </Route>
+
 
           {/* ================================
               ROTA PADRÃO
@@ -108,6 +119,7 @@ function App() {
           />
 
         </Routes>
+
 
         {/* =====================================
             ACESSIBILIDADE GLOBAL

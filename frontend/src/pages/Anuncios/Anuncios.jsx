@@ -49,13 +49,6 @@ function Anuncios() {
     }
   }
 
-  function handleLogout() {
-    localStorage.removeItem("usuario");
-    localStorage.removeItem("parceiro");
-
-    navigate("/login", { replace: true });
-  }
-
   function anuncioVisivel(anuncio) {
     const termo = busca.trim().toLowerCase();
 
@@ -68,6 +61,12 @@ function Anuncios() {
         ?.toLowerCase()
         .includes(termo) ||
       anuncio.categoria
+        ?.toLowerCase()
+        .includes(termo) ||
+      anuncio.condicao
+        ?.toLowerCase()
+        .includes(termo) ||
+      anuncio.publicado_por
         ?.toLowerCase()
         .includes(termo);
 
@@ -83,6 +82,69 @@ function Anuncios() {
 
   const anunciosFiltrados =
     anuncios.filter(anuncioVisivel);
+
+  function obterImagemPrincipal(anuncio) {
+    if (
+      Array.isArray(anuncio.imagens) &&
+      anuncio.imagens.length > 0
+    ) {
+      const primeiraImagem =
+        anuncio.imagens[0];
+
+      if (
+        typeof primeiraImagem === "string"
+      ) {
+        return primeiraImagem;
+      }
+
+      return primeiraImagem?.url || null;
+    }
+
+    /*
+     * Compatibilidade temporária com anúncios
+     * antigos que eventualmente ainda possuam
+     * o campo "imagem".
+     */
+    return anuncio.imagem || null;
+  }
+
+  function quantidadeImagens(anuncio) {
+    if (
+      Array.isArray(anuncio.imagens)
+    ) {
+      return anuncio.imagens.length;
+    }
+
+    return anuncio.imagem ? 1 : 0;
+  }
+
+  function obterTextoModalidade(modalidade) {
+    if (modalidade === "doacao") {
+      return "Doação";
+    }
+
+    if (modalidade === "troca") {
+      return "Troca";
+    }
+
+    return "Venda";
+  }
+
+  function obterTextoCondicao(condicao) {
+    if (condicao === "novo") {
+      return "Novo";
+    }
+
+    if (condicao === "bom_estado") {
+      return "Bom estado";
+    }
+
+    if (condicao === "usado") {
+      return "Usado";
+    }
+
+    return "Não informado";
+  }
 
   return (
     <main className="anuncios-page">
@@ -176,81 +238,133 @@ function Anuncios() {
               aria-label="Lista de anúncios"
             >
               {anunciosFiltrados.map(
-                (anuncio) => (
-                  <article
-                    key={anuncio.id}
-                    className="product-card"
-                    onClick={() =>
-                      navigate(
-                        `/anuncios/${anuncio.id}`
-                      )
-                    }
-                  >
-                    <div className="product-image">
-                      {anuncio.imagem ? (
-                        <img
-                          src={anuncio.imagem}
-                          alt={anuncio.titulo}
-                        />
-                      ) : (
-                        <span aria-hidden="true">
-                          📚
-                        </span>
-                      )}
+                (anuncio) => {
+                  const imagemPrincipal =
+                    obterImagemPrincipal(anuncio);
 
-                      <span
-                        className={`product-badge product-badge--${anuncio.modalidade}`}
-                      >
-                        {anuncio.modalidade ===
-                        "doacao"
-                          ? "Doação"
-                          : anuncio.modalidade ===
-                              "troca"
-                            ? "Troca"
-                            : "Venda"}
-                      </span>
-                    </div>
+                  const totalImagens =
+                    quantidadeImagens(anuncio);
 
-                    <div className="product-info">
-                      <span className="product-category">
-                        {anuncio.categoria}
-                      </span>
+                  return (
+                    <article
+                      key={anuncio.id}
+                      className="product-card"
+                      onClick={() =>
+                        navigate(
+                          `/anuncios/${anuncio.id}`
+                        )
+                      }
+                      tabIndex={0}
+                      role="button"
+                      onKeyDown={(event) => {
+                        if (
+                          event.key === "Enter" ||
+                          event.key === " "
+                        ) {
+                          event.preventDefault();
 
-                      <h3>
-                        {anuncio.titulo}
-                      </h3>
-
-                      <p>
-                        {anuncio.descricao}
-                      </p>
-
-                      <div className="product-footer">
-                        {anuncio.modalidade ===
-                        "venda" ? (
-                          <strong>
-                            R${" "}
-                            {Number(
-                              anuncio.preco
-                            ).toFixed(2)}
-                          </strong>
+                          navigate(
+                            `/anuncios/${anuncio.id}`
+                          );
+                        }
+                      }}
+                      aria-label={`Ver anúncio ${anuncio.titulo}`}
+                    >
+                      <div className="product-image">
+                        {imagemPrincipal ? (
+                          <img
+                            src={imagemPrincipal}
+                            alt={anuncio.titulo}
+                            loading="lazy"
+                          />
                         ) : (
-                          <strong>
-                            {anuncio.modalidade ===
-                            "doacao"
-                              ? "Gratuito"
-                              : "Aceita troca"}
-                          </strong>
+                          <span aria-hidden="true">
+                            📚
+                          </span>
                         )}
 
                         <span
-                          aria-hidden="true"
+                          className={`product-badge product-badge--${anuncio.modalidade}`}
                         >
-                          →
+                          {obterTextoModalidade(
+                            anuncio.modalidade
+                          )}
                         </span>
+
+                        {totalImagens > 1 && (
+                          <span
+                            className="product-image-count"
+                            aria-label={`${totalImagens} fotos`}
+                          >
+                            <span aria-hidden="true">
+                              ▧
+                            </span>
+
+                            {totalImagens}
+                          </span>
+                        )}
                       </div>
-                    </div>
-                  </article>
-                )
+
+                      <div className="product-info">
+                        <h3>
+                          {anuncio.titulo}
+                        </h3>
+
+                        <div
+                          className="product-meta"
+                          aria-label="Informações do item"
+                        >
+                          <span className="product-category">
+                            {anuncio.categoria}
+                          </span>
+
+                          <span
+                            className={`product-condition product-condition--${
+                              anuncio.condicao || "nao-informado"
+                            }`}
+                          >
+                            {obterTextoCondicao(
+                              anuncio.condicao
+                            )}
+                          </span>
+                        </div>
+
+                        <p className="product-author">
+                          Publicado por{" "}
+                          <strong>
+                            {anuncio.publicado_por ||
+                              "Usuário"}
+                          </strong>
+                        </p>
+
+                        <div className="product-footer">
+                          {anuncio.modalidade ===
+                          "venda" ? (
+                            <strong>
+                              R${" "}
+                              {Number(
+                                anuncio.preco
+                              ).toFixed(2)}
+                            </strong>
+                          ) : (
+                            <strong>
+                              {anuncio.modalidade ===
+                              "doacao"
+                                ? "Gratuito"
+                                : "Aceita troca"}
+                            </strong>
+                          )}
+
+                          <span
+                            aria-hidden="true"
+                          >
+                            →
+                          </span>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                }
               )}
             </section>
           )}

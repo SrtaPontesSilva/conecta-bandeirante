@@ -1,9 +1,11 @@
 :root {
+
   /* ==========================================================
      CORES PRINCIPAIS
   ========================================================== */
 
   --color-primary: #5B6D93;
+
   --color-secondary: #D5E3E6;
 
 
@@ -12,7 +14,9 @@
   ========================================================== */
 
   --color-background: #EEEEE4;
+
   --color-background-warm: #EFE2D2;
+
   --color-surface: #FFFFFF;
 
 
@@ -28,7 +32,9 @@
   ========================================================== */
 
   --color-text: #364042;
+
   --color-text-secondary: #667174;
+
   --color-text-light: #FFFFFF;
 
 
@@ -37,7 +43,9 @@
   ========================================================== */
 
   --color-success: #5F8068;
+
   --color-error: #B85C5C;
+
   --color-warning: #C28A4B;
 
 
@@ -46,6 +54,39 @@
   ========================================================== */
 
   --color-border: #D9DEDD;
+
+
+  /* ==========================================================
+     CONDIÇÃO DOS ITENS
+  ========================================================== */
+
+  /*
+    As cores das condições são variações da identidade
+    visual do Conecta.
+
+    Novo:
+    Azul derivado da cor primária.
+
+    Bom estado:
+    Verde derivado da cor de sucesso.
+
+    Usado:
+    Dourado/marrom derivado da cor de atenção.
+  */
+
+  --color-condition-new: #4F6287;
+
+  --color-condition-new-bg: #E8ECF3;
+
+
+  --color-condition-good: #4F7059;
+
+  --color-condition-good-bg: #E7EEE9;
+
+
+  --color-condition-used: #8A6638;
+
+  --color-condition-used-bg: #F3EBDD;
 
 
   /* ==========================================================
@@ -60,10 +101,15 @@
   ========================================================== */
 
   --font-size-xs: 0.75rem;
+
   --font-size-sm: 0.875rem;
+
   --font-size-md: 1rem;
+
   --font-size-lg: 1.25rem;
+
   --font-size-xl: 1.75rem;
+
   --font-size-2xl: 2.25rem;
 
 
@@ -72,10 +118,15 @@
   ========================================================== */
 
   --space-xs: 0.25rem;
+
   --space-sm: 0.5rem;
+
   --space-md: 1rem;
+
   --space-lg: 1.5rem;
+
   --space-xl: 2rem;
+
   --space-2xl: 3rem;
 
 
@@ -84,7 +135,9 @@
   ========================================================== */
 
   --radius-sm: 6px;
+
   --radius-md: 10px;
+
   --radius-lg: 14px;
 
 
@@ -114,18 +167,23 @@
   ========================================================== */
 
   --accessibility-background: #FFFFFF;
+
   --accessibility-surface: #FFFFFF;
 
   --accessibility-text: #000000;
+
   --accessibility-text-secondary: #202020;
 
   --accessibility-primary: #17345F;
+
   --accessibility-secondary: #E6E6E6;
 
   --accessibility-accent: #8A2500;
 
   --accessibility-success: #174D27;
+
   --accessibility-error: #8B0000;
+
   --accessibility-warning: #704800;
 
   --accessibility-border: #000000;
@@ -133,4 +191,18 @@
   --accessibility-link: #003B8F;
 
   --accessibility-focus-high-contrast: #000000;
+
+
+  /* ==========================================================
+     ACESSIBILIDADE — CONDIÇÃO
+  ========================================================== */
+
+  --accessibility-condition-new: #17345F;
+
+  --accessibility-condition-good: #174D27;
+
+  --accessibility-condition-used: #704800;
+
+  --accessibility-condition-background: #FFFFFF;
+
 }

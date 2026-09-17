@@ -207,6 +207,11 @@
   box-shadow: var(--shadow-card);
 }
 
+.product-card:focus-visible {
+  outline: 3px solid rgba(91, 109, 147, 0.35);
+  outline-offset: 3px;
+}
+
 
 /* =========================================
    IMAGEM DO PRODUTO
@@ -221,6 +226,8 @@
   align-items: center;
   justify-content: center;
 
+  overflow: hidden;
+
   background-color: var(--color-secondary);
 
   font-size: 3rem;
@@ -230,7 +237,43 @@
   width: 100%;
   height: 100%;
 
+  display: block;
+
   object-fit: cover;
+}
+
+
+/* =========================================
+   CONTADOR DE FOTOS
+========================================= */
+
+.product-image-count {
+  position: absolute;
+
+  right: 10px;
+  bottom: 10px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  min-height: 26px;
+
+  padding: 4px 8px;
+
+  color: var(--color-text);
+
+  background-color: rgba(255, 255, 255, 0.94);
+
+  border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.product-image-count span {
+  font-size: 0.9rem;
 }
 
 
@@ -279,39 +322,140 @@
   padding: 14px;
 }
 
-.product-category {
-  color: var(--color-text-secondary);
+.product-info h3 {
+  overflow: hidden;
+
+  min-height: 2.6em;
+
+  font-size: var(--font-size-md);
+  line-height: 1.3;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+
+/* =========================================
+   META DO PRODUTO
+========================================= */
+
+.product-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  margin-top: 7px;
+}
+
+.product-category,
+.product-condition {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 22px;
+
+  padding: 3px 7px;
+
+  border-radius: var(--radius-sm);
 
   font-size: var(--font-size-xs);
   font-weight: 700;
+}
+
+.product-category {
+  color: var(--color-text-secondary);
+
+  background-color: var(--color-secondary);
 
   text-transform: uppercase;
 }
 
-.product-info h3 {
-  margin-top: 5px;
 
-  font-size: var(--font-size-md);
-  line-height: 1.3;
+/* =========================================
+   CONDIÇÃO DO ITEM
+========================================= */
+
+.product-condition {
+  border: 1px solid transparent;
 }
 
-.product-info p {
-  display: -webkit-box;
+
+/* =========================================
+   CONDIÇÃO — NOVO
+========================================= */
+
+.product-condition--novo {
+  color: var(--color-condition-new);
+
+  background-color: var(--color-condition-new-bg);
+
+  border-color: rgba(79, 98, 135, 0.25);
+}
+
+
+/* =========================================
+   CONDIÇÃO — BOM ESTADO
+========================================= */
+
+.product-condition--bom_estado {
+  color: var(--color-condition-good);
+
+  background-color: var(--color-condition-good-bg);
+
+  border-color: rgba(79, 112, 89, 0.25);
+}
+
+
+/* =========================================
+   CONDIÇÃO — USADO
+========================================= */
+
+.product-condition--usado {
+  color: var(--color-condition-used);
+
+  background-color: var(--color-condition-used-bg);
+
+  border-color: rgba(138, 102, 56, 0.25);
+}
+
+
+/* =========================================
+   CONDIÇÃO — NÃO INFORMADO
+========================================= */
+
+.product-condition--nao-informado {
+  color: var(--color-text-secondary);
+
+  background-color: var(--color-secondary);
+
+  border-color: var(--color-border);
+}
+
+
+/* =========================================
+   AUTOR DO ANÚNCIO
+========================================= */
+
+.product-author {
+  margin-top: 9px;
 
   overflow: hidden;
 
-  min-height: 38px;
-
-  margin-top: 6px;
-
   color: var(--color-text-secondary);
 
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   line-height: 1.4;
 
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.product-author strong {
+  color: var(--color-text);
+  font-weight: 700;
 }
 
 
@@ -396,8 +540,6 @@
 
 /* =========================================
    ACESSIBILIDADE
-   (a navegação inferior agora vive em
-   BottomNavigation.css)
 ========================================= */
 
 .sr-only {
@@ -437,10 +579,6 @@
 
 @media (max-width: 900px) {
   .anuncios-page {
-    /*
-      Navbar tablet:
-      aproximadamente 76px.
-    */
     padding-top: 94px;
 
     padding-bottom: 92px;
@@ -458,16 +596,8 @@
 
 @media (max-width: 700px) {
   .anuncios-page {
-    /*
-      Navbar mobile:
-      aproximadamente 126px.
-    */
     padding-top: 142px;
 
-    /*
-      Bottom navigation:
-      aproximadamente 68px.
-    */
     padding-bottom: 88px;
   }
 
@@ -516,8 +646,31 @@
     padding: 11px;
   }
 
-  .product-info p {
-    display: none;
+  .product-info h3 {
+    min-height: 2.6em;
+
+    font-size: var(--font-size-sm);
+  }
+
+  .product-meta {
+    gap: 4px;
+
+    margin-top: 6px;
+  }
+
+  .product-category,
+  .product-condition {
+    min-height: 20px;
+
+    padding: 3px 5px;
+
+    font-size: 0.62rem;
+  }
+
+  .product-author {
+    margin-top: 7px;
+
+    font-size: 0.65rem;
   }
 
   .product-footer {
@@ -545,6 +698,17 @@
 
     font-size: 0.65rem;
   }
+
+  .product-image-count {
+    right: 7px;
+    bottom: 7px;
+
+    min-height: 24px;
+
+    padding: 4px 7px;
+
+    font-size: 0.65rem;
+  }
 }
 
 
@@ -554,12 +718,6 @@
 
 @media (max-width: 520px) {
   .anuncios-page {
-    /*
-      A navbar continua com aproximadamente
-      126px. Não reduzir para 120/116px,
-      pois isso faria o conteúdo subir
-      para trás da navbar.
-    */
     padding-top: 142px;
 
     padding-bottom: 84px;
@@ -587,6 +745,10 @@
   .market-welcome p {
     font-size: var(--font-size-sm);
   }
+
+  .product-author {
+    max-width: 100%;
+  }
 }
 
 
@@ -596,10 +758,6 @@
 
 @media (max-width: 420px) {
   .anuncios-page {
-    /*
-      Mantemos espaço suficiente para a
-      navbar de duas linhas.
-    */
     padding-top: 142px;
 
     padding-bottom: 80px;
@@ -628,11 +786,20 @@
   }
 
   .product-info h3 {
+    min-height: 2.6em;
+
     font-size: var(--font-size-sm);
   }
 
-  .product-category {
-    font-size: 0.62rem;
+  .product-category,
+  .product-condition {
+    font-size: 0.58rem;
+  }
+
+  .product-author {
+    margin-top: 6px;
+
+    font-size: 0.6rem;
   }
 
   .product-footer {
@@ -660,6 +827,17 @@
 
     font-size: 0.58rem;
   }
+
+  .product-image-count {
+    right: 6px;
+    bottom: 6px;
+
+    min-height: 22px;
+
+    padding: 3px 6px;
+
+    font-size: 0.58rem;
+  }
 }
 
 
@@ -669,10 +847,6 @@
 
 @media (max-width: 350px) {
   .anuncios-page {
-    /*
-      Não diminuímos o espaço superior.
-      A navbar continua ocupando duas linhas.
-    */
     padding-top: 142px;
 
     padding-bottom: 80px;
@@ -691,14 +865,73 @@
   }
 
   .product-info h3 {
+    min-height: 2.6em;
+
     font-size: 0.8rem;
   }
 
-  .product-category {
+  .product-category,
+  .product-condition {
+    font-size: 0.54rem;
+  }
+
+  .product-author {
+    margin-top: 5px;
+
     font-size: 0.56rem;
+  }
+
+  .product-footer {
+    margin-top: 7px;
   }
 
   .product-footer strong {
     font-size: 0.72rem;
   }
+
+  .product-image-count {
+    right: 5px;
+    bottom: 5px;
+
+    padding: 3px 5px;
+
+    font-size: 0.54rem;
+  }
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE — CONDIÇÕES
+============================================================ */
+
+html[data-high-contrast="true"] {
+
+  --color-condition-new:
+    var(--accessibility-condition-new);
+
+  --color-condition-new-bg:
+    var(--accessibility-condition-background);
+
+
+  --color-condition-good:
+    var(--accessibility-condition-good);
+
+  --color-condition-good-bg:
+    var(--accessibility-condition-background);
+
+
+  --color-condition-used:
+    var(--accessibility-condition-used);
+
+  --color-condition-used-bg:
+    var(--accessibility-condition-background);
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE — BORDAS DAS CONDIÇÕES
+============================================================ */
+
+html[data-high-contrast="true"] .product-condition {
+  border-color: var(--accessibility-border);
 }

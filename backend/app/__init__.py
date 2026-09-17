@@ -1,8 +1,10 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
+
+import cloudinary
 import os
 
 from .extensions import db
@@ -14,8 +16,23 @@ def create_app():
     app = Flask(__name__)
 
     # =========================================
-    # DATABASE
+    # PRÉ-FLIGHT / OPTIONS
     # =========================================
+
+    # O navegador envia uma requisição OPTIONS
+    # antes de determinadas requisições, como o
+    # POST com FormData + Authorization.
+    #
+    # Essa requisição não deve exigir JWT.
+    @app.before_request
+    def permitir_preflight():
+        if request.method == "OPTIONS":
+            return "", 204
+
+    # =========================================
+    # BANCO DE DADOS
+    # =========================================
+
     database_url = os.getenv("DATABASE_URL")
 
     if database_url:
@@ -34,121 +51,207 @@ def create_app():
             )
 
     app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # =========================================
-    # SECURITY
+    # LIMITE DE UPLOAD
     # =========================================
-    secret_key = os.getenv("SECRET_KEY")
 
-    if not secret_key:
-        raise RuntimeError(
-            "A variável de ambiente SECRET_KEY não foi configurada."
-        )
+    # Até 25 MB por requisição.
+    #
+    # O frontend permite até 5 imagens.
+    # O backend limita cada imagem individualmente
+    # a 4 MB.
+    app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024
 
-    app.config["SECRET_KEY"] = secret_key
-    app.config["JWT_SECRET_KEY"] = secret_key
+    # =========================================
+    # SEGURANÇA
+    # =========================================
+
+    app.config["SECRET_KEY"] = os.getenv(
+        "SECRET_KEY"
+    )
+
+    app.config["JWT_SECRET_KEY"] = os.getenv(
+        "SECRET_KEY"
+    )
+
+    # =========================================
+    # CLOUDINARY
+    # =========================================
+
+    cloudinary.config(
+        cloud_name=os.getenv(
+            "CLOUDINARY_CLOUD_NAME"
+        ),
+        api_key=os.getenv(
+            "CLOUDINARY_API_KEY"
+        ),
+        api_secret=os.getenv(
+            "CLOUDINARY_API_SECRET"
+        ),
+        secure=True
+    )
 
     # =========================================
     # CORS
     # =========================================
+
     CORS(
         app,
         resources={
             r"/api/*": {
                 "origins": [
-                    "https://conecta-bandeirante-2026.vercel.app",
                     "http://localhost:5173",
-                    "http://127.0.0.1:5173"
+                    "http://127.0.0.1:5173",
                 ]
             }
         },
-        supports_credentials=True
+        supports_credentials=True,
+        methods=[
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS"
+        ],
+        allow_headers=[
+            "Content-Type",
+            "Authorization"
+        ]
     )
 
     # =========================================
-    # EXTENSIONS
+    # EXTENSÕES
     # =========================================
+
     db.init_app(app)
 
-    Migrate(app, db)
+    Migrate(
+        app,
+        db
+    )
 
     jwt = JWTManager(app)
 
     # =========================================
-    # JWT ERROR HANDLERS
+    # ERROS JWT
     # =========================================
+
     @jwt.invalid_token_loader
     def invalid_token_callback(error):
-        return {
+        return jsonify({
             "erro": "Token inválido."
-        }, 401
+        }), 401
 
     @jwt.expired_token_loader
-    def expired_token_callback(jwt_header, jwt_payload):
-        return {
+    def expired_token_callback(
+        jwt_header,
+        jwt_payload
+    ):
+        return jsonify({
             "erro": "Token expirado."
-        }, 401
+        }), 401
 
     @jwt.unauthorized_loader
     def missing_token_callback(error):
-        return {
+        return jsonify({
             "erro": "Token de autenticação não enviado."
-        }, 401
+        }), 401
 
     # =========================================
     # MODELS
     # =========================================
+
     from .models import (
         Usuario,
         Parceiro,
         Anuncio,
-        AnuncioDisponibilidade
+        AnuncioDisponibilidade,
+        AnuncioImagem
     )
 
     # =========================================
     # ROUTES
     # =========================================
+
     from .routes.usuarios import usuarios_bp
     from .routes.parceiros import parceiros_bp
     from .routes.auth import auth_bp
     from .routes.anuncios import anuncios_bp
 
     # =========================================
-    # BLUEPRINTS
+    # REGISTRO COM /api
     # =========================================
-    # Cada blueprint já possui seu próprio
-    # prefixo /api/... .
-    #
-    # Portanto, NÃO adicionar url_prefix aqui.
-    app.register_blueprint(usuarios_bp)
-    app.register_blueprint(parceiros_bp)
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(anuncios_bp)
+
+    app.register_blueprint(
+        usuarios_bp,
+        name="usuarios_api"
+    )
+
+    app.register_blueprint(
+        parceiros_bp,
+        name="parceiros_api"
+    )
+
+    app.register_blueprint(
+        auth_bp,
+        name="auth_api"
+    )
+
+    app.register_blueprint(
+        anuncios_bp,
+        name="anuncios_api"
+    )
 
     # =========================================
-    # HEALTH CHECK
+    # REGISTRO SEM /api
     # =========================================
+
+    app.register_blueprint(
+        usuarios_bp,
+        url_prefix="/",
+        name="usuarios_root"
+    )
+
+    app.register_blueprint(
+        parceiros_bp,
+        url_prefix="/",
+        name="parceiros_root"
+    )
+
+    app.register_blueprint(
+        auth_bp,
+        url_prefix="/",
+        name="auth_root"
+    )
+
+    # =========================================
+    # HEALTH
+    # =========================================
+
     @app.get("/api/health")
     def health():
         return {
             "status": "ok",
             "message": "Conecta Bandeirante API funcionando"
-        }, 200
+        }
 
     @app.get("/api/health/database")
     def database_health():
         try:
-            db.session.execute(db.text("SELECT 1"))
+            db.session.execute(
+                db.text("SELECT 1")
+            )
 
             return {
                 "status": "ok",
                 "database": "conectado"
-            }, 200
+            }
 
         except Exception as error:
-            db.session.rollback()
-
             return {
                 "status": "error",
                 "database": "não conectado",

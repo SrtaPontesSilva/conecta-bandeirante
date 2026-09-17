@@ -3,37 +3,54 @@
 
   background-color: var(--color-background);
 
-  /*
-    Espaço para a navbar superior fixa
-    (mesma altura usada em Anuncios.css).
-  */
   padding-top: 104px;
-
   padding-bottom: 3rem;
 
-  /*
-    ESTILO QUADRADO / MINIMALISTA
-    ------------------------------------------------------------
-    Sobrescreve localmente os raios de borda globais para esta
-    tela, deixando cartões, botões e inputs com cantos retos.
-    Não afeta o restante do site.
-  */
   --radius-sm: 4px;
   --radius-md: 4px;
   --radius-lg: 4px;
 }
 
+
 .novo-anuncio-content {
   width: min(900px, calc(100% - 32px));
 
   margin: 0 auto;
+
   padding-top: 2rem;
 }
 
-/* SEÇÕES */
+
+/* =========================================
+   LINHA SUPERIOR
+========================================= */
+
+.anuncio-top-row {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr) 230px;
+
+  align-items: stretch;
+
+  gap: 1.5rem;
+
+  margin-bottom: 1.5rem;
+}
+
+.anuncio-top-row
+  .anuncio-section--item {
+  margin-bottom: 0;
+}
+
+
+/* =========================================
+   SEÇÕES
+========================================= */
 
 .anuncio-section {
   margin-bottom: 1.5rem;
+
   padding: 1.75rem;
 
   background-color: var(--color-surface);
@@ -42,8 +59,22 @@
   border-radius: var(--radius-md);
 }
 
+.anuncio-section--preco {
+  padding: 1.25rem 1.75rem;
+}
+
+.anuncio-section--imagens {
+  margin-bottom: 1.5rem;
+}
+
+
+/* =========================================
+   CABEÇALHO DAS SEÇÕES
+========================================= */
+
 .anuncio-section-header {
   display: flex;
+
   gap: 14px;
 
   margin-bottom: 1.5rem;
@@ -60,6 +91,7 @@
   justify-content: center;
 
   color: var(--color-text-light);
+
   background-color: var(--color-primary);
 
   border-radius: 4px;
@@ -78,20 +110,29 @@
   color: var(--color-text-secondary);
 
   font-size: var(--font-size-sm);
+
   line-height: 1.5;
 }
 
-/* FORMULÁRIO */
+
+/* =========================================
+   FORMULÁRIO
+========================================= */
 
 .anuncio-form-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
   gap: 1rem;
 }
 
 .form-group {
   display: flex;
+
   flex-direction: column;
+
   gap: 7px;
 }
 
@@ -101,6 +142,7 @@
 
 .form-group label {
   font-size: var(--font-size-sm);
+
   font-weight: 700;
 }
 
@@ -112,6 +154,7 @@
   padding: 12px 13px;
 
   color: var(--color-text);
+
   background-color: var(--color-surface);
 
   border: 1px solid var(--color-border);
@@ -126,6 +169,7 @@
 
 .form-group textarea {
   resize: vertical;
+
   min-height: 120px;
 }
 
@@ -142,6 +186,7 @@
   color: var(--color-text-secondary);
 
   font-size: var(--font-size-xs);
+
   line-height: 1.4;
 }
 
@@ -149,48 +194,91 @@
   align-self: flex-end;
 }
 
-/* MODALIDADES */
 
-.modalidade-options {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+/* =========================================
+   MODALIDADES
+========================================= */
+
+.modalidade-card {
+  display: flex;
+
+  flex-direction: column;
+
   gap: 10px;
+
+  padding: 1.75rem 1rem;
+
+  background-color: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+
+  border-radius: var(--radius-md);
 }
 
-.modalidade-option {
-  position: relative;
+.modalidade-card-label {
+  display: block;
 
-  min-height: 125px;
+  padding: 0 0.25rem;
 
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-xs);
+
+  font-weight: 800;
+
+  letter-spacing: 0.05em;
+
+  text-transform: uppercase;
+}
+
+.modalidade-tiles {
   display: flex;
+
   flex-direction: column;
-  align-items: flex-start;
+
   gap: 10px;
 
-  padding: 16px;
+  flex: 1;
+}
+
+.modalidade-tile {
+  position: relative;
+
+  flex: 1;
+
+  min-height: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 0 12px;
 
   cursor: pointer;
 
   background-color: var(--color-surface);
 
   border: 1px solid var(--color-border);
+
+  border-left: 3px solid var(--color-border);
+
   border-radius: var(--radius-sm);
+
+  text-align: left;
 
   transition:
     border-color var(--transition-fast),
-    background-color var(--transition-fast);
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
-.modalidade-option:hover {
-  border-color: var(--color-primary);
+.modalidade-tile:hover {
+  transform: translateX(1px);
 }
 
-.modalidade-option--active {
-  background-color: rgba(91, 109, 147, 0.06);
-  border-color: var(--color-primary);
-}
-
-.modalidade-option input {
+.modalidade-tile input {
   position: absolute;
 
   width: 1px;
@@ -199,60 +287,83 @@
   opacity: 0;
 }
 
-.modalidade-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.modalidade-tile:has(input:focus-visible) {
+  outline: 3px solid rgba(91, 109, 147, 0.25);
 
-  width: 34px;
-  height: 34px;
+  outline-offset: 2px;
+}
+
+.modalidade-tile-icon {
+  width: 32px;
+  height: 32px;
 
   flex-shrink: 0;
 
-  color: var(--color-primary);
+  display: flex;
 
-  background-color: var(--color-secondary);
+  align-items: center;
+
+  justify-content: center;
 
   border-radius: 4px;
 }
 
-.modalidade-option--active .modalidade-icon {
-  color: var(--color-text-light);
-  background-color: var(--color-primary);
-}
+.modalidade-tile-text {
+  min-width: 0;
 
-.modalidade-content {
   display: flex;
+
   flex-direction: column;
-  gap: 6px;
+
+  gap: 2px;
 }
 
-.modalidade-content strong {
-  font-size: var(--font-size-md);
+.modalidade-tile-label {
+  overflow: hidden;
+
+  font-size: var(--font-size-sm);
+
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
 }
 
-.modalidade-content small {
+.modalidade-tile-desc {
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
   color: var(--color-text-secondary);
 
-  line-height: 1.4;
+  font-size: 0.7rem;
+
+  line-height: 1.3;
 }
 
-.modalidade-check {
+.modalidade-tile-check {
   position: absolute;
 
-  top: 12px;
-  right: 12px;
+  top: 8px;
+  right: 8px;
 
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   color: var(--color-text-light);
-
-  background-color: var(--color-primary);
 
   border-radius: 2px;
 
@@ -265,13 +376,413 @@
     transform var(--transition-fast);
 }
 
-.modalidade-option--active .modalidade-check {
+
+/* =========================================
+   CORES MODALIDADES
+========================================= */
+
+.modalidade-tile--doacao
+  .modalidade-tile-icon {
+  color: var(--color-success);
+
+  background-color: #e6ede7;
+}
+
+.modalidade-tile--troca
+  .modalidade-tile-icon {
+  color: var(--color-primary);
+
+  background-color: var(--color-secondary);
+}
+
+.modalidade-tile--venda
+  .modalidade-tile-icon {
+  color: var(--color-accent);
+
+  background-color: #f5e6e0;
+}
+
+.modalidade-tile--doacao:hover {
+  border-color: var(--color-success);
+
+  border-left-color:
+    var(--color-success);
+}
+
+.modalidade-tile--troca:hover {
+  border-color: var(--color-primary);
+
+  border-left-color:
+    var(--color-primary);
+}
+
+.modalidade-tile--venda:hover {
+  border-color: var(--color-accent);
+
+  border-left-color:
+    var(--color-accent);
+}
+
+.modalidade-tile--doacao.modalidade-tile--active {
+  background-color: #edf2ed;
+
+  border-color: var(--color-success);
+
+  border-left-color:
+    var(--color-success);
+}
+
+.modalidade-tile--troca.modalidade-tile--active {
+  background-color:
+    rgba(91, 109, 147, 0.07);
+
+  border-color: var(--color-primary);
+
+  border-left-color:
+    var(--color-primary);
+}
+
+.modalidade-tile--venda.modalidade-tile--active {
+  background-color: #fbf0ec;
+
+  border-color: var(--color-accent);
+
+  border-left-color:
+    var(--color-accent);
+}
+
+.modalidade-tile--doacao.modalidade-tile--active
+  .modalidade-tile-icon {
+  color: var(--color-text-light);
+
+  background-color:
+    var(--color-success);
+}
+
+.modalidade-tile--troca.modalidade-tile--active
+  .modalidade-tile-icon {
+  color: var(--color-text-light);
+
+  background-color:
+    var(--color-primary);
+}
+
+.modalidade-tile--venda.modalidade-tile--active
+  .modalidade-tile-icon {
+  color: var(--color-text-light);
+
+  background-color:
+    var(--color-accent);
+}
+
+.modalidade-tile--doacao
+  .modalidade-tile-check {
+  background-color:
+    var(--color-success);
+}
+
+.modalidade-tile--troca
+  .modalidade-tile-check {
+  background-color:
+    var(--color-primary);
+}
+
+.modalidade-tile--venda
+  .modalidade-tile-check {
+  background-color:
+    var(--color-accent);
+}
+
+.modalidade-tile--active
+  .modalidade-tile-check {
   opacity: 1;
 
   transform: scale(1);
 }
 
-/* PREÇO */
+
+/* =========================================
+   UPLOAD DE IMAGENS
+========================================= */
+
+.imagens-upload {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 8px;
+}
+
+.imagens-input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  overflow: hidden;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.imagens-upload-button {
+  min-height: 48px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 9px;
+
+  padding: 0 16px;
+
+  color: var(--color-primary);
+
+  background-color:
+    var(--color-background);
+
+  border: 1px dashed
+    var(--color-primary);
+
+  border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-sm);
+
+  font-weight: 700;
+
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.imagens-upload-button:hover:not(:disabled) {
+  background-color:
+    var(--color-secondary);
+}
+
+.imagens-upload-button:focus-visible {
+  outline: 3px solid
+    rgba(91, 109, 147, 0.25);
+
+  outline-offset: 2px;
+}
+
+.imagens-upload-button:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.5;
+}
+
+.imagens-upload-icon {
+  width: 24px;
+  height: 24px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: var(--color-text-light);
+
+  background-color:
+    var(--color-primary);
+
+  border-radius: 50%;
+
+  font-size: 1.2rem;
+
+  line-height: 1;
+}
+
+.imagens-upload-help {
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-xs);
+
+  line-height: 1.4;
+}
+
+
+/* =========================================
+   PREVIEWS
+========================================= */
+
+.imagens-preview-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+
+  margin-top: 1rem;
+}
+
+.imagem-preview {
+  min-width: 0;
+
+  overflow: hidden;
+
+  background-color:
+    var(--color-background);
+
+  border: 1px solid
+    var(--color-border);
+
+  border-radius: var(--radius-sm);
+}
+
+.imagem-preview--principal {
+  border-color:
+    var(--color-primary);
+}
+
+.imagem-preview-media {
+  position: relative;
+
+  aspect-ratio: 1 / 1;
+
+  overflow: hidden;
+
+  background-color:
+    var(--color-secondary);
+}
+
+.imagem-preview-media img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.imagem-preview-principal {
+  position: absolute;
+
+  top: 7px;
+  left: 7px;
+
+  padding: 4px 7px;
+
+  color: var(--color-text-light);
+
+  background-color:
+    var(--color-primary);
+
+  border-radius: 3px;
+
+  font-size: 0.68rem;
+
+  font-weight: 700;
+}
+
+.imagem-preview-actions {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap: 5px;
+
+  padding: 8px;
+}
+
+.imagem-preview-actions button {
+  min-width: 30px;
+  min-height: 30px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 4px 7px;
+
+  color: var(--color-text);
+
+  background-color:
+    var(--color-surface);
+
+  border: 1px solid
+    var(--color-border);
+
+  border-radius: 3px;
+
+  font-size: var(--font-size-xs);
+
+  font-weight: 700;
+}
+
+.imagem-preview-actions
+  button:hover {
+  border-color:
+    var(--color-primary);
+
+  color: var(--color-primary);
+}
+
+.imagem-preview-actions
+  button:focus-visible {
+  outline: 2px solid
+    var(--color-primary);
+
+  outline-offset: 1px;
+}
+
+.imagem-preview-actions
+  .imagem-preview-remove {
+  color: var(--color-error);
+}
+
+.imagem-preview-actions
+  .imagem-preview-remove:hover {
+  border-color:
+    var(--color-error);
+}
+
+
+/* =========================================
+   PREÇO
+========================================= */
+
+.preco-inline {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: flex-end;
+
+  gap: 1rem;
+}
+
+.preco-inline
+  .preco-group {
+  max-width: 320px;
+
+  margin-top: 0;
+}
+
+.preco-inline > small {
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-xs);
+
+  line-height: 1.4;
+
+  padding-bottom: 2px;
+}
 
 .preco-group {
   max-width: 320px;
@@ -281,14 +792,18 @@
 
 .price-input {
   display: flex;
+
   align-items: center;
 
   overflow: hidden;
 
-  border: 1px solid var(--color-border);
+  border: 1px solid
+    var(--color-border);
+
   border-radius: var(--radius-sm);
 
-  background-color: var(--color-surface);
+  background-color:
+    var(--color-surface);
 }
 
 .price-input span {
@@ -301,10 +816,14 @@
 
 .price-input input {
   border: none !important;
+
   box-shadow: none !important;
 }
 
-/* CALENDÁRIO — SELETOR (POPUP) */
+
+/* =========================================
+   CALENDÁRIO
+========================================= */
 
 .calendar-picker {
   position: relative;
@@ -316,20 +835,27 @@
   width: 100%;
 
   display: flex;
+
   align-items: center;
+
   gap: 10px;
 
   padding: 12px 14px;
 
   color: var(--color-text);
 
-  background-color: var(--color-surface);
+  background-color:
+    var(--color-surface);
 
-  border: 1px solid var(--color-border);
+  border: 1px solid
+    var(--color-border);
+
   border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
+
   font-weight: 600;
+
   text-align: left;
 
   transition:
@@ -339,7 +865,9 @@
 
 .calendar-trigger-icon {
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   color: var(--color-primary);
@@ -351,22 +879,30 @@
   overflow: hidden;
 
   text-overflow: ellipsis;
+
   white-space: nowrap;
 }
 
 .calendar-trigger:hover,
 .calendar-trigger--open {
-  border-color: var(--color-primary);
+  border-color:
+    var(--color-primary);
 
   box-shadow:
-    0 0 0 3px rgba(91, 109, 147, 0.1);
+    0 0 0 3px
+    rgba(91, 109, 147, 0.1);
 }
 
-/* CHIPS DE DIAS SELECIONADOS */
+
+/* =========================================
+   CHIPS
+========================================= */
 
 .calendar-chips {
   display: flex;
+
   flex-wrap: wrap;
+
   gap: 6px;
 
   margin-top: 10px;
@@ -374,18 +910,22 @@
 
 .calendar-chip {
   display: flex;
+
   align-items: center;
+
   gap: 5px;
 
   padding: 5px 6px 5px 10px;
 
   color: var(--color-primary);
 
-  background-color: var(--color-secondary);
+  background-color:
+    var(--color-secondary);
 
   border-radius: 3px;
 
   font-size: var(--font-size-xs);
+
   font-weight: 700;
 
   text-transform: capitalize;
@@ -393,7 +933,9 @@
 
 .calendar-chip button {
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   width: 16px;
@@ -402,9 +944,11 @@
   color: var(--color-primary);
 
   background: none;
+
   border: none;
 
   font-size: 0.9rem;
+
   line-height: 1;
 
   opacity: 0.7;
@@ -414,29 +958,39 @@
   opacity: 1;
 }
 
-/* POPOVER DO CALENDÁRIO */
+
+/* =========================================
+   POPOVER
+========================================= */
 
 .calendar-popover {
   position: absolute;
 
   top: calc(100% + 8px);
+
   left: 0;
+
   z-index: 20;
 
   width: min(320px, 90vw);
 
   padding: 1rem;
 
-  background-color: var(--color-surface);
+  background-color:
+    var(--color-surface);
 
-  border: 1px solid var(--color-border);
+  border: 1px solid
+    var(--color-border);
+
   border-radius: var(--radius-md);
 
   box-shadow:
-    0 8px 22px rgba(54, 64, 66, 0.12);
+    0 8px 22px
+    rgba(54, 64, 66, 0.12);
 
   animation:
-    calendar-popover-in 0.15s ease;
+    calendar-popover-in
+    0.15s ease;
 }
 
 @keyframes calendar-popover-in {
@@ -455,7 +1009,10 @@
 
 .calendar-header {
   display: grid;
-  grid-template-columns: 32px 1fr 32px;
+
+  grid-template-columns:
+    32px 1fr 32px;
+
   align-items: center;
 
   margin-bottom: 1rem;
@@ -474,13 +1031,19 @@
   height: 32px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   color: var(--color-text);
-  background-color: var(--color-background);
 
-  border: 1px solid var(--color-border);
+  background-color:
+    var(--color-background);
+
+  border: 1px solid
+    var(--color-border);
+
   border-radius: 3px;
 
   transition:
@@ -490,20 +1053,26 @@
 
 .calendar-header button:hover:not(:disabled) {
   color: var(--color-primary);
-  border-color: var(--color-primary);
+
+  border-color:
+    var(--color-primary);
 }
 
 .calendar-header button:disabled {
   cursor: not-allowed;
 
   color: var(--color-border);
+
   opacity: 0.6;
 }
 
 .calendar-weekdays,
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+
+  grid-template-columns:
+    repeat(7, 1fr);
+
   gap: 4px;
 }
 
@@ -517,6 +1086,7 @@
   text-align: center;
 
   font-size: 0.68rem;
+
   font-weight: 700;
 }
 
@@ -524,13 +1094,18 @@
   aspect-ratio: 1;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   color: var(--color-text);
-  background-color: var(--color-background);
+
+  background-color:
+    var(--color-background);
 
   border: 1px solid transparent;
+
   border-radius: 3px;
 
   font-size: var(--font-size-xs);
@@ -540,14 +1115,18 @@
   .calendar-day--empty,
   .calendar-day--disabled
 ):hover {
-  border-color: var(--color-primary);
+  border-color:
+    var(--color-primary);
 }
 
 .calendar-day--selected {
   color: var(--color-text-light);
-  background-color: var(--color-primary);
 
-  border-color: var(--color-primary);
+  background-color:
+    var(--color-primary);
+
+  border-color:
+    var(--color-primary);
 
   font-weight: 700;
 }
@@ -562,6 +1141,7 @@
 
 .calendar-day--disabled {
   color: var(--color-text-secondary);
+
   background-color: transparent;
 
   cursor: not-allowed;
@@ -571,22 +1151,28 @@
 
 .calendar-footer {
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   margin-top: 1rem;
+
   padding-top: 0.85rem;
 
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid
+    var(--color-border);
 }
 
 .calendar-footer-clear {
   color: var(--color-text-secondary);
 
   background: none;
+
   border: none;
 
   font-size: var(--font-size-xs);
+
   font-weight: 700;
 }
 
@@ -605,12 +1191,15 @@
 
   color: var(--color-text-light);
 
-  background-color: var(--color-primary);
+  background-color:
+    var(--color-primary);
 
   border: none;
+
   border-radius: 3px;
 
   font-size: var(--font-size-xs);
+
   font-weight: 700;
 }
 
@@ -618,24 +1207,33 @@
   background-color: #4b5b7c;
 }
 
-/* ENTREGA */
+
+/* =========================================
+   ENTREGA
+========================================= */
 
 .delivery-notice {
   display: flex;
+
   gap: 13px;
 
   margin-bottom: 1.5rem;
+
   padding: 1.25rem;
 
-  background-color: var(--color-secondary);
+  background-color:
+    var(--color-secondary);
 
   border: 1px solid #c5d5d9;
+
   border-radius: var(--radius-md);
 }
 
 .delivery-notice-icon {
   display: flex;
+
   align-items: flex-start;
+
   justify-content: center;
 
   color: var(--color-primary);
@@ -653,18 +1251,24 @@
   color: var(--color-text);
 
   font-size: var(--font-size-sm);
+
   line-height: 1.5;
 }
 
-/* MENSAGENS */
+
+/* =========================================
+   MENSAGENS
+========================================= */
 
 .anuncio-message {
   margin-bottom: 1rem;
+
   padding: 12px 14px;
 
   border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
+
   line-height: 1.4;
 }
 
@@ -684,11 +1288,16 @@
   border: 1px solid #cadbcd;
 }
 
-/* AÇÕES */
+
+/* =========================================
+   AÇÕES
+========================================= */
 
 .anuncio-actions {
   display: flex;
+
   justify-content: flex-end;
+
   gap: 10px;
 
   padding-bottom: 2rem;
@@ -712,49 +1321,60 @@
 
 .primary-button {
   color: var(--color-text-light);
-  background-color: var(--color-accent);
 
-  border: 1px solid var(--color-accent);
+  background-color:
+    var(--color-accent);
+
+  border: 1px solid
+    var(--color-accent);
 }
 
 .primary-button:hover:not(:disabled) {
   background-color: #b96e55;
+
   border-color: #b96e55;
 }
 
 .secondary-button {
   color: var(--color-text);
-  background-color: var(--color-surface);
 
-  border: 1px solid var(--color-border);
+  background-color:
+    var(--color-surface);
+
+  border: 1px solid
+    var(--color-border);
 }
 
 .secondary-button:hover:not(:disabled) {
-  border-color: var(--color-primary);
+  border-color:
+    var(--color-primary);
 }
 
 .primary-button:disabled,
 .secondary-button:disabled {
   cursor: not-allowed;
+
   opacity: 0.6;
 }
 
-/* RESPONSIVO */
+
+/* =========================================
+   RESPONSIVO
+========================================= */
 
 @media (max-width: 900px) {
   .novo-anuncio-page {
-    /*
-      Navbar tablet: aproximadamente 76px.
-    */
     padding-top: 94px;
+  }
+
+  .anuncio-top-row {
+    grid-template-columns:
+      minmax(0, 1fr) 210px;
   }
 }
 
 @media (max-width: 700px) {
   .novo-anuncio-page {
-    /*
-      Navbar mobile: aproximadamente 126px.
-    */
     padding-top: 142px;
   }
 
@@ -776,15 +1396,23 @@
     grid-column: auto;
   }
 
-  .modalidade-options {
+  .anuncio-top-row {
     grid-template-columns: 1fr;
+
+    gap: 1rem;
   }
 
-  .modalidade-option {
-    min-height: auto;
+  .modalidade-tile {
+    min-height: 66px;
+  }
 
-    flex-direction: row;
-    align-items: center;
+  .preco-inline {
+    align-items: stretch;
+  }
+
+  .preco-inline
+    .preco-group {
+    max-width: none;
   }
 
   .calendar-picker {
@@ -809,6 +1437,11 @@
   .secondary-button {
     width: 100%;
   }
+
+  .imagens-preview-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 400px) {
@@ -819,5 +1452,22 @@
   .calendar-weekdays,
   .calendar-grid {
     gap: 3px;
+  }
+
+  .imagens-preview-grid {
+    gap: 8px;
+  }
+
+  .imagem-preview-actions {
+    padding: 6px;
+  }
+
+  .imagem-preview-actions button {
+    min-width: 28px;
+    min-height: 28px;
+
+    padding: 3px 5px;
+
+    font-size: 0.68rem;
   }
 }

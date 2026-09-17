@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 import MarketplaceNavbar from "../../components/MarketplaceNavbar/MarketplaceNavbar";
@@ -75,6 +79,17 @@ const DIAS_SEMANA = [
   "Sáb",
 ];
 
+const MAX_IMAGENS = 5;
+const MAX_TAMANHO_IMAGEM =
+  4 * 1024 * 1024;
+
+const TIPOS_IMAGEM_PERMITIDOS = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+];
+
+
 /*
  * ============================================================
  * DATAS
@@ -124,20 +139,42 @@ function obterDiasDoMes(data) {
   const ano = data.getFullYear();
   const mes = data.getMonth();
 
-  const primeiroDia = new Date(ano, mes, 1);
-  const ultimoDia = new Date(ano, mes + 1, 0);
+  const primeiroDia = new Date(
+    ano,
+    mes,
+    1
+  );
 
-  const primeiroDiaSemana = primeiroDia.getDay();
-  const quantidadeDias = ultimoDia.getDate();
+  const ultimoDia = new Date(
+    ano,
+    mes + 1,
+    0
+  );
+
+  const primeiroDiaSemana =
+    primeiroDia.getDay();
+
+  const quantidadeDias =
+    ultimoDia.getDate();
 
   const dias = [];
 
-  for (let i = 0; i < primeiroDiaSemana; i++) {
+  for (
+    let i = 0;
+    i < primeiroDiaSemana;
+    i++
+  ) {
     dias.push(null);
   }
 
-  for (let dia = 1; dia <= quantidadeDias; dia++) {
-    dias.push(new Date(ano, mes, dia));
+  for (
+    let dia = 1;
+    dia <= quantidadeDias;
+    dia++
+  ) {
+    dias.push(
+      new Date(ano, mes, dia)
+    );
   }
 
   return dias;
@@ -146,52 +183,81 @@ function obterDiasDoMes(data) {
 function formatarDataAPI(data) {
   const ano = data.getFullYear();
 
-  const mes = String(data.getMonth() + 1).padStart(
-    2,
-    "0"
-  );
+  const mes = String(
+    data.getMonth() + 1
+  ).padStart(2, "0");
 
-  const dia = String(data.getDate()).padStart(2, "0");
+  const dia = String(
+    data.getDate()
+  ).padStart(2, "0");
 
   return `${ano}-${mes}-${dia}`;
 }
 
-function dataJaSelecionada(data, datasSelecionadas) {
+function dataJaSelecionada(
+  data,
+  datasSelecionadas
+) {
   return datasSelecionadas.includes(
     formatarDataAPI(data)
   );
 }
+
+
+/*
+ * ============================================================
+ * COMPONENTE
+ * ============================================================
+ */
 
 function NovoAnuncio() {
   const navigate = useNavigate();
 
   const amanha = obterAmanha();
 
-  const [formulario, setFormulario] = useState({
-    titulo: "",
-    descricao: "",
-    categoria: "",
-    modalidade: "",
-    condicao: "",
-    preco: "",
-  });
+  const [formulario, setFormulario] =
+    useState({
+      titulo: "",
+      descricao: "",
+      categoria: "",
+      modalidade: "",
+      condicao: "",
+      preco: "",
+      imagens: [],
+    });
 
-  const [mesAtual, setMesAtual] = useState(() =>
-    inicioDoMes(amanha)
-  );
-
-  const [datasSelecionadas, setDatasSelecionadas] =
+  const [previews, setPreviews] =
     useState([]);
 
-  const [calendarioAberto, setCalendarioAberto] =
+  const [mesAtual, setMesAtual] =
+    useState(() =>
+      inicioDoMes(amanha)
+    );
+
+  const [
+    datasSelecionadas,
+    setDatasSelecionadas,
+  ] = useState([]);
+
+  const [
+    calendarioAberto,
+    setCalendarioAberto,
+  ] = useState(false);
+
+  const [erro, setErro] =
+    useState("");
+
+  const [sucesso, setSucesso] =
+    useState("");
+
+  const [carregando, setCarregando] =
     useState(false);
 
-  const [erro, setErro] = useState("");
-  const [sucesso, setSucesso] = useState("");
+  const calendarioRef =
+    useRef(null);
 
-  const [carregando, setCarregando] = useState(false);
-
-  const calendarioRef = useRef(null);
+  const inputImagensRef =
+    useRef(null);
 
   const usuario = JSON.parse(
     localStorage.getItem("usuario")
@@ -203,9 +269,27 @@ function NovoAnuncio() {
 
   const pessoa = usuario || parceiro;
 
+
   /*
    * ============================================================
-   * FECHAR CALENDÁRIO AO CLICAR FORA / ESC
+   * LIMPEZA DAS PREVIEWS
+   * ============================================================
+   */
+
+  useEffect(() => {
+    return () => {
+      previews.forEach((preview) => {
+        URL.revokeObjectURL(
+          preview.url
+        );
+      });
+    };
+  }, [previews]);
+
+
+  /*
+   * ============================================================
+   * FECHAR CALENDÁRIO
    * ============================================================
    */
 
@@ -250,45 +334,310 @@ function NovoAnuncio() {
     };
   }, []);
 
-  function handleChange(event) {
-    const { name, value } = event.target;
 
-    setFormulario((estadoAnterior) => ({
-      ...estadoAnterior,
-      [name]: value,
-    }));
+  /*
+   * ============================================================
+   * CAMPOS
+   * ============================================================
+   */
+
+  function handleChange(event) {
+    const {
+      name,
+      value,
+    } = event.target;
+
+    setFormulario(
+      (estadoAnterior) => ({
+        ...estadoAnterior,
+        [name]: value,
+      })
+    );
   }
+
+
+  /*
+   * ============================================================
+   * IMAGENS
+   * ============================================================
+   */
+
+  function criarChaveArquivo(arquivo) {
+    return [
+      arquivo.name,
+      arquivo.size,
+      arquivo.lastModified,
+    ].join("-");
+  }
+
+  function handleImagensChange(event) {
+    const arquivosSelecionados =
+      Array.from(
+        event.target.files || []
+      );
+
+    if (
+      arquivosSelecionados.length === 0
+    ) {
+      return;
+    }
+
+    setErro("");
+
+    const imagensAtuais =
+      formulario.imagens || [];
+
+    const chavesExistentes =
+      new Set(
+        imagensAtuais.map(
+          criarChaveArquivo
+        )
+      );
+
+    const novosArquivos = [];
+
+    for (const arquivo of
+      arquivosSelecionados) {
+      const chave =
+        criarChaveArquivo(arquivo);
+
+      if (
+        chavesExistentes.has(chave)
+      ) {
+        continue;
+      }
+
+      if (
+        !TIPOS_IMAGEM_PERMITIDOS.includes(
+          arquivo.type
+        )
+      ) {
+        setErro(
+          "Use apenas imagens JPG, PNG ou WebP."
+        );
+
+        continue;
+      }
+
+      if (
+        arquivo.size >
+        MAX_TAMANHO_IMAGEM
+      ) {
+        setErro(
+          `A imagem "${arquivo.name}" ultrapassa o limite de 4 MB.`
+        );
+
+        continue;
+      }
+
+      novosArquivos.push(arquivo);
+      chavesExistentes.add(chave);
+    }
+
+    const total =
+      imagensAtuais.length +
+      novosArquivos.length;
+
+    if (total > MAX_IMAGENS) {
+      setErro(
+        `Você pode adicionar no máximo ${MAX_IMAGENS} imagens por anúncio.`
+      );
+
+      const quantidadePermitida =
+        MAX_IMAGENS -
+        imagensAtuais.length;
+
+      novosArquivos.splice(
+        quantidadePermitida
+      );
+    }
+
+    if (
+      novosArquivos.length === 0
+    ) {
+      event.target.value = "";
+      return;
+    }
+
+    const novasImagens = [
+      ...imagensAtuais,
+      ...novosArquivos,
+    ];
+
+    setFormulario(
+      (estadoAnterior) => ({
+        ...estadoAnterior,
+        imagens: novasImagens,
+      })
+    );
+
+    const novasPreviews =
+      novosArquivos.map(
+        (arquivo) => ({
+          arquivo,
+          url: URL.createObjectURL(
+            arquivo
+          ),
+          chave:
+            criarChaveArquivo(
+              arquivo
+            ),
+        })
+      );
+
+    setPreviews(
+      (previewsAtuais) => [
+        ...previewsAtuais,
+        ...novasPreviews,
+      ]
+    );
+
+    event.target.value = "";
+  }
+
+  function removerImagem(indice) {
+    setFormulario(
+      (estadoAnterior) => ({
+        ...estadoAnterior,
+        imagens:
+          estadoAnterior.imagens.filter(
+            (_, index) =>
+              index !== indice
+          ),
+      })
+    );
+
+    setPreviews(
+      (previewsAtuais) => {
+        const previewRemovida =
+          previewsAtuais[indice];
+
+        if (previewRemovida) {
+          URL.revokeObjectURL(
+            previewRemovida.url
+          );
+        }
+
+        return previewsAtuais.filter(
+          (_, index) =>
+            index !== indice
+        );
+      }
+    );
+  }
+
+  function moverImagem(
+    indiceOrigem,
+    indiceDestino
+  ) {
+    if (
+      indiceDestino < 0 ||
+      indiceDestino >=
+        formulario.imagens.length
+    ) {
+      return;
+    }
+
+    const novasImagens = [
+      ...formulario.imagens,
+    ];
+
+    const [
+      imagemMovida,
+    ] = novasImagens.splice(
+      indiceOrigem,
+      1
+    );
+
+    novasImagens.splice(
+      indiceDestino,
+      0,
+      imagemMovida
+    );
+
+    setFormulario(
+      (estadoAnterior) => ({
+        ...estadoAnterior,
+        imagens: novasImagens,
+      })
+    );
+
+    setPreviews(
+      (previewsAtuais) => {
+        const novasPreviews = [
+          ...previewsAtuais,
+        ];
+
+        const [
+          previewMovida,
+        ] = novasPreviews.splice(
+          indiceOrigem,
+          1
+        );
+
+        novasPreviews.splice(
+          indiceDestino,
+          0,
+          previewMovida
+        );
+
+        return novasPreviews;
+      }
+    );
+  }
+
+
+  /*
+   * ============================================================
+   * CALENDÁRIO
+   * ============================================================
+   */
 
   function diaDesabilitado(data) {
     return data < amanha;
   }
 
   function selecionarData(data) {
-    if (!data || diaDesabilitado(data)) {
+    if (
+      !data ||
+      diaDesabilitado(data)
+    ) {
       return;
     }
 
-    const dataFormatada = formatarDataAPI(data);
+    const dataFormatada =
+      formatarDataAPI(data);
 
-    setDatasSelecionadas((datasAnteriores) => {
-      if (datasAnteriores.includes(dataFormatada)) {
-        return datasAnteriores.filter(
-          (item) => item !== dataFormatada
-        );
+    setDatasSelecionadas(
+      (datasAnteriores) => {
+        if (
+          datasAnteriores.includes(
+            dataFormatada
+          )
+        ) {
+          return datasAnteriores.filter(
+            (item) =>
+              item !== dataFormatada
+          );
+        }
+
+        return [
+          ...datasAnteriores,
+          dataFormatada,
+        ].sort();
       }
-
-      return [
-        ...datasAnteriores,
-        dataFormatada,
-      ].sort();
-    });
+    );
   }
 
-  function removerData(dataFormatada) {
-    setDatasSelecionadas((datasAnteriores) =>
-      datasAnteriores.filter(
-        (item) => item !== dataFormatada
-      )
+  function removerData(
+    dataFormatada
+  ) {
+    setDatasSelecionadas(
+      (datasAnteriores) =>
+        datasAnteriores.filter(
+          (item) =>
+            item !== dataFormatada
+        )
     );
   }
 
@@ -296,14 +645,20 @@ function NovoAnuncio() {
     return (
       mesAtual.getFullYear() >
         amanha.getFullYear() ||
-      (mesAtual.getFullYear() ===
-        amanha.getFullYear() &&
-        mesAtual.getMonth() > amanha.getMonth())
+      (
+        mesAtual.getFullYear() ===
+          amanha.getFullYear() &&
+        mesAtual.getMonth() >
+          amanha.getMonth()
+      )
     );
   }
 
   function mudarMes(direcao) {
-    if (direcao === -1 && !podeVoltarMes()) {
+    if (
+      direcao === -1 &&
+      !podeVoltarMes()
+    ) {
       return;
     }
 
@@ -311,15 +666,30 @@ function NovoAnuncio() {
       (mesAnterior) =>
         new Date(
           mesAnterior.getFullYear(),
-          mesAnterior.getMonth() + direcao,
+          mesAnterior.getMonth() +
+            direcao,
           1
         )
     );
   }
 
+
+  /*
+   * ============================================================
+   * NAVEGAÇÃO
+   * ============================================================
+   */
+
   function voltarInicio() {
     navigate("/inicio");
   }
+
+
+  /*
+   * ============================================================
+   * ENVIO
+   * ============================================================
+   */
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -335,9 +705,22 @@ function NovoAnuncio() {
       return;
     }
 
-    if (datasSelecionadas.length === 0) {
+    if (
+      datasSelecionadas.length === 0
+    ) {
       setErro(
         "Selecione pelo menos um dia disponível para entrega."
+      );
+
+      return;
+    }
+
+    if (
+      formulario.imagens.length >
+      MAX_IMAGENS
+    ) {
+      setErro(
+        `Você pode adicionar no máximo ${MAX_IMAGENS} imagens.`
       );
 
       return;
@@ -346,32 +729,81 @@ function NovoAnuncio() {
     setCarregando(true);
 
     try {
-      const payload = {
-        titulo: formulario.titulo,
-        descricao: formulario.descricao,
-        categoria: formulario.categoria,
-        modalidade: formulario.modalidade,
-        condicao: formulario.condicao,
-        preco:
-          formulario.modalidade === "venda"
-            ? formulario.preco
-            : null,
-        datas: datasSelecionadas,
-      };
+      const formData =
+        new FormData();
 
-      const resposta = await api.post(
-        "/anuncios",
-        payload
+      formData.append(
+        "titulo",
+        formulario.titulo
       );
 
-      setSucesso(resposta.data.mensagem);
+      formData.append(
+        "descricao",
+        formulario.descricao
+      );
+
+      formData.append(
+        "categoria",
+        formulario.categoria
+      );
+
+      formData.append(
+        "modalidade",
+        formulario.modalidade
+      );
+
+      formData.append(
+        "condicao",
+        formulario.condicao
+      );
+
+      formData.append(
+        "preco",
+        formulario.modalidade ===
+          "venda"
+          ? formulario.preco
+          : ""
+      );
+
+      datasSelecionadas.forEach(
+        (data) => {
+          formData.append(
+            "datas",
+            data
+          );
+        }
+      );
+
+      formulario.imagens.forEach(
+        (imagem) => {
+          formData.append(
+            "imagens",
+            imagem
+          );
+        }
+      );
+
+      const resposta =
+        await api.post(
+          "/anuncios",
+          formData
+        );
+
+      setSucesso(
+        resposta.data.mensagem ||
+          "Anúncio publicado com sucesso!"
+      );
 
       setTimeout(() => {
         navigate("/inicio");
       }, 1000);
     } catch (error) {
-      if (error.response?.data?.erro) {
-        setErro(error.response.data.erro);
+      if (
+        error.response?.data?.erro
+      ) {
+        setErro(
+          error.response.data.erro
+        );
       } else {
         setErro(
           "Não foi possível publicar o anúncio."
@@ -382,7 +814,15 @@ function NovoAnuncio() {
     }
   }
 
-  const diasDoMes = obterDiasDoMes(mesAtual);
+
+  /*
+   * ============================================================
+   * DADOS CALENDÁRIO
+   * ============================================================
+   */
+
+  const diasDoMes =
+    obterDiasDoMes(mesAtual);
 
   const textoTrigger =
     datasSelecionadas.length === 0
@@ -392,6 +832,13 @@ function NovoAnuncio() {
             ? "dia selecionado"
             : "dias selecionados"
         }`;
+
+
+  /*
+   * ============================================================
+   * RENDER
+   * ============================================================
+   */
 
   return (
     <main className="novo-anuncio-page">
@@ -405,193 +852,379 @@ function NovoAnuncio() {
         className="novo-anuncio-content"
         onSubmit={handleSubmit}
       >
-        <section className="anuncio-section">
-          <div className="anuncio-section-header">
-            <span>01</span>
+        <div className="anuncio-top-row">
+          <section className="anuncio-section anuncio-section--item">
+            <div className="anuncio-section-header">
+              <span>01</span>
 
-            <div>
-              <h2>Sobre o item</h2>
+              <div>
+                <h2>
+                  Sobre o item
+                </h2>
 
-              <p>
-                Conte um pouco sobre o que você
-                deseja disponibilizar.
-              </p>
+                <p>
+                  Conte um pouco sobre o que você
+                  deseja disponibilizar.
+                </p>
+              </div>
+            </div>
+
+            <div className="anuncio-form-grid">
+              <div className="form-group form-group--full">
+                <label htmlFor="titulo">
+                  Título
+                </label>
+
+                <input
+                  id="titulo"
+                  name="titulo"
+                  value={formulario.titulo}
+                  onChange={handleChange}
+                  placeholder="Ex.: Livro de matemática do 2º ano"
+                  maxLength={150}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="categoria">
+                  Categoria
+                </label>
+
+                <select
+                  id="categoria"
+                  name="categoria"
+                  value={formulario.categoria}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">
+                    Selecione uma categoria
+                  </option>
+
+                  {CATEGORIAS.map(
+                    (categoria) => (
+                      <option
+                        key={categoria}
+                        value={categoria}
+                      >
+                        {categoria}
+                      </option>
+                    )
+                  )}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="condicao">
+                  Condição
+                </label>
+
+                <select
+                  id="condicao"
+                  name="condicao"
+                  value={formulario.condicao}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">
+                    Selecione a condição
+                  </option>
+
+                  {CONDICOES.map(
+                    (condicao) => (
+                      <option
+                        key={condicao.value}
+                        value={condicao.value}
+                      >
+                        {condicao.label}
+                      </option>
+                    )
+                  )}
+                </select>
+              </div>
+
+              <div className="form-group form-group--full">
+                <label htmlFor="descricao">
+                  Descrição
+                </label>
+
+                <textarea
+                  id="descricao"
+                  name="descricao"
+                  value={formulario.descricao}
+                  onChange={handleChange}
+                  placeholder="Descreva o estado do item, tamanho, série, edição ou outras informações importantes."
+                  rows={5}
+                  maxLength={600}
+                  required
+                />
+
+                <small className="char-counter">
+                  {formulario.descricao.length}/600
+                </small>
+              </div>
+            </div>
+          </section>
+
+          <div className="modalidade-card">
+            <span className="modalidade-card-label">
+              Modalidade
+            </span>
+
+            <div className="modalidade-tiles">
+              {MODALIDADES.map(
+                (modalidade) => {
+                  const Icon =
+                    modalidade.Icon;
+
+                  const ativa =
+                    formulario.modalidade ===
+                    modalidade.value;
+
+                  const classeTile = [
+                    "modalidade-tile",
+                    `modalidade-tile--${modalidade.value}`,
+                    ativa
+                      ? "modalidade-tile--active"
+                      : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ");
+
+                  return (
+                    <label
+                      key={modalidade.value}
+                      className={
+                        classeTile
+                      }
+                    >
+                      <input
+                        type="radio"
+                        name="modalidade"
+                        value={
+                          modalidade.value
+                        }
+                        checked={ativa}
+                        onChange={
+                          handleChange
+                        }
+                        required
+                      />
+
+                      <span className="modalidade-tile-icon">
+                        <Icon size={18} />
+                      </span>
+
+                      <span className="modalidade-tile-text">
+                        <strong className="modalidade-tile-label">
+                          {
+                            modalidade.label
+                          }
+                        </strong>
+
+                        <small className="modalidade-tile-desc">
+                          {
+                            modalidade.description
+                          }
+                        </small>
+                      </span>
+
+                      <span className="modalidade-tile-check">
+                        <IconCheck size={11} />
+                      </span>
+                    </label>
+                  );
+                }
+              )}
             </div>
           </div>
+        </div>
 
-          <div className="anuncio-form-grid">
-            <div className="form-group form-group--full">
-              <label htmlFor="titulo">Título</label>
 
-              <input
-                id="titulo"
-                name="titulo"
-                value={formulario.titulo}
-                onChange={handleChange}
-                placeholder="Ex.: Livro de matemática do 2º ano"
-                maxLength={150}
-                required
-              />
-            </div>
+        {/* =====================================================
+            IMAGENS
+        ====================================================== */}
 
-            <div className="form-group">
-              <label htmlFor="categoria">
-                Categoria
-              </label>
-
-              <select
-                id="categoria"
-                name="categoria"
-                value={formulario.categoria}
-                onChange={handleChange}
-                required
-              >
-                <option value="">
-                  Selecione uma categoria
-                </option>
-
-                {CATEGORIAS.map((categoria) => (
-                  <option
-                    key={categoria}
-                    value={categoria}
-                  >
-                    {categoria}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="condicao">
-                Condição
-              </label>
-
-              <select
-                id="condicao"
-                name="condicao"
-                value={formulario.condicao}
-                onChange={handleChange}
-                required
-              >
-                <option value="">
-                  Selecione a condição
-                </option>
-
-                {CONDICOES.map((condicao) => (
-                  <option
-                    key={condicao.value}
-                    value={condicao.value}
-                  >
-                    {condicao.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group form-group--full">
-              <label htmlFor="descricao">
-                Descrição
-              </label>
-
-              <textarea
-                id="descricao"
-                name="descricao"
-                value={formulario.descricao}
-                onChange={handleChange}
-                placeholder="Descreva o estado do item, tamanho, série, edição ou outras informações importantes."
-                rows={5}
-                maxLength={600}
-                required
-              />
-
-              <small className="char-counter">
-                {formulario.descricao.length}/600
-              </small>
-            </div>
-          </div>
-        </section>
-
-        <section className="anuncio-section">
+        <section className="anuncio-section anuncio-section--imagens">
           <div className="anuncio-section-header">
             <span>02</span>
 
             <div>
               <h2>
-                Como você deseja disponibilizar?
+                Fotos do item
               </h2>
 
               <p>
-                Escolha uma modalidade para o seu item.
+                Adicione até {MAX_IMAGENS} fotos.
+                A primeira será usada como imagem
+                principal do anúncio.
               </p>
             </div>
           </div>
 
-          <div className="modalidade-options">
-            {MODALIDADES.map((modalidade) => {
-              const Icon = modalidade.Icon;
+          <div className="imagens-upload">
+            <input
+              ref={inputImagensRef}
+              id="imagens"
+              name="imagens"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              onChange={
+                handleImagensChange
+              }
+              className="imagens-input"
+            />
 
-              return (
-                <label
-                  key={modalidade.value}
-                  className={
-                    formulario.modalidade ===
-                    modalidade.value
-                      ? "modalidade-option modalidade-option--active"
-                      : "modalidade-option"
-                  }
-                >
-                  <input
-                    type="radio"
-                    name="modalidade"
-                    value={modalidade.value}
-                    checked={
-                      formulario.modalidade ===
-                      modalidade.value
-                    }
-                    onChange={handleChange}
-                    required
-                  />
+            <button
+              type="button"
+              className="imagens-upload-button"
+              onClick={() =>
+                inputImagensRef.current?.click()
+              }
+              disabled={
+                formulario.imagens.length >=
+                MAX_IMAGENS ||
+                carregando
+              }
+            >
+              <span
+                className="imagens-upload-icon"
+                aria-hidden="true"
+              >
+                +
+              </span>
 
-                  <span className="modalidade-icon">
-                    <Icon size={19} />
-                  </span>
+              <span>
+                Adicionar fotos
+              </span>
+            </button>
 
-                  <span className="modalidade-content">
-                    <strong>
-                      {modalidade.label}
-                    </strong>
-
-                    <small>
-                      {modalidade.description}
-                    </small>
-                  </span>
-
-                  <span className="modalidade-check">
-                    <IconCheck size={13} />
-                  </span>
-                </label>
-              );
-            })}
+            <small className="imagens-upload-help">
+              JPG, PNG ou WebP · até 4 MB por foto
+              · {formulario.imagens.length}/
+              {MAX_IMAGENS}
+            </small>
           </div>
 
-          {formulario.modalidade === "venda" && (
-            <div className="form-group preco-group">
-              <label htmlFor="preco">Preço</label>
+          {previews.length > 0 && (
+            <div
+              className="imagens-preview-grid"
+              aria-label="Fotos selecionadas"
+            >
+              {previews.map(
+                (preview, index) => (
+                  <div
+                    key={preview.chave}
+                    className={
+                      index === 0
+                        ? "imagem-preview imagem-preview--principal"
+                        : "imagem-preview"
+                    }
+                  >
+                    <div className="imagem-preview-media">
+                      <img
+                        src={preview.url}
+                        alt={`Pré-visualização da foto ${
+                          index + 1
+                        } do anúncio`}
+                      />
 
-              <div className="price-input">
-                <span>R$</span>
+                      {index === 0 && (
+                        <span className="imagem-preview-principal">
+                          Principal
+                        </span>
+                      )}
+                    </div>
 
-                <input
-                  id="preco"
-                  name="preco"
-                  type="number"
-                  min="0.01"
-                  step="0.01"
-                  value={formulario.preco}
-                  onChange={handleChange}
-                  placeholder="0,00"
-                  required
-                />
+                    <div className="imagem-preview-actions">
+                      {index > 0 && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            moverImagem(
+                              index,
+                              index - 1
+                            )
+                          }
+                          aria-label={`Mover foto ${
+                            index + 1
+                          } para a esquerda`}
+                        >
+                          ←
+                        </button>
+                      )}
+
+                      {index <
+                        previews.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            moverImagem(
+                              index,
+                              index + 1
+                            )
+                          }
+                          aria-label={`Mover foto ${
+                            index + 1
+                          } para a direita`}
+                        >
+                          →
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        className="imagem-preview-remove"
+                        onClick={() =>
+                          removerImagem(
+                            index
+                          )
+                        }
+                        aria-label={`Remover foto ${
+                          index + 1
+                        }`}
+                      >
+                        Remover
+                      </button>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
+          )}
+        </section>
+
+
+        {/* =====================================================
+            PREÇO
+        ====================================================== */}
+
+        {formulario.modalidade ===
+          "venda" && (
+          <section className="anuncio-section anuncio-section--preco">
+            <div className="preco-inline">
+              <div className="form-group preco-group">
+                <label htmlFor="preco">
+                  Preço
+                </label>
+
+                <div className="price-input">
+                  <span>R$</span>
+
+                  <input
+                    id="preco"
+                    name="preco"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    value={formulario.preco}
+                    onChange={handleChange}
+                    placeholder="0,00"
+                    required
+                  />
+                </div>
               </div>
 
               <small>
@@ -599,15 +1232,22 @@ function NovoAnuncio() {
                 doações e trocas.
               </small>
             </div>
-          )}
-        </section>
+          </section>
+        )}
+
+
+        {/* =====================================================
+            CALENDÁRIO
+        ====================================================== */}
 
         <section className="anuncio-section">
           <div className="anuncio-section-header">
             <span>03</span>
 
             <div>
-              <h2>Escolha os dias</h2>
+              <h2>
+                Escolha os dias
+              </h2>
 
               <p>
                 Selecione os dias em que você poderá
@@ -635,7 +1275,9 @@ function NovoAnuncio() {
                 )
               }
               aria-haspopup="dialog"
-              aria-expanded={calendarioAberto}
+              aria-expanded={
+                calendarioAberto
+              }
             >
               <span className="calendar-trigger-icon">
                 <IconCalendar size={18} />
@@ -646,28 +1288,33 @@ function NovoAnuncio() {
               </span>
             </button>
 
-            {datasSelecionadas.length > 0 && (
+            {datasSelecionadas.length >
+              0 && (
               <div className="calendar-chips">
-                {datasSelecionadas.map((data) => (
-                  <span
-                    className="calendar-chip"
-                    key={data}
-                  >
-                    {formatarDataCurta(data)}
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        removerData(data)
-                      }
-                      aria-label={`Remover ${formatarDataCurta(
-                        data
-                      )}`}
+                {datasSelecionadas.map(
+                  (data) => (
+                    <span
+                      className="calendar-chip"
+                      key={data}
                     >
-                      ×
-                    </button>
-                  </span>
-                ))}
+                      {formatarDataCurta(
+                        data
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          removerData(data)
+                        }
+                        aria-label={`Remover ${formatarDataCurta(
+                          data
+                        )}`}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  )
+                )}
               </div>
             )}
 
@@ -680,20 +1327,28 @@ function NovoAnuncio() {
                 <div className="calendar-header">
                   <button
                     type="button"
-                    onClick={() => mudarMes(-1)}
-                    disabled={!podeVoltarMes()}
+                    onClick={() =>
+                      mudarMes(-1)
+                    }
+                    disabled={
+                      !podeVoltarMes()
+                    }
                     aria-label="Mês anterior"
                   >
                     <IconChevronLeft size={16} />
                   </button>
 
                   <strong>
-                    {formatarMes(mesAtual)}
+                    {formatarMes(
+                      mesAtual
+                    )}
                   </strong>
 
                   <button
                     type="button"
-                    onClick={() => mudarMes(1)}
+                    onClick={() =>
+                      mudarMes(1)
+                    }
                     aria-label="Próximo mês"
                   >
                     <IconChevronRight size={16} />
@@ -701,51 +1356,63 @@ function NovoAnuncio() {
                 </div>
 
                 <div className="calendar-weekdays">
-                  {DIAS_SEMANA.map((dia) => (
-                    <span key={dia}>{dia}</span>
-                  ))}
+                  {DIAS_SEMANA.map(
+                    (dia) => (
+                      <span key={dia}>
+                        {dia}
+                      </span>
+                    )
+                  )}
                 </div>
 
                 <div className="calendar-grid">
-                  {diasDoMes.map((data, index) => {
-                    if (!data) {
+                  {diasDoMes.map(
+                    (data, index) => {
+                      if (!data) {
+                        return (
+                          <span
+                            key={`vazio-${index}`}
+                            className="calendar-day calendar-day--empty"
+                          />
+                        );
+                      }
+
+                      const selecionada =
+                        dataJaSelecionada(
+                          data,
+                          datasSelecionadas
+                        );
+
+                      const desabilitada =
+                        diaDesabilitado(
+                          data
+                        );
+
                       return (
-                        <span
-                          key={`vazio-${index}`}
-                          className="calendar-day calendar-day--empty"
-                        />
+                        <button
+                          type="button"
+                          key={data.toISOString()}
+                          className={
+                            selecionada
+                              ? "calendar-day calendar-day--selected"
+                              : desabilitada
+                                ? "calendar-day calendar-day--disabled"
+                                : "calendar-day"
+                          }
+                          disabled={
+                            desabilitada
+                          }
+                          onClick={() =>
+                            selecionarData(
+                              data
+                            )
+                          }
+                        >
+                          {data.getDate()}
+                        </button>
                       );
                     }
-
-                    const selecionada =
-                      dataJaSelecionada(
-                        data,
-                        datasSelecionadas
-                      );
-
-                    const desabilitada =
-                      diaDesabilitado(data);
-
-                    return (
-                      <button
-                        type="button"
-                        key={data.toISOString()}
-                        className={
-                          selecionada
-                            ? "calendar-day calendar-day--selected"
-                            : desabilitada
-                              ? "calendar-day calendar-day--disabled"
-                              : "calendar-day"
-                        }
-                        disabled={desabilitada}
-                        onClick={() =>
-                          selecionarData(data)
-                        }
-                      >
-                        {data.getDate()}
-                      </button>
-                    );
-                  })}
+                  )}
                 </div>
 
                 <div className="calendar-footer">
@@ -753,10 +1420,13 @@ function NovoAnuncio() {
                     type="button"
                     className="calendar-footer-clear"
                     onClick={() =>
-                      setDatasSelecionadas([])
+                      setDatasSelecionadas(
+                        []
+                      )
                     }
                     disabled={
-                      datasSelecionadas.length === 0
+                      datasSelecionadas.length ===
+                      0
                     }
                   >
                     Limpar
@@ -766,7 +1436,9 @@ function NovoAnuncio() {
                     type="button"
                     className="calendar-footer-confirm"
                     onClick={() =>
-                      setCalendarioAberto(false)
+                      setCalendarioAberto(
+                        false
+                      )
                     }
                   >
                     Concluir
@@ -776,6 +1448,11 @@ function NovoAnuncio() {
             )}
           </div>
         </section>
+
+
+        {/* =====================================================
+            AVISO
+        ====================================================== */}
 
         <section className="delivery-notice">
           <div
@@ -800,6 +1477,11 @@ function NovoAnuncio() {
           </div>
         </section>
 
+
+        {/* =====================================================
+            MENSAGENS
+        ====================================================== */}
+
         {erro && (
           <div
             className="anuncio-message anuncio-message--error"
@@ -817,6 +1499,11 @@ function NovoAnuncio() {
             {sucesso}
           </div>
         )}
+
+
+        {/* =====================================================
+            AÇÕES
+        ====================================================== */}
 
         <div className="anuncio-actions">
           <button
