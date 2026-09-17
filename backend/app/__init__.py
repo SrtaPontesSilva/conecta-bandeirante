@@ -16,20 +16,6 @@ def create_app():
     app = Flask(__name__)
 
     # =========================================
-    # PRÉ-FLIGHT / OPTIONS
-    # =========================================
-
-    # O navegador envia uma requisição OPTIONS
-    # antes de determinadas requisições, como o
-    # POST com FormData + Authorization.
-    #
-    # Essa requisição não deve exigir JWT.
-    @app.before_request
-    def permitir_preflight():
-        if request.method == "OPTIONS":
-            return "", 204
-
-    # =========================================
     # BANCO DE DADOS
     # =========================================
 
@@ -105,6 +91,7 @@ def create_app():
                 "origins": [
                     "http://localhost:5173",
                     "http://127.0.0.1:5173",
+                    "https://conecta-bandeirante-2026.vercel.app",
                 ]
             }
         },
