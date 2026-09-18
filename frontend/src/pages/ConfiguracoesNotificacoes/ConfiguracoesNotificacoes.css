@@ -7,24 +7,16 @@
   min-height: 100dvh;
 
   /*
-   * O MarketplaceNavbar é fixo.
-   * Mantemos uma área superior segura para que
-   * o conteúdo nunca comece atrás dele.
+   * O MarketplaceNavbar possui duas áreas nesta página:
+   * navbar principal + cabeçalho "Notificações".
+   * O conteúdo precisa começar abaixo das duas.
    */
-  padding-top: 104px;
-
-  /*
-   * Espaço reservado para o BottomNavigation.
-   */
-  padding-bottom: 120px;
+  padding-top: 164px;
+  padding-bottom: 100px;
 
   background-color: var(--color-background);
   color: var(--color-text);
 
-  /*
-   * Evita que elementos muito largos criem
-   * rolagem horizontal acidental.
-   */
   overflow-x: hidden;
 }
 
@@ -565,13 +557,7 @@
 
 @media (max-width: 768px) {
   .configuracoes-notificacoes-page {
-    /*
-     * Não reduzimos demais o espaço superior.
-     * O navbar continua sendo considerado fixo.
-     */
-    padding-top: 96px;
-
-    padding-bottom: 112px;
+    padding-bottom: 96px;
   }
 
   .configuracoes-notificacoes-container {
@@ -601,12 +587,7 @@
 
 @media (max-width: 600px) {
   .configuracoes-notificacoes-page {
-    /*
-     * Espaço real de segurança abaixo do navbar.
-     */
-    padding-top: 92px;
-
-    padding-bottom: 112px;
+    padding-bottom: 92px;
   }
 
   .configuracoes-notificacoes-container {
@@ -746,13 +727,7 @@
 
 @media (max-width: 480px) {
   .configuracoes-notificacoes-page {
-    /*
-     * Mantemos espaço suficiente para o navbar.
-     * Não diminuir este valor demais.
-     */
-    padding-top: 90px;
-
-    padding-bottom: 108px;
+    padding-bottom: 88px;
   }
 
   .configuracoes-notificacoes-container {
@@ -849,13 +824,7 @@
 
 @media (max-width: 380px) {
   .configuracoes-notificacoes-page {
-    /*
-     * Mesmo em celulares muito estreitos,
-     * preservamos uma área superior segura.
-     */
-    padding-top: 88px;
-
-    padding-bottom: 106px;
+    padding-bottom: 84px;
   }
 
   .configuracoes-notificacoes-container {
