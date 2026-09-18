@@ -7,19 +7,25 @@
   min-height: 100dvh;
 
   /*
-   * O MarketplaceNavbar fica sobreposto/fixo.
-   * Este espaço impede que o primeiro card fique
-   * escondido atrás dele.
+   * O MarketplaceNavbar é fixo.
+   * Mantemos uma área superior segura para que
+   * o conteúdo nunca comece atrás dele.
    */
-  padding-top: 108px;
+  padding-top: 104px;
 
   /*
-   * Espaço de segurança para o BottomNavigation.
+   * Espaço reservado para o BottomNavigation.
    */
-  padding-bottom: 112px;
+  padding-bottom: 120px;
 
   background-color: var(--color-background);
   color: var(--color-text);
+
+  /*
+   * Evita que elementos muito largos criem
+   * rolagem horizontal acidental.
+   */
+  overflow-x: hidden;
 }
 
 
@@ -32,7 +38,7 @@
 
   margin: 0 auto;
 
-  padding: 0 0 24px;
+  padding: 18px 0 28px;
 }
 
 
@@ -560,12 +566,12 @@
 @media (max-width: 768px) {
   .configuracoes-notificacoes-page {
     /*
-     * Navbar mobile costuma ser menor,
-     * mas ainda precisa de área de segurança.
+     * Não reduzimos demais o espaço superior.
+     * O navbar continua sendo considerado fixo.
      */
-    padding-top: 88px;
+    padding-top: 96px;
 
-    padding-bottom: 108px;
+    padding-bottom: 112px;
   }
 
   .configuracoes-notificacoes-container {
@@ -573,6 +579,8 @@
       680px,
       calc(100% - 28px)
     );
+
+    padding-top: 16px;
   }
 
   .configuracoes-notificacoes-section {
@@ -593,15 +601,19 @@
 
 @media (max-width: 600px) {
   .configuracoes-notificacoes-page {
-    padding-top: 82px;
+    /*
+     * Espaço real de segurança abaixo do navbar.
+     */
+    padding-top: 92px;
 
-    padding-bottom: 106px;
+    padding-bottom: 112px;
   }
 
   .configuracoes-notificacoes-container {
     width: calc(100% - 20px);
 
-    padding-bottom: 18px;
+    padding-top: 14px;
+    padding-bottom: 20px;
   }
 
   .configuracoes-notificacoes-form {
@@ -617,7 +629,7 @@
   }
 
   .configuracoes-notificacoes-section {
-    padding: 14px 14px;
+    padding: 14px;
 
     border-radius: 13px;
   }
@@ -734,13 +746,19 @@
 
 @media (max-width: 480px) {
   .configuracoes-notificacoes-page {
-    padding-top: 78px;
+    /*
+     * Mantemos espaço suficiente para o navbar.
+     * Não diminuir este valor demais.
+     */
+    padding-top: 90px;
 
-    padding-bottom: 104px;
+    padding-bottom: 108px;
   }
 
   .configuracoes-notificacoes-container {
     width: calc(100% - 16px);
+
+    padding-top: 12px;
   }
 
   .configuracoes-notificacoes-section {
@@ -831,13 +849,19 @@
 
 @media (max-width: 380px) {
   .configuracoes-notificacoes-page {
-    padding-top: 74px;
+    /*
+     * Mesmo em celulares muito estreitos,
+     * preservamos uma área superior segura.
+     */
+    padding-top: 88px;
 
-    padding-bottom: 102px;
+    padding-bottom: 106px;
   }
 
   .configuracoes-notificacoes-container {
     width: calc(100% - 12px);
+
+    padding-top: 10px;
   }
 
   .configuracoes-notificacoes-form {
@@ -852,7 +876,7 @@
 
   /*
    * Em telas muito estreitas, os ícones secundários
-   * são removidos para preservar espaço para o texto.
+   * são removidos para preservar espaço horizontal.
    */
   .configuracoes-notificacoes-section-icon {
     display: none;
