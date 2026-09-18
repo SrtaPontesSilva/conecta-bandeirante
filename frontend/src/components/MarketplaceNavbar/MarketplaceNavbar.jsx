@@ -1,7 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
 import { useNavigate } from "react-router-dom";
 
 import Logo from "../Logo/Logo";
+
 import {
   IconSearch,
   IconWallet,
@@ -13,10 +19,15 @@ import {
   IconArrowLeft,
 } from "../Icons/Icons";
 
+import NotificationsDropdown from "../NotificationsDropdown/NotificationsDropdown";
+
+import { useAuth } from "../../auth/AuthContext";
+
 import "./MarketplaceNavbar.css";
 
+
 function MarketplaceNavbar({
-  pessoa,
+  pessoa: pessoaExterna,
   busca,
   setBusca,
   filtro,
@@ -31,42 +42,78 @@ function MarketplaceNavbar({
 }) {
   const navigate = useNavigate();
 
-  const [filtroAberto, setFiltroAberto] = useState(false);
-  const [menuAberto, setMenuAberto] = useState(false);
-  const [notificacoesAbertas, setNotificacoesAbertas] =
-    useState(false);
+  const {
+    pessoa: pessoaAutenticada,
+    logout,
+  } = useAuth();
 
-  /*
-   * ============================================================
-   * MODO DA NAVBAR
-   * ------------------------------------------------------------
-   * Quando `tituloPagina` é informado, a navbar exibe um botão
-   * de voltar + o título da tela no lugar da barra de busca.
-   * Usado em telas de formulário, como "Novo anúncio".
-   * ============================================================
-   */
 
-  const modoTitulo = Boolean(tituloPagina);
+  /* ============================================================
+     PESSOA LOGADA
+  ============================================================ */
 
-  /*
-   * ============================================================
-   * FILTROS EXTRAS
-   * ============================================================
-   */
+  const pessoa =
+    pessoaExterna ||
+    pessoaAutenticada ||
+    null;
 
-  const [ordenacaoInterna, setOrdenacaoInterna] =
-    useState("recentes");
 
-  const [pontosMaxInterno, setPontosMaxInterno] =
-    useState(120);
+  /* ============================================================
+     ESTADOS DA NAVBAR
+  ============================================================ */
+
+  const [
+    filtroAberto,
+    setFiltroAberto,
+  ] = useState(false);
+
+  const [
+    menuAberto,
+    setMenuAberto,
+  ] = useState(false);
+
+  const [
+    notificacoesAbertas,
+    setNotificacoesAbertas,
+  ] = useState(false);
+
+
+  /* ============================================================
+     MODO DA NAVBAR
+  ============================================================ */
+
+  const modoTitulo =
+    Boolean(tituloPagina);
+
+
+  /* ============================================================
+     FILTROS EXTRAS
+  ============================================================ */
+
+  const [
+    ordenacaoInterna,
+    setOrdenacaoInterna,
+  ] = useState("recentes");
+
+  const [
+    pontosMaxInterno,
+    setPontosMaxInterno,
+  ] = useState(120);
+
 
   const ordenacao =
-    ordenacaoExterna ?? ordenacaoInterna;
+    ordenacaoExterna ??
+    ordenacaoInterna;
+
 
   const pontosMax =
-    pontosMaxExterno ?? pontosMaxInterno;
+    pontosMaxExterno ??
+    pontosMaxInterno;
 
-  function alterarOrdenacao(valor) {
+
+  function alterarOrdenacao(
+    valor
+  ) {
     if (setOrdenacaoExterna) {
       setOrdenacaoExterna(valor);
     } else {
@@ -74,31 +121,40 @@ function MarketplaceNavbar({
     }
   }
 
-  function alterarPontosMax(valor) {
-    const numero = Number(valor);
+
+  function alterarPontosMax(
+    valor
+  ) {
+    const numero =
+      Number(valor);
+
 
     if (setPontosMaxExterno) {
-      setPontosMaxExterno(numero);
+      setPontosMaxExterno(
+        numero
+      );
     } else {
-      setPontosMaxInterno(numero);
+      setPontosMaxInterno(
+        numero
+      );
     }
   }
 
-  /*
-   * ============================================================
-   * REFS
-   * ============================================================
-   */
 
-  const filtroRef = useRef(null);
-  const menuRef = useRef(null);
-  const notificacoesRef = useRef(null);
+  /* ============================================================
+     REFS
+  ============================================================ */
 
-  /*
-   * ============================================================
-   * NOME DO USUÁRIO
-   * ============================================================
-   */
+  const filtroRef =
+    useRef(null);
+
+  const menuRef =
+    useRef(null);
+
+
+  /* ============================================================
+     NOME DO USUÁRIO
+  ============================================================ */
 
   const nomePessoa =
     pessoa?.nome ||
@@ -106,30 +162,41 @@ function MarketplaceNavbar({
     pessoa?.nome_estabelecimento ||
     "Usuário";
 
+
   const primeiroNome =
-    nomePessoa.trim().split(" ")[0] || "Usuário";
+    nomePessoa
+      .trim()
+      .split(" ")[0] ||
+    "Usuário";
 
-  /*
-   * ============================================================
-   * INICIAIS
-   * ============================================================
-   */
 
-  function obterIniciais(nome) {
+  /* ============================================================
+     INICIAIS
+  ============================================================ */
+
+  function obterIniciais(
+    nome
+  ) {
     if (!nome) {
       return "?";
     }
 
-    const partes = nome
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean);
 
-    if (partes.length === 1) {
+    const partes =
+      nome
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
+
+    if (
+      partes.length === 1
+    ) {
       return partes[0]
         .substring(0, 2)
         .toUpperCase();
     }
+
 
     return (
       partes[0][0] +
@@ -137,13 +204,16 @@ function MarketplaceNavbar({
     ).toUpperCase();
   }
 
-  const iniciais = obterIniciais(nomePessoa);
 
-  /*
-   * ============================================================
-   * FILTROS / NICHOS
-   * ============================================================
-   */
+  const iniciais =
+    obterIniciais(
+      nomePessoa
+    );
+
+
+  /* ============================================================
+     FILTROS / NICHOS
+  ============================================================ */
 
   const filtrosAnuncios = [
     {
@@ -163,6 +233,7 @@ function MarketplaceNavbar({
       label: "Venda",
     },
   ];
+
 
   const filtrosResgates = [
     {
@@ -187,40 +258,49 @@ function MarketplaceNavbar({
     },
   ];
 
+
   const filtros =
     contexto === "resgates"
       ? filtrosResgates
       : filtrosAnuncios;
+
 
   const placeholder =
     contexto === "resgates"
       ? "Busque cupons, parceiros e benefícios..."
       : "Pesquise livros, uniformes, materiais...";
 
+
   const filtroSelecionado =
     filtros.find(
-      (item) => item.valor === filtro
+      (item) =>
+        item.valor === filtro
     ) || filtros[0];
 
-  function selecionarFiltro(valor) {
+
+  function selecionarFiltro(
+    valor
+  ) {
     setFiltro(valor);
+
+    setFiltroAberto(false);
   }
 
-  /*
-   * ============================================================
-   * BUSCA
-   * ============================================================
-   */
 
-  function handleSubmitBusca(event) {
+  /* ============================================================
+     BUSCA
+  ============================================================ */
+
+  function handleSubmitBusca(
+    event
+  ) {
     event.preventDefault();
   }
 
-  /*
-   * ============================================================
-   * VOLTAR (MODO TÍTULO)
-   * ============================================================
-   */
+
+  /* ============================================================
+     VOLTAR
+  ============================================================ */
 
   function handleVoltarPagina() {
     if (aoVoltarPagina) {
@@ -230,59 +310,75 @@ function MarketplaceNavbar({
     }
   }
 
-  /*
-   * ============================================================
-   * LOGOUT
-   * ============================================================
-   */
+
+  /* ============================================================
+     LOGOUT
+  ============================================================ */
 
   function handleLogout() {
     setMenuAberto(false);
 
-    localStorage.removeItem("usuario");
-    localStorage.removeItem("parceiro");
+    setNotificacoesAbertas(
+      false
+    );
 
-    navigate("/login", {
-      replace: true,
-    });
+    setFiltroAberto(false);
+
+    /*
+     * Usa o logout centralizado do AuthContext.
+     *
+     * Isso remove:
+     * - token
+     * - usuario
+     * - parceiro
+     *
+     * e atualiza o estado global de autenticação.
+     */
+    logout();
+
+    navigate(
+      "/login",
+      {
+        replace: true,
+      }
+    );
   }
 
-  /*
-   * ============================================================
-   * CLIQUE FORA DOS DROPDOWNS
-   * ============================================================
-   */
+
+  /* ============================================================
+     CLIQUE FORA
+  ============================================================ */
 
   useEffect(() => {
-    function handleClickOutside(event) {
+    function handleClickOutside(
+      event
+    ) {
       if (
         filtroRef.current &&
-        !filtroRef.current.contains(event.target)
+        !filtroRef.current.contains(
+          event.target
+        )
       ) {
         setFiltroAberto(false);
       }
 
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target)
-      ) {
-        setMenuAberto(false);
-      }
 
       if (
-        notificacoesRef.current &&
-        !notificacoesRef.current.contains(
+        menuRef.current &&
+        !menuRef.current.contains(
           event.target
         )
       ) {
-        setNotificacoesAbertas(false);
+        setMenuAberto(false);
       }
     }
+
 
     document.addEventListener(
       "mousedown",
       handleClickOutside
     );
+
 
     return () => {
       document.removeEventListener(
@@ -292,25 +388,34 @@ function MarketplaceNavbar({
     };
   }, []);
 
-  /*
-   * ============================================================
-   * ESC
-   * ============================================================
-   */
+
+  /* ============================================================
+     ESC
+  ============================================================ */
 
   useEffect(() => {
-    function handleKeyDown(event) {
-      if (event.key === "Escape") {
+    function handleKeyDown(
+      event
+    ) {
+      if (
+        event.key === "Escape"
+      ) {
         setFiltroAberto(false);
+
         setMenuAberto(false);
-        setNotificacoesAbertas(false);
+
+        setNotificacoesAbertas(
+          false
+        );
       }
     }
+
 
     document.addEventListener(
       "keydown",
       handleKeyDown
     );
+
 
     return () => {
       document.removeEventListener(
@@ -320,109 +425,175 @@ function MarketplaceNavbar({
     };
   }, []);
 
-  /*
-   * ============================================================
-   * NAVEGAÇÃO
-   * ============================================================
-   */
+
+  /* ============================================================
+     NAVEGAÇÃO
+  ============================================================ */
 
   function irParaPerfil() {
     setMenuAberto(false);
-    setNotificacoesAbertas(false);
+
+    setNotificacoesAbertas(
+      false
+    );
 
     navigate("/perfil");
   }
 
+
   function irParaHistorico() {
     setMenuAberto(false);
-    setNotificacoesAbertas(false);
+
+    setNotificacoesAbertas(
+      false
+    );
 
     navigate("/historico");
   }
 
-  function alternarNotificacoes() {
+
+  /* ============================================================
+     NOTIFICAÇÕES
+  ============================================================ */
+
+  function alternarNotificacoes(
+    estadoForcado
+  ) {
+    const novoEstado =
+      typeof estadoForcado ===
+      "boolean"
+        ? estadoForcado
+        : !notificacoesAbertas;
+
+
     setNotificacoesAbertas(
-      (estado) => !estado
+      novoEstado
     );
 
     setMenuAberto(false);
+
+    setFiltroAberto(false);
   }
+
+
+  /* ============================================================
+     MENU
+  ============================================================ */
 
   function alternarMenu() {
     setMenuAberto(
       (estado) => !estado
     );
 
-    setNotificacoesAbertas(false);
+    setNotificacoesAbertas(
+      false
+    );
+
+    setFiltroAberto(false);
   }
 
-  /*
-   * ============================================================
-   * RENDER
-   * ============================================================
-   */
+
+  /* ============================================================
+     RENDER
+  ============================================================ */
 
   return (
     <header className="marketplace-navbar">
+
       <div className="marketplace-navbar-inner">
 
-        {/* ====================================================
+        {/* ======================================================
             LOGO
-        ===================================================== */}
+        ====================================================== */}
 
         <button
           type="button"
           className="marketplace-navbar-logo"
-          onClick={() => navigate("/inicio")}
+          onClick={() =>
+            navigate("/inicio")
+          }
           aria-label="Ir para o início"
         >
           <Logo variant="navbar" />
         </button>
 
-        {/* ====================================================
-            BUSCA (padrão) OU TÍTULO DA PÁGINA (formulários)
-        ===================================================== */}
+
+        {/* ======================================================
+            BUSCA OU TÍTULO
+        ====================================================== */}
 
         {modoTitulo ? (
+
           <div className="marketplace-page-title-block">
+
             <button
               type="button"
               className="marketplace-page-back"
-              onClick={handleVoltarPagina}
+              onClick={
+                handleVoltarPagina
+              }
               aria-label="Voltar"
             >
-              <IconArrowLeft size={18} />
+              <IconArrowLeft
+                size={18}
+              />
             </button>
 
-            <div className="marketplace-page-title-divider" />
+
+            <div
+              className="marketplace-page-title-divider"
+              aria-hidden="true"
+            />
+
 
             <h1 className="marketplace-page-title">
               {tituloPagina}
             </h1>
+
           </div>
+
         ) : (
+
           <form
             className="marketplace-search"
-            onSubmit={handleSubmitBusca}
+            onSubmit={
+              handleSubmitBusca
+            }
           >
+
             <div
               className="marketplace-search-filter"
               ref={filtroRef}
             >
+
               <button
                 type="button"
                 className="marketplace-search-filter-button"
-                onClick={() =>
+                onClick={() => {
                   setFiltroAberto(
-                    (estado) => !estado
-                  )
-                }
+                    (estado) =>
+                      !estado
+                  );
+
+                  setMenuAberto(false);
+
+                  setNotificacoesAbertas(
+                    false
+                  );
+                }}
                 aria-haspopup="dialog"
-                aria-expanded={filtroAberto}
+                aria-expanded={
+                  filtroAberto
+                }
+                aria-label={`Filtro atual: ${filtroSelecionado.label}`}
               >
+
                 <span>
-                  {filtroSelecionado.label}
+                  {
+                    filtroSelecionado.label
+                  }
                 </span>
+
 
                 <span
                   className={
@@ -434,7 +605,9 @@ function MarketplaceNavbar({
                 >
                   ▾
                 </span>
+
               </button>
+
 
               {filtroAberto && (
                 <div
@@ -447,77 +620,103 @@ function MarketplaceNavbar({
                   aria-label="Filtros"
                 >
 
-                  {/* ==================================================
-                      OPÇÕES DE NICHO / TIPO
-                  =================================================== */}
-
                   <div className="marketplace-filter-section marketplace-filter-niches">
+
                     <span className="marketplace-filter-title">
-                      {contexto === "resgates"
-                        ? "Nicho"
-                        : "Tipo de anúncio"}
+                      {
+                        contexto ===
+                        "resgates"
+                          ? "Nicho"
+                          : "Tipo de anúncio"
+                      }
                     </span>
 
-                    <div className="marketplace-filter-options">
-                      {filtros.map((item) => (
-                        <button
-                          key={item.valor}
-                          type="button"
-                          className={
-                            filtro === item.valor
-                              ? "marketplace-filter-option marketplace-filter-option--active"
-                              : "marketplace-filter-option"
-                          }
-                          onClick={() =>
-                            selecionarFiltro(
-                              item.valor
-                            )
-                          }
-                        >
-                          <span>
-                            {item.label}
-                          </span>
 
-                          {filtro === item.valor && (
-                            <span
-                              aria-hidden="true"
-                              className="marketplace-filter-check"
-                            >
-                              ✓
+                    <div className="marketplace-filter-options">
+
+                      {filtros.map(
+                        (item) => (
+                          <button
+                            key={
+                              item.valor
+                            }
+                            type="button"
+                            className={
+                              filtro ===
+                              item.valor
+                                ? "marketplace-filter-option marketplace-filter-option--active"
+                                : "marketplace-filter-option"
+                            }
+                            onClick={() =>
+                              selecionarFiltro(
+                                item.valor
+                              )
+                            }
+                            aria-pressed={
+                              filtro ===
+                              item.valor
+                            }
+                          >
+
+                            <span>
+                              {
+                                item.label
+                              }
                             </span>
-                          )}
-                        </button>
-                      ))}
+
+
+                            {filtro ===
+                              item.valor && (
+                              <span
+                                aria-hidden="true"
+                                className="marketplace-filter-check"
+                              >
+                                ✓
+                              </span>
+                            )}
+
+                          </button>
+                        )
+                      )}
+
                     </div>
+
                   </div>
 
-                  {/* ==================================================
-                      FILTROS DE RESGATES
-                  =================================================== */}
 
-                  {contexto === "resgates" && (
+                  {contexto ===
+                    "resgates" && (
                     <>
-                      <div className="marketplace-filter-panel-divider" />
 
-                      {/* ============================================
-                          ORDENAÇÃO
-                      ============================================= */}
+                      <div
+                        className="marketplace-filter-panel-divider"
+                        aria-hidden="true"
+                      />
+
 
                       <div className="marketplace-filter-section marketplace-filter-sort">
+
                         <span className="marketplace-filter-title">
                           Ordenar
                         </span>
 
+
                         <div className="marketplace-sort-control">
+
                           <select
-                            value={ordenacao}
-                            onChange={(event) =>
+                            value={
+                              ordenacao
+                            }
+                            onChange={(
+                              event
+                            ) =>
                               alterarOrdenacao(
                                 event.target.value
                               )
                             }
                             aria-label="Ordenar benefícios"
                           >
+
                             <option value="recentes">
                               Mais recentes
                             </option>
@@ -529,32 +728,41 @@ function MarketplaceNavbar({
                             <option value="maior_pontos">
                               Maior pontuação
                             </option>
+
                           </select>
+
                         </div>
+
                       </div>
 
-                      {/* ============================================
-                          LIMITE DE PONTOS
-                      ============================================= */}
 
                       <div className="marketplace-filter-section marketplace-filter-points">
+
                         <div className="marketplace-filter-points-header">
+
                           <span className="marketplace-filter-title">
                             Quanto você quer gastar?
                           </span>
 
+
                           <strong>
                             {pontosMax} pts
                           </strong>
+
                         </div>
+
 
                         <input
                           type="range"
                           min="0"
                           max="500"
                           step="10"
-                          value={pontosMax}
-                          onChange={(event) =>
+                          value={
+                            pontosMax
+                          }
+                          onChange={(
+                            event
+                          ) =>
                             alterarPontosMax(
                               event.target.value
                             )
@@ -563,25 +771,42 @@ function MarketplaceNavbar({
                           aria-label="Quantidade máxima de pontos"
                         />
 
+
                         <div className="marketplace-points-range-labels">
-                          <span>0 pts</span>
+
+                          <span>
+                            0 pts
+                          </span>
 
                           <span>
                             500 pts
                           </span>
+
                         </div>
 
+
                         <span className="marketplace-filter-points-limit">
-                          até {pontosMax} pts
+                          até{" "}
+                          {pontosMax}{" "}
+                          pts
                         </span>
+
                       </div>
+
                     </>
                   )}
+
                 </div>
               )}
+
             </div>
 
-            <div className="marketplace-search-divider" />
+
+            <div
+              className="marketplace-search-divider"
+              aria-hidden="true"
+            />
+
 
             <label
               htmlFor="marketplace-search-input"
@@ -590,43 +815,57 @@ function MarketplaceNavbar({
               Pesquisar anúncios
             </label>
 
+
             <input
               id="marketplace-search-input"
               type="search"
               value={busca}
               onChange={(event) =>
-                setBusca(event.target.value)
+                setBusca(
+                  event.target.value
+                )
               }
-              placeholder={placeholder}
+              placeholder={
+                placeholder
+              }
               autoComplete="off"
             />
+
 
             {busca && (
               <button
                 type="button"
                 className="marketplace-search-clear"
-                onClick={() => setBusca("")}
+                onClick={() =>
+                  setBusca("")
+                }
                 aria-label="Limpar pesquisa"
               >
                 ×
               </button>
             )}
 
+
             <button
               type="submit"
               className="marketplace-search-button"
               aria-label="Pesquisar"
             >
-              <IconSearch size={17} />
+              <IconSearch
+                size={17}
+              />
             </button>
+
           </form>
         )}
 
-        {/* ====================================================
+
+        {/* ======================================================
             BLOCO DO USUÁRIO
-        ===================================================== */}
+        ====================================================== */}
 
         <div className="marketplace-user-area">
+
           <span
             className="marketplace-user-avatar"
             aria-hidden="true"
@@ -634,26 +873,34 @@ function MarketplaceNavbar({
             {iniciais}
           </span>
 
+
           <span className="marketplace-user-greeting">
+
             <strong>
-              Olá, {primeiroNome}! Vamos conectar?
+              Olá, {primeiroNome}!
+              Vamos conectar?
             </strong>
 
+
             <span className="marketplace-user-community">
-              Juntos, fazemos a comunidade circular.
+              Juntos, fazemos a
+              comunidade circular.
             </span>
+
           </span>
+
         </div>
 
-        {/* ====================================================
-            AÇÕES DO USUÁRIO
-        ===================================================== */}
+
+        {/* ======================================================
+            AÇÕES
+        ====================================================== */}
 
         <div className="marketplace-user-actions">
 
-          {/* ==================================================
+          {/* ====================================================
               PONTOS
-          =================================================== */}
+          ===================================================== */}
 
           <button
             type="button"
@@ -661,171 +908,243 @@ function MarketplaceNavbar({
             aria-label="Saldo de pontos"
             title="Saldo de pontos"
             onClick={() =>
-              navigate("/historico")
+              navigate(
+                "/historico"
+              )
             }
           >
+
             <span className="marketplace-action-icon">
-              <IconWallet size={18} />
+              <IconWallet
+                size={18}
+              />
             </span>
+
 
             <span className="marketplace-points-value">
-               —
+              —
             </span>
+
           </button>
 
-          {/* ==================================================
-              NOTIFICAÇÕES
-          =================================================== */}
 
-          <div
-            className="marketplace-action-wrapper"
-            ref={notificacoesRef}
-          >
+          {/* ====================================================
+              NOTIFICAÇÕES
+          ===================================================== */}
+
+          <div className="marketplace-action-wrapper">
+
             <button
               type="button"
-              className="marketplace-action marketplace-notification-button"
-              onClick={alternarNotificacoes}
+              className={
+                notificacoesAbertas
+                  ? "marketplace-action marketplace-notification-button marketplace-action--active"
+                  : "marketplace-action marketplace-notification-button"
+              }
+              onClick={() =>
+                alternarNotificacoes()
+              }
               aria-label="Notificações"
               aria-haspopup="dialog"
               aria-expanded={
                 notificacoesAbertas
               }
+              title="Notificações"
             >
+
               <span className="marketplace-action-icon">
-                <IconBell size={18} />
+
+                <IconBell
+                  size={18}
+                />
+
               </span>
 
-              <span className="marketplace-notification-count">
-                0
-              </span>
             </button>
 
-            {notificacoesAbertas && (
-              <div className="marketplace-notifications">
-                <div className="marketplace-dropdown-header">
-                  <strong>
-                    Notificações
-                  </strong>
-                </div>
 
-                <div className="marketplace-notifications-empty">
-                  <span className="marketplace-notifications-empty-icon">
-                    <IconBell size={24} />
-                  </span>
+            <NotificationsDropdown
+              aberta={
+                notificacoesAbertas
+              }
+              aoAlternar={
+                alternarNotificacoes
+              }
+            />
 
-                  <strong>
-                    Tudo tranquilo por aqui
-                  </strong>
-
-                  <p>
-                    Quando alguém demonstrar
-                    interesse em um dos seus itens,
-                    você verá a notificação aqui.
-                  </p>
-                </div>
-              </div>
-            )}
           </div>
 
-          {/* ==================================================
+
+          {/* ====================================================
               MENU
-          =================================================== */}
+          ===================================================== */}
 
           <div
             className="marketplace-action-wrapper"
             ref={menuRef}
           >
+
             <button
               type="button"
-              className="marketplace-action marketplace-menu-button"
-              onClick={alternarMenu}
+              className={
+                menuAberto
+                  ? "marketplace-action marketplace-menu-button marketplace-action--active"
+                  : "marketplace-action marketplace-menu-button"
+              }
+              onClick={
+                alternarMenu
+              }
               aria-label="Abrir menu"
               aria-haspopup="menu"
-              aria-expanded={menuAberto}
+              aria-expanded={
+                menuAberto
+              }
+              title="Menu"
             >
+
               <span className="marketplace-menu-icon">
-                <IconMenu size={19} />
+
+                <IconMenu
+                  size={19}
+                />
+
               </span>
+
             </button>
+
 
             {menuAberto && (
               <div
                 className="marketplace-user-menu"
                 role="menu"
+                aria-label="Menu do usuário"
               >
+
                 <div className="marketplace-user-menu-profile">
-                  <div className="marketplace-user-menu-avatar">
+
+                  <div
+                    className="marketplace-user-menu-avatar"
+                    aria-hidden="true"
+                  >
                     {iniciais}
                   </div>
 
+
                   <div>
+
                     <strong>
                       {nomePessoa}
                     </strong>
+
 
                     <span>
                       {pessoa?.email ||
                         "Conta Conecta"}
                     </span>
+
                   </div>
+
                 </div>
 
-                <div className="marketplace-menu-divider" />
+
+                <div
+                  className="marketplace-menu-divider"
+                  aria-hidden="true"
+                />
+
 
                 <button
                   type="button"
                   className="marketplace-menu-option"
-                  onClick={irParaPerfil}
+                  onClick={
+                    irParaPerfil
+                  }
                   role="menuitem"
                 >
+
                   <span className="marketplace-menu-option-icon">
-                    <IconUser size={17} />
+
+                    <IconUser
+                      size={17}
+                    />
+
                   </span>
+
 
                   <span>
                     Meus dados
                   </span>
+
                 </button>
+
 
                 <button
                   type="button"
                   className="marketplace-menu-option"
-                  onClick={irParaHistorico}
+                  onClick={
+                    irParaHistorico
+                  }
                   role="menuitem"
                 >
+
                   <span className="marketplace-menu-option-icon">
-                    <IconClipboard size={17} />
+
+                    <IconClipboard
+                      size={17}
+                    />
+
                   </span>
+
 
                   <span>
                     Histórico
                   </span>
+
                 </button>
 
-                <div className="marketplace-menu-divider" />
+
+                <div
+                  className="marketplace-menu-divider"
+                  aria-hidden="true"
+                />
+
 
                 <button
                   type="button"
                   className="marketplace-menu-option marketplace-menu-option--logout"
-                  onClick={handleLogout}
+                  onClick={
+                    handleLogout
+                  }
                   role="menuitem"
                 >
+
                   <span className="marketplace-menu-option-icon">
-                    <IconLogout size={17} />
+
+                    <IconLogout
+                      size={17}
+                    />
+
                   </span>
+
 
                   <span>
                     Sair
                   </span>
+
                 </button>
+
               </div>
             )}
+
           </div>
 
         </div>
+
       </div>
+
     </header>
   );
 }
+
 
 export default MarketplaceNavbar;

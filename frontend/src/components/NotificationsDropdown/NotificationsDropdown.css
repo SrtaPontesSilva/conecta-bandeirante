@@ -1,0 +1,1084 @@
+/* ============================================================
+   DROPDOWN
+============================================================ */
+
+.notifications-dropdown {
+  position: absolute;
+
+  top: calc(100% + 12px);
+  right: 0;
+
+  z-index: 120;
+
+  width: 390px;
+  max-width: calc(100vw - 20px);
+
+  background-color:
+    var(--color-surface);
+
+  border:
+    1px solid var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+
+  box-shadow:
+    0 14px 36px
+    rgba(
+      54,
+      64,
+      66,
+      0.15
+    );
+
+  overflow: hidden;
+
+  animation:
+    notifications-dropdown-in
+    0.15s ease;
+}
+
+
+@keyframes notifications-dropdown-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+
+/* ============================================================
+   CABEÇALHO
+============================================================ */
+
+.notifications-dropdown-header {
+  min-height: 56px;
+
+  padding:
+    10px
+    12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  border-bottom:
+    1px solid var(--color-border);
+}
+
+
+.notifications-dropdown-title {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color:
+    var(--color-text);
+}
+
+
+.notifications-dropdown-title-icon {
+  width: 30px;
+  height: 30px;
+
+  flex: 0 0 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color:
+    var(--color-primary);
+
+  background-color:
+    var(--color-secondary);
+
+  border-radius: 5px;
+}
+
+
+.notifications-dropdown-title strong {
+  font-size:
+    0.78rem;
+
+  font-weight: 800;
+}
+
+
+.notifications-dropdown-header-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+}
+
+
+/* ============================================================
+   MARCAR TODAS
+============================================================ */
+
+.notifications-dropdown-mark-all {
+  min-height: 30px;
+
+  padding:
+    0
+    7px;
+
+  color:
+    var(--color-primary);
+
+  background: none;
+
+  border:
+    1px solid transparent;
+
+  border-radius: 5px;
+
+  font-family:
+    var(--font-family);
+
+  font-size:
+    0.59rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+
+.notifications-dropdown-mark-all:hover {
+  background-color:
+    var(--color-secondary);
+
+  border-color:
+    var(--color-border);
+}
+
+
+.notifications-dropdown-mark-all:focus-visible {
+  outline:
+    2px solid var(--color-primary);
+
+  outline-offset:
+    2px;
+}
+
+
+/* ============================================================
+   CONFIGURAÇÕES
+============================================================ */
+
+.notifications-dropdown-settings {
+  width: 30px;
+  height: 30px;
+
+  flex: 0 0 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color:
+    var(--color-text-secondary);
+
+  background:
+    transparent;
+
+  border:
+    1px solid transparent;
+
+  border-radius: 5px;
+
+  font-size:
+    0.95rem;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+
+.notifications-dropdown-settings:hover {
+  color:
+    var(--color-primary);
+
+  background-color:
+    var(--color-secondary);
+
+  border-color:
+    var(--color-border);
+}
+
+
+.notifications-dropdown-settings:focus-visible {
+  outline:
+    2px solid var(--color-primary);
+
+  outline-offset:
+    2px;
+}
+
+
+/* ============================================================
+   ESTADO DE CARREGAMENTO
+============================================================ */
+
+.notifications-dropdown-loading {
+  min-height: 190px;
+
+  padding: 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  color:
+    var(--color-text-secondary);
+
+  text-align: center;
+}
+
+
+.notifications-dropdown-loading strong {
+  color:
+    var(--color-text);
+
+  font-size:
+    0.72rem;
+}
+
+
+.notifications-dropdown-state-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color:
+    var(--color-primary);
+
+  background-color:
+    var(--color-secondary);
+
+  border-radius: 8px;
+}
+
+
+/* ============================================================
+   ERRO
+============================================================ */
+
+.notifications-dropdown-error {
+  min-height: 190px;
+
+  padding: 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  text-align: center;
+}
+
+
+.notifications-dropdown-error strong {
+  max-width: 240px;
+
+  color:
+    var(--color-text);
+
+  font-size:
+    0.72rem;
+
+  line-height: 1.4;
+}
+
+
+.notifications-dropdown-error button {
+  min-height: 34px;
+
+  padding:
+    0
+    12px;
+
+  color:
+    var(--color-primary);
+
+  background-color:
+    var(--color-secondary);
+
+  border:
+    1px solid var(--color-border);
+
+  border-radius: 5px;
+
+  font-family:
+    var(--font-family);
+
+  font-size:
+    0.65rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+.notifications-dropdown-error button:hover {
+  background-color:
+    var(--color-background);
+}
+
+
+.notifications-dropdown-error button:focus-visible {
+  outline:
+    2px solid var(--color-primary);
+
+  outline-offset:
+    2px;
+}
+
+
+/* ============================================================
+   VAZIO
+============================================================ */
+
+.notifications-dropdown-empty {
+  min-height: 220px;
+
+  padding:
+    28px
+    24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  text-align: center;
+}
+
+
+.notifications-dropdown-empty strong {
+  color:
+    var(--color-text);
+
+  font-size:
+    0.76rem;
+
+  font-weight: 800;
+}
+
+
+.notifications-dropdown-empty p {
+  max-width: 260px;
+
+  color:
+    var(--color-text-secondary);
+
+  font-size:
+    0.65rem;
+
+  line-height: 1.55;
+}
+
+
+/* ============================================================
+   LISTA
+============================================================ */
+
+.notifications-dropdown-list {
+  max-height: 420px;
+
+  overflow-y: auto;
+}
+
+
+.notifications-dropdown-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+
+.notifications-dropdown-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.notifications-dropdown-list::-webkit-scrollbar-thumb {
+  background-color:
+    var(--color-border);
+
+  border-radius: 10px;
+}
+
+
+/* ============================================================
+   ITEM
+============================================================ */
+
+.notifications-dropdown-item {
+  position: relative;
+
+  border-bottom:
+    1px solid var(--color-border);
+
+  transition:
+    background-color var(--transition-fast);
+}
+
+
+.notifications-dropdown-item:hover {
+  background-color:
+    #f8f8f5;
+}
+
+
+.notifications-dropdown-item--unread {
+  background-color:
+    rgba(
+      213,
+      227,
+      230,
+      0.28
+    );
+}
+
+
+.notifications-dropdown-item--unread:hover {
+  background-color:
+    rgba(
+      213,
+      227,
+      230,
+      0.45
+    );
+}
+
+
+/* ============================================================
+   CONTEÚDO PRINCIPAL
+============================================================ */
+
+.notifications-dropdown-main {
+  width: 100%;
+
+  padding:
+    13px
+    38px
+    10px
+    12px;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 10px;
+
+  color: inherit;
+
+  background:
+    transparent;
+
+  border: none;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+
+.notifications-dropdown-main:focus-visible {
+  outline:
+    2px solid var(--color-primary);
+
+  outline-offset:
+    -2px;
+}
+
+
+.notifications-dropdown-item-icon {
+  width: 30px;
+  height: 30px;
+
+  flex: 0 0 30px;
+
+  margin-top: 1px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color:
+    var(--color-primary);
+
+  background-color:
+    var(--color-secondary);
+
+  border-radius: 5px;
+}
+
+
+.notifications-dropdown-item-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+}
+
+
+/* ============================================================
+   TÍTULO
+============================================================ */
+
+.notifications-dropdown-item-header {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+}
+
+
+.notifications-dropdown-item-header strong {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color:
+    var(--color-text);
+
+  font-size:
+    0.7rem;
+
+  font-weight: 800;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.notifications-dropdown-unread-dot {
+  width: 6px;
+  height: 6px;
+
+  flex: 0 0 6px;
+
+  background-color:
+    var(--color-accent);
+
+  border-radius: 50%;
+}
+
+
+/* ============================================================
+   MENSAGEM
+============================================================ */
+
+.notifications-dropdown-item-message {
+  margin-top: 4px;
+
+  color:
+    var(--color-text-secondary);
+
+  font-size:
+    0.65rem;
+
+  font-weight: 500;
+
+  line-height: 1.45;
+}
+
+
+/* ============================================================
+   DATA
+============================================================ */
+
+.notifications-dropdown-item-date {
+  margin-top: 5px;
+
+  color:
+    var(--color-text-secondary);
+
+  font-size:
+    0.56rem;
+
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   EXCLUIR ITEM
+============================================================ */
+
+.notifications-dropdown-delete {
+  position: absolute;
+
+  top: 9px;
+  right: 7px;
+
+  width: 25px;
+  height: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color:
+    var(--color-text-secondary);
+
+  background:
+    transparent;
+
+  border: none;
+
+  border-radius: 4px;
+
+  font-family:
+    var(--font-family);
+
+  font-size:
+    1rem;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  opacity: 0;
+
+  transition:
+    opacity var(--transition-fast),
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+
+.notifications-dropdown-item:hover
+.notifications-dropdown-delete,
+.notifications-dropdown-delete:focus-visible {
+  opacity: 1;
+}
+
+
+.notifications-dropdown-delete:hover {
+  color:
+    var(--color-error);
+
+  background-color:
+    rgba(
+      181,
+      78,
+      78,
+      0.08
+    );
+}
+
+
+.notifications-dropdown-delete:focus-visible {
+  outline:
+    2px solid var(--color-error);
+
+  outline-offset:
+    1px;
+}
+
+
+.notifications-dropdown-delete:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.45;
+}
+
+
+/* ============================================================
+   AÇÕES
+============================================================ */
+
+.notifications-dropdown-actions {
+  padding:
+    0
+    12px
+    12px
+    52px;
+
+  display: flex;
+
+  gap: 6px;
+}
+
+
+.notifications-dropdown-action {
+  min-height: 32px;
+
+  padding:
+    0
+    10px;
+
+  border:
+    1px solid var(--color-border);
+
+  border-radius: 5px;
+
+  font-family:
+    var(--font-family);
+
+  font-size:
+    0.61rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+
+.notifications-dropdown-action--reject {
+  color:
+    var(--color-text-secondary);
+
+  background-color:
+    var(--color-surface);
+}
+
+
+.notifications-dropdown-action--reject:hover {
+  color:
+    var(--color-error);
+
+  border-color:
+    var(--color-error);
+
+  background-color:
+    rgba(
+      181,
+      78,
+      78,
+      0.05
+    );
+}
+
+
+.notifications-dropdown-action--accept {
+  color:
+    var(--color-text-light);
+
+  background-color:
+    var(--color-success);
+
+  border-color:
+    var(--color-success);
+}
+
+
+.notifications-dropdown-action--accept:hover {
+  filter:
+    brightness(0.94);
+}
+
+
+.notifications-dropdown-action:focus-visible {
+  outline:
+    2px solid var(--color-primary);
+
+  outline-offset:
+    2px;
+}
+
+
+.notifications-dropdown-action:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+}
+
+
+/* ============================================================
+   AÇÃO CONCLUÍDA
+============================================================ */
+
+.notifications-dropdown-action-complete {
+  padding:
+    0
+    12px
+    11px
+    52px;
+
+  color:
+    var(--color-success);
+
+  font-size:
+    0.59rem;
+
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   RODAPÉ
+============================================================ */
+
+.notifications-dropdown-footer {
+  padding:
+    8px
+    12px;
+
+  display: flex;
+  justify-content: flex-end;
+
+  border-top:
+    1px solid var(--color-border);
+
+  background-color:
+    var(--color-background);
+}
+
+
+.notifications-dropdown-delete-all {
+  min-height: 30px;
+
+  padding:
+    0
+    9px;
+
+  color:
+    var(--color-error);
+
+  background:
+    transparent;
+
+  border:
+    1px solid transparent;
+
+  border-radius: 5px;
+
+  font-family:
+    var(--font-family);
+
+  font-size:
+    0.6rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+
+.notifications-dropdown-delete-all:hover {
+  background-color:
+    rgba(
+      181,
+      78,
+      78,
+      0.07
+    );
+
+  border-color:
+    rgba(
+      181,
+      78,
+      78,
+      0.2
+    );
+}
+
+
+.notifications-dropdown-delete-all:focus-visible {
+  outline:
+    2px solid var(--color-error);
+
+  outline-offset:
+    2px;
+}
+
+
+.notifications-dropdown-delete-all:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 600px) {
+  .notifications-dropdown {
+    position: fixed;
+
+    top: 92px;
+
+    right: 8px;
+    left: 8px;
+
+    width: auto;
+
+    max-width: none;
+  }
+
+
+  .notifications-dropdown-list {
+    max-height:
+      calc(100vh - 220px);
+
+    max-height:
+      calc(100dvh - 220px);
+  }
+
+
+  .notifications-dropdown-header {
+    min-height: 52px;
+
+    padding:
+      9px
+      10px;
+  }
+
+
+  .notifications-dropdown-mark-all {
+    max-width: 130px;
+
+    font-size:
+      0.57rem;
+  }
+
+
+  .notifications-dropdown-item-message {
+    font-size:
+      0.64rem;
+  }
+
+
+  .notifications-dropdown-item-date {
+    font-size:
+      0.55rem;
+  }
+
+
+  .notifications-dropdown-actions {
+    padding-left:
+      50px;
+  }
+
+
+  .notifications-dropdown-delete {
+    opacity: 1;
+  }
+}
+
+
+/* ============================================================
+   CELULARES PEQUENOS
+============================================================ */
+
+@media (max-width: 380px) {
+  .notifications-dropdown {
+    top: 86px;
+  }
+
+
+  .notifications-dropdown-title strong {
+    font-size:
+      0.7rem;
+  }
+
+
+  .notifications-dropdown-mark-all {
+    max-width: 115px;
+
+    font-size:
+      0.54rem;
+  }
+
+
+  .notifications-dropdown-item-icon {
+    width: 28px;
+    height: 28px;
+
+    flex-basis: 28px;
+  }
+
+
+  .notifications-dropdown-item-header strong {
+    font-size:
+      0.67rem;
+  }
+
+
+  .notifications-dropdown-item-message {
+    font-size:
+      0.61rem;
+  }
+
+
+  .notifications-dropdown-actions {
+    padding-left:
+      48px;
+  }
+
+
+  .notifications-dropdown-action {
+    min-height: 31px;
+
+    padding:
+      0
+      7px;
+
+    font-size:
+      0.57rem;
+  }
+}
+
+
+/* ============================================================
+   REDUÇÃO DE MOVIMENTO
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .notifications-dropdown {
+    animation: none;
+  }
+}

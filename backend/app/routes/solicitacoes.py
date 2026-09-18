@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from flask import Blueprint, request, jsonify
 
 from flask_jwt_extended import (
@@ -33,7 +35,12 @@ solicitacoes_bp = Blueprint(
 )
 
 
+# ============================================================
+# USUÁRIO ATUAL
+# ============================================================
+
 def obter_usuario_atual():
+
     usuario_id = get_jwt_identity()
 
     try:
@@ -48,7 +55,12 @@ def obter_usuario_atual():
     )
 
 
+# ============================================================
+# NOME DO USUÁRIO
+# ============================================================
+
 def nome_usuario(usuario):
+
     if not usuario:
         return "Usuário"
 
@@ -62,7 +74,12 @@ def nome_usuario(usuario):
     return nome_completo or "Usuário"
 
 
+# ============================================================
+# SERIALIZAÇÃO
+# ============================================================
+
 def serializar_solicitacao(solicitacao):
+
     anuncio = solicitacao.anuncio
     interessado = solicitacao.interessado
     disponibilidade = solicitacao.disponibilidade
@@ -106,6 +123,10 @@ def serializar_solicitacao(solicitacao):
     }
 
 
+# ============================================================
+# CRIAR NOTIFICAÇÃO
+# ============================================================
+
 def criar_notificacao(
     usuario_id,
     tipo,
@@ -113,6 +134,7 @@ def criar_notificacao(
     mensagem,
     referencia_id=None
 ):
+
     notificacao = Notificacao(
         usuario_id=usuario_id,
         tipo=tipo,
@@ -121,7 +143,52 @@ def criar_notificacao(
         referencia_id=referencia_id
     )
 
-    db.session.add(notificacao)
+    db.session.add(
+        notificacao
+    )
+
+    return notificacao
+
+
+
+# ============================================================
+# ATUALIZAR NOTIFICAÇÃO ORIGINAL
+# ============================================================
+
+def atualizar_notificacao_original(
+    solicitacao,
+    tipo,
+    titulo,
+    mensagem
+):
+    """
+    Atualiza a notificação que originou a solicitação.
+
+    A data é salva em UTC sem timezone porque o projeto utiliza
+    DateTime sem timezone no banco. O endpoint de notificações
+    adiciona +00:00 ao serializar a data para o frontend.
+    """
+
+    notificacao = Notificacao.query.filter_by(
+        usuario_id=solicitacao.anuncio.usuario_id,
+        referencia_id=solicitacao.id,
+        tipo="doacao_solicitacao_recebida"
+    ).order_by(
+        Notificacao.criada_em.desc()
+    ).first()
+
+    if not notificacao:
+        return None
+
+    notificacao.tipo = tipo
+    notificacao.titulo = titulo
+    notificacao.mensagem = mensagem
+
+    # UTC sem timezone para compatibilidade com DateTime
+    # sem timezone no PostgreSQL.
+    notificacao.criada_em = datetime.utcnow()
+
+    notificacao.lida = True
 
     return notificacao
 
@@ -171,7 +238,10 @@ def criar_solicitacao():
         }), 400
 
     try:
-        anuncio_id = int(anuncio_id)
+        anuncio_id = int(
+            anuncio_id
+        )
+
         disponibilidade_id = int(
             disponibilidade_id
         )
@@ -295,15 +365,19 @@ def criar_solicitacao():
             usuario
         )
 
+        # ====================================================
+        # NOTIFICA DONO DO ANÚNCIO
+        # ====================================================
+
         criar_notificacao(
             usuario_id=anuncio.usuario_id,
-            tipo="interesse_recebido",
-            titulo="Novo interesse no seu item",
+            tipo="doacao_solicitacao_recebida",
+            titulo="Nova solicitação de doação",
             mensagem=(
                 f"{nome_interessado} demonstrou "
-                f"interesse no seu item "
+                f"interesse no item "
                 f'"{anuncio.titulo}" e solicitou '
-                f"a data "
+                f"a retirada em "
                 f"{disponibilidade.data.strftime('%d/%m/%Y')}."
             ),
             referencia_id=solicitacao.id
@@ -326,6 +400,7 @@ def criar_solicitacao():
             "Seu interesse foi enviado "
             "com sucesso."
         ),
+
         "solicitacao": (
             serializar_solicitacao(
                 solicitacao
@@ -383,7 +458,9 @@ def listar_solicitacoes():
 
 @solicitacoes_bp.get("/<int:solicitacao_id>")
 @jwt_required()
-def obter_solicitacao(solicitacao_id):
+def obter_solicitacao(
+    solicitacao_id
+):
 
     usuario = obter_usuario_atual()
 
@@ -414,7 +491,10 @@ def obter_solicitacao(solicitacao_id):
 
     if not eh_interessado and not eh_dono:
         return jsonify({
-            "erro": "Você não tem acesso a esta solicitação."
+            "erro": (
+                "Você não tem acesso "
+                "a esta solicitação."
+            )
         }), 403
 
     return jsonify(
@@ -425,7 +505,7 @@ def obter_solicitacao(solicitacao_id):
 
 
 # ============================================================
-# ACEITAR
+# ACEITAR SOLICITAÇÃO DE DOAÇÃO
 # ============================================================
 
 @solicitacoes_bp.patch(
@@ -467,6 +547,10 @@ def aceitar_solicitacao(
             )
         }), 403
 
+    # ========================================================
+    # SOMENTE FLUXO DE DOAÇÃO
+    # ========================================================
+
     if solicitacao.tipo != "doacao":
         return jsonify({
             "erro": (
@@ -474,6 +558,10 @@ def aceitar_solicitacao(
                 "ao fluxo de doação."
             )
         }), 400
+
+    # ========================================================
+    # DEVE ESTAR PENDENTE
+    # ========================================================
 
     if solicitacao.status != "pendente":
         return jsonify({
@@ -554,17 +642,34 @@ def aceitar_solicitacao(
 
         criar_notificacao(
             usuario_id=outra.interessado_id,
-            tipo="interesse_recusado",
-            titulo="Item reservado",
+            tipo="doacao_item_reservado",
+            titulo="Item já reservado",
             mensagem=(
                 f'O item "{anuncio.titulo}" '
-                "foi reservado para outra pessoa."
+                "foi reservado para outra pessoa. "
+                "Sua solicitação de doação foi "
+                "encerrada."
             ),
             referencia_id=outra.id
         )
 
     # ========================================================
-    # NOTIFICA INTERESSADO
+    # ATUALIZA NOTIFICAÇÃO ORIGINAL DO DONO
+    # ========================================================
+
+    atualizar_notificacao_original(
+        solicitacao=solicitacao,
+        tipo="doacao_solicitacao_aceita",
+        titulo="Proposta aceita",
+        mensagem=(
+            f'Você aceitou a solicitação de retirada '
+            f'do item "{anuncio.titulo}" por '
+            f'{nome_usuario(solicitacao.interessado)}.'
+        )
+    )
+
+    # ========================================================
+    # NOTIFICA INTERESSADO ACEITO
     # ========================================================
 
     disponibilidade = (
@@ -573,10 +678,10 @@ def aceitar_solicitacao(
 
     criar_notificacao(
         usuario_id=solicitacao.interessado_id,
-        tipo="reserva_confirmada",
-        titulo="Reserva confirmada",
+        tipo="doacao_aceita",
+        titulo="Proposta aceita",
         mensagem=(
-            f'A sua solicitação para '
+            f'Sua proposta para receber '
             f'"{anuncio.titulo}" foi aceita. '
             f"A retirada está reservada para "
             f"{disponibilidade.data.strftime('%d/%m/%Y')}."
@@ -593,14 +698,16 @@ def aceitar_solicitacao(
         return jsonify({
             "erro": (
                 "Não foi possível confirmar "
-                "a reserva."
+                "a doação."
             )
         }), 500
 
     return jsonify({
         "mensagem": (
-            "Solicitação aceita e item reservado."
+            "Solicitação de doação aceita "
+            "e item reservado."
         ),
+
         "solicitacao": (
             serializar_solicitacao(
                 solicitacao
@@ -610,7 +717,7 @@ def aceitar_solicitacao(
 
 
 # ============================================================
-# RECUSAR
+# RECUSAR SOLICITAÇÃO DE DOAÇÃO
 # ============================================================
 
 @solicitacoes_bp.patch(
@@ -640,6 +747,10 @@ def recusar_solicitacao(
 
     anuncio = solicitacao.anuncio
 
+    # ========================================================
+    # SOMENTE DONO
+    # ========================================================
+
     if anuncio.usuario_id != usuario.id:
         return jsonify({
             "erro": (
@@ -648,6 +759,22 @@ def recusar_solicitacao(
             )
         }), 403
 
+    # ========================================================
+    # SOMENTE FLUXO DE DOAÇÃO
+    # ========================================================
+
+    if solicitacao.tipo != "doacao":
+        return jsonify({
+            "erro": (
+                "Esta solicitação não pertence "
+                "ao fluxo de doação."
+            )
+        }), 400
+
+    # ========================================================
+    # DEVE ESTAR PENDENTE
+    # ========================================================
+
     if solicitacao.status != "pendente":
         return jsonify({
             "erro": (
@@ -655,14 +782,37 @@ def recusar_solicitacao(
             )
         }), 409
 
+    # ========================================================
+    # RECUSA
+    # ========================================================
+
     solicitacao.status = "recusada"
+
+    # ========================================================
+    # ATUALIZA NOTIFICAÇÃO ORIGINAL DO DONO
+    # ========================================================
+
+    atualizar_notificacao_original(
+        solicitacao=solicitacao,
+        tipo="doacao_solicitacao_recusada",
+        titulo="Proposta recusada",
+        mensagem=(
+            f'Você recusou a solicitação de retirada '
+            f'do item "{anuncio.titulo}" por '
+            f'{nome_usuario(solicitacao.interessado)}.'
+        )
+    )
+
+    # ========================================================
+    # NOTIFICA INTERESSADO
+    # ========================================================
 
     criar_notificacao(
         usuario_id=solicitacao.interessado_id,
-        tipo="interesse_recusado",
-        titulo="Solicitação recusada",
+        tipo="doacao_recusada",
+        titulo="Proposta recusada",
         mensagem=(
-            f'A sua solicitação para '
+            f'Sua proposta para receber '
             f'"{anuncio.titulo}" foi recusada.'
         ),
         referencia_id=solicitacao.id
@@ -683,8 +833,9 @@ def recusar_solicitacao(
 
     return jsonify({
         "mensagem": (
-            "Solicitação recusada."
+            "Solicitação de doação recusada."
         ),
+
         "solicitacao": (
             serializar_solicitacao(
                 solicitacao
@@ -694,7 +845,7 @@ def recusar_solicitacao(
 
 
 # ============================================================
-# CANCELAR
+# CANCELAR SOLICITAÇÃO DE DOAÇÃO
 # ============================================================
 
 @solicitacoes_bp.patch(
@@ -724,6 +875,10 @@ def cancelar_solicitacao(
 
     anuncio = solicitacao.anuncio
 
+    # ========================================================
+    # IDENTIFICA AS PARTES
+    # ========================================================
+
     eh_interessado = (
         solicitacao.interessado_id ==
         usuario.id
@@ -742,6 +897,22 @@ def cancelar_solicitacao(
             )
         }), 403
 
+    # ========================================================
+    # SOMENTE FLUXO DE DOAÇÃO
+    # ========================================================
+
+    if solicitacao.tipo != "doacao":
+        return jsonify({
+            "erro": (
+                "Esta solicitação não pertence "
+                "ao fluxo de doação."
+            )
+        }), 400
+
+    # ========================================================
+    # STATUS
+    # ========================================================
+
     if solicitacao.status not in [
         "pendente",
         "aceita"
@@ -752,6 +923,10 @@ def cancelar_solicitacao(
                 "mais ser cancelada."
             )
         }), 409
+
+    # ========================================================
+    # GUARDA STATUS ANTERIOR
+    # ========================================================
 
     estava_aceita = (
         solicitacao.status == "aceita"
@@ -767,6 +942,7 @@ def cancelar_solicitacao(
         estava_aceita
         and anuncio.status == "reservado"
     ):
+
         anuncio.status = "disponivel"
 
         solicitacao.disponibilidade.status = (
@@ -789,8 +965,8 @@ def cancelar_solicitacao(
 
     criar_notificacao(
         usuario_id=destinatario_id,
-        tipo="reserva_cancelada",
-        titulo="Reserva cancelada",
+        tipo="doacao_cancelada",
+        titulo="Doação cancelada",
         mensagem=(
             f'{nome_cancelador} cancelou '
             f'a solicitação do item '
@@ -813,7 +989,10 @@ def cancelar_solicitacao(
         }), 500
 
     return jsonify({
-        "mensagem": "Solicitação cancelada.",
+        "mensagem": (
+            "Solicitação de doação cancelada."
+        ),
+
         "solicitacao": (
             serializar_solicitacao(
                 solicitacao

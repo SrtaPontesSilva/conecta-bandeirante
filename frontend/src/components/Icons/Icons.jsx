@@ -31,7 +31,12 @@ export function IconSearch(props) {
   return (
     <IconBase {...props}>
       <circle cx="11" cy="11" r="6.5" />
-      <line x1="20" y1="20" x2="15.8" y2="15.8" />
+      <line
+        x1="20"
+        y1="20"
+        x2="15.8"
+        y2="15.8"
+      />
     </IconBase>
   );
 }
@@ -39,9 +44,21 @@ export function IconSearch(props) {
 export function IconWallet(props) {
   return (
     <IconBase {...props}>
-      <rect x="3" y="6.5" width="18" height="12" rx="1.5" />
+      <rect
+        x="3"
+        y="6.5"
+        width="18"
+        height="12"
+        rx="1.5"
+      />
       <path d="M3 10h18" />
-      <circle cx="16.5" cy="14.5" r="1" fill="currentColor" stroke="none" />
+      <circle
+        cx="16.5"
+        cy="14.5"
+        r="1"
+        fill="currentColor"
+        stroke="none"
+      />
     </IconBase>
   );
 }
@@ -68,7 +85,11 @@ export function IconMenu(props) {
 export function IconUser(props) {
   return (
     <IconBase {...props}>
-      <circle cx="12" cy="8.2" r="3.4" />
+      <circle
+        cx="12"
+        cy="8.2"
+        r="3.4"
+      />
       <path d="M5.2 19.5c0-3.5 3-6 6.8-6s6.8 2.5 6.8 6" />
     </IconBase>
   );
@@ -77,11 +98,32 @@ export function IconUser(props) {
 export function IconClipboard(props) {
   return (
     <IconBase {...props}>
-      <rect x="6" y="4.2" width="12" height="15.8" rx="1.5" />
+      <rect
+        x="6"
+        y="4.2"
+        width="12"
+        height="15.8"
+        rx="1.5"
+      />
       <path d="M9 4.2V3.6A1.6 1.6 0 0 1 10.6 2h2.8a1.6 1.6 0 0 1 1.6 1.6v0.6" />
-      <line x1="9" y1="10.2" x2="15" y2="10.2" />
-      <line x1="9" y1="13.6" x2="15" y2="13.6" />
-      <line x1="9" y1="17" x2="12.5" y2="17" />
+      <line
+        x1="9"
+        y1="10.2"
+        x2="15"
+        y2="10.2"
+      />
+      <line
+        x1="9"
+        y1="13.6"
+        x2="15"
+        y2="13.6"
+      />
+      <line
+        x1="9"
+        y1="17"
+        x2="12.5"
+        y2="17"
+      />
     </IconBase>
   );
 }
@@ -90,7 +132,12 @@ export function IconLogout(props) {
   return (
     <IconBase {...props}>
       <path d="M9.5 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3.5" />
-      <line x1="20" y1="12" x2="10.5" y2="12" />
+      <line
+        x1="20"
+        y1="12"
+        x2="10.5"
+        y2="12"
+      />
       <polyline points="16 7.5 20.5 12 16 16.5" />
     </IconBase>
   );
@@ -100,7 +147,13 @@ export function IconTicket(props) {
   return (
     <IconBase {...props}>
       <path d="M4 8.3A1.5 1.5 0 0 1 5.5 6.8h13A1.5 1.5 0 0 1 20 8.3v2a1.7 1.7 0 0 0 0 3.4v2A1.5 1.5 0 0 1 18.5 17.2h-13A1.5 1.5 0 0 1 4 15.7v-2a1.7 1.7 0 0 0 0-3.4v-2Z" />
-      <line x1="14.2" y1="7.3" x2="14.2" y2="16.2" strokeDasharray="2.2 2.2" />
+      <line
+        x1="14.2"
+        y1="7.3"
+        x2="14.2"
+        y2="16.2"
+        strokeDasharray="2.2 2.2"
+      />
     </IconBase>
   );
 }
@@ -108,7 +161,13 @@ export function IconTicket(props) {
 export function IconVideo(props) {
   return (
     <IconBase {...props}>
-      <rect x="3" y="6.8" width="12.2" height="10.4" rx="1.5" />
+      <rect
+        x="3"
+        y="6.8"
+        width="12.2"
+        height="10.4"
+        rx="1.5"
+      />
       <path d="M15.2 10.4 21 7.3v9.4l-5.8-3.1" />
     </IconBase>
   );
@@ -117,8 +176,18 @@ export function IconVideo(props) {
 export function IconPlus(props) {
   return (
     <IconBase {...props}>
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <line x1="5" y1="12" x2="19" y2="12" />
+      <line
+        x1="12"
+        y1="5"
+        x2="12"
+        y2="19"
+      />
+      <line
+        x1="5"
+        y1="12"
+        x2="19"
+        y2="12"
+      />
     </IconBase>
   );
 }
@@ -126,7 +195,12 @@ export function IconPlus(props) {
 export function IconArrowLeft(props) {
   return (
     <IconBase {...props}>
-      <line x1="19" y1="12" x2="5" y2="12" />
+      <line
+        x1="19"
+        y1="12"
+        x2="5"
+        y2="12"
+      />
       <polyline points="11 6 5 12 11 18" />
     </IconBase>
   );
@@ -160,7 +234,11 @@ export function IconMapPin(props) {
   return (
     <IconBase {...props}>
       <path d="M12 21s-6.8-6.1-6.8-11.2a6.8 6.8 0 0 1 13.6 0C18.8 14.9 12 21 12 21Z" />
-      <circle cx="12" cy="9.7" r="2.2" />
+      <circle
+        cx="12"
+        cy="9.7"
+        r="2.2"
+      />
     </IconBase>
   );
 }
@@ -168,10 +246,31 @@ export function IconMapPin(props) {
 export function IconCalendar(props) {
   return (
     <IconBase {...props}>
-      <rect x="3.5" y="5" width="17" height="15.5" rx="1.5" />
-      <line x1="3.5" y1="9.8" x2="20.5" y2="9.8" />
-      <line x1="8" y1="3" x2="8" y2="6.8" />
-      <line x1="16" y1="3" x2="16" y2="6.8" />
+      <rect
+        x="3.5"
+        y="5"
+        width="17"
+        height="15.5"
+        rx="1.5"
+      />
+      <line
+        x1="3.5"
+        y1="9.8"
+        x2="20.5"
+        y2="9.8"
+      />
+      <line
+        x1="8"
+        y1="3"
+        x2="8"
+        y2="6.8"
+      />
+      <line
+        x1="16"
+        y1="3"
+        x2="16"
+        y2="6.8"
+      />
     </IconBase>
   );
 }
@@ -179,8 +278,19 @@ export function IconCalendar(props) {
 export function IconGift(props) {
   return (
     <IconBase {...props}>
-      <rect x="3.5" y="9.5" width="17" height="10.5" rx="1.2" />
-      <line x1="12" y1="9.5" x2="12" y2="20" />
+      <rect
+        x="3.5"
+        y="9.5"
+        width="17"
+        height="10.5"
+        rx="1.2"
+      />
+      <line
+        x1="12"
+        y1="9.5"
+        x2="12"
+        y2="20"
+      />
       <path d="M3.5 9.5h17" />
       <path d="M12 9.5S9.5 9.5 8.3 8.2A2.2 2.2 0 1 1 12 5.6a2.2 2.2 0 1 1 3.7 2.6C14.5 9.5 12 9.5 12 9.5Z" />
     </IconBase>
@@ -202,7 +312,13 @@ export function IconTag(props) {
   return (
     <IconBase {...props}>
       <path d="M20 12.7 12.7 20a1.5 1.5 0 0 1-2.1 0l-6.6-6.6a1.5 1.5 0 0 1 0-2.1L11.3 4h5.2A3.5 3.5 0 0 1 20 7.5v5.2Z" />
-      <circle cx="15" cy="9" r="1.4" fill="currentColor" stroke="none" />
+      <circle
+        cx="15"
+        cy="9"
+        r="1.4"
+        fill="currentColor"
+        stroke="none"
+      />
     </IconBase>
   );
 }
@@ -211,6 +327,43 @@ export function IconCheck(props) {
   return (
     <IconBase {...props}>
       <polyline points="5 12.5 9.5 17 19 6.5" />
+    </IconBase>
+  );
+}
+
+export function IconMail(props) {
+  return (
+    <IconBase {...props}>
+      <rect
+        x="3.5"
+        y="5.5"
+        width="17"
+        height="13"
+        rx="1.5"
+      />
+      <polyline points="4.5 7 12 13 19.5 7" />
+    </IconBase>
+  );
+}
+
+export function IconTrash(props) {
+  return (
+    <IconBase {...props}>
+      <polyline points="4 7 20 7" />
+      <path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7" />
+      <path d="M6.5 7 7.3 19a1.5 1.5 0 0 0 1.5 1.4h6.4a1.5 1.5 0 0 0 1.5-1.4L17.5 7" />
+      <line
+        x1="10"
+        y1="10.5"
+        x2="10.5"
+        y2="16.5"
+      />
+      <line
+        x1="14"
+        y1="10.5"
+        x2="13.5"
+        y2="16.5"
+      />
     </IconBase>
   );
 }

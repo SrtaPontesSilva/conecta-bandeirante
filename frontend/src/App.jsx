@@ -1,8 +1,8 @@
 import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
+BrowserRouter,
+Routes,
+Route,
+Navigate,
 } from "react-router-dom";
 
 import Login from "./pages/Login/Login";
@@ -13,6 +13,7 @@ import Anuncios from "./pages/Anuncios/Anuncios";
 import AnuncioDetalhes from "./pages/DetalheAnuncio/DetalheAnuncio";
 import NovoAnuncio from "./pages/NovoAnuncio/NovoAnuncio";
 import Resgates from "./pages/Resgates/Resgates";
+import ConfiguracoesNotificacoes from "./pages/ConfiguracoesNotificacoes/ConfiguracoesNotificacoes";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
 import PageTitle from "./components/PageTitle/PageTitle";
@@ -21,115 +22,119 @@ import AccessibilityButton from "./components/Accessibility/AccessibilityButton"
 import { AccessibilityProvider } from "./contexts/AccessibilityContext";
 
 function App() {
-  return (
-    <BrowserRouter>
-      <AccessibilityProvider>
+return ( <BrowserRouter> <AccessibilityProvider>
 
-        <PageTitle />
+    <PageTitle />
 
-        <Routes>
+    <Routes>
 
-          {/* ================================
-              ROTAS PÚBLICAS
-          ================================= */}
+      {/* ================================
+          ROTAS PÚBLICAS
+      ================================= */}
 
-          <Route
-            path="/login"
-            element={<Login />}
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
+      <Route
+        path="/cadastro"
+        element={<Cadastro />}
+      />
+
+      <Route
+        path="/cadastro/usuario"
+        element={<CadastroUsuario />}
+      />
+
+      <Route
+        path="/cadastro/parceiro"
+        element={<CadastroParceiro />}
+      />
+
+
+      {/* ================================
+          ROTAS PARA QUALQUER
+          USUÁRIO AUTENTICADO
+      ================================= */}
+
+      <Route element={<ProtectedRoute />}>
+
+        <Route
+          path="/inicio"
+          element={<Anuncios />}
+        />
+
+        <Route
+          path="/anuncios"
+          element={<Anuncios />}
+        />
+
+        <Route
+          path="/anuncios/:id"
+          element={<AnuncioDetalhes />}
+        />
+
+        <Route
+          path="/resgates"
+          element={<Resgates />}
+        />
+
+        <Route
+          path="/configuracoes/notificacoes"
+          element={<ConfiguracoesNotificacoes />}
+        />
+
+      </Route>
+
+
+      {/* ================================
+          ROTAS EXCLUSIVAS DE USUÁRIO
+      ================================= */}
+
+      <Route
+        element={
+          <ProtectedRoute
+            tipoPermitido="usuario"
           />
+        }
+      >
 
-          <Route
-            path="/cadastro"
-            element={<Cadastro />}
+        <Route
+          path="/anuncios/novo"
+          element={<NovoAnuncio />}
+        />
+
+      </Route>
+
+
+      {/* ================================
+          ROTA PADRÃO
+      ================================= */}
+
+      <Route
+        path="*"
+        element={
+          <Navigate
+            to="/login"
+            replace
           />
+        }
+      />
 
-          <Route
-            path="/cadastro/usuario"
-            element={<CadastroUsuario />}
-          />
-
-          <Route
-            path="/cadastro/parceiro"
-            element={<CadastroParceiro />}
-          />
+    </Routes>
 
 
-          {/* ================================
-              ROTAS PARA QUALQUER
-              USUÁRIO AUTENTICADO
-          ================================= */}
+    {/* =====================================
+        ACESSIBILIDADE GLOBAL
+    ====================================== */}
 
-          <Route element={<ProtectedRoute />}>
+    <AccessibilityButton />
 
-            <Route
-              path="/inicio"
-              element={<Anuncios />}
-            />
+  </AccessibilityProvider>
+</BrowserRouter>
 
-            <Route
-              path="/anuncios"
-              element={<Anuncios />}
-            />
-
-            <Route
-              path="/anuncios/:id"
-              element={<AnuncioDetalhes />}
-            />
-
-            <Route
-              path="/resgates"
-              element={<Resgates />}
-            />
-
-          </Route>
-
-
-          {/* ================================
-              ROTAS EXCLUSIVAS DE USUÁRIO
-          ================================= */}
-
-          <Route
-            element={
-              <ProtectedRoute
-                tipoPermitido="usuario"
-              />
-            }
-          >
-
-            <Route
-              path="/anuncios/novo"
-              element={<NovoAnuncio />}
-            />
-
-          </Route>
-
-
-          {/* ================================
-              ROTA PADRÃO
-          ================================= */}
-
-          <Route
-            path="*"
-            element={
-              <Navigate
-                to="/login"
-                replace
-              />
-            }
-          />
-
-        </Routes>
-
-
-        {/* =====================================
-            ACESSIBILIDADE GLOBAL
-        ====================================== */}
-
-        <AccessibilityButton />
-
-      </AccessibilityProvider>
-    </BrowserRouter>
-  );
+);
 }
 
 export default App;

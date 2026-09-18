@@ -1,0 +1,952 @@
+/* ============================================================
+   PÁGINA
+============================================================ */
+
+.configuracoes-notificacoes-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  /*
+   * O MarketplaceNavbar fica sobreposto/fixo.
+   * Este espaço impede que o primeiro card fique
+   * escondido atrás dele.
+   */
+  padding-top: 108px;
+
+  /*
+   * Espaço de segurança para o BottomNavigation.
+   */
+  padding-bottom: 112px;
+
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+
+/* ============================================================
+   CONTAINER
+============================================================ */
+
+.configuracoes-notificacoes-container {
+  width: min(720px, calc(100% - 32px));
+
+  margin: 0 auto;
+
+  padding: 0 0 24px;
+}
+
+
+/* ============================================================
+   FEEDBACK
+============================================================ */
+
+.configuracoes-notificacoes-feedback {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 8px;
+
+  width: 100%;
+
+  margin-bottom: 14px;
+
+  padding: 11px 13px;
+
+  border-radius: 11px;
+
+  font-size: 0.84rem;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
+}
+
+.configuracoes-notificacoes-feedback--erro {
+  border: 1px solid rgba(209, 129, 102, 0.3);
+
+  background-color: rgba(209, 129, 102, 0.1);
+
+  color: #7d4030;
+}
+
+.configuracoes-notificacoes-feedback--sucesso {
+  border: 1px solid rgba(95, 128, 104, 0.3);
+
+  background-color: rgba(95, 128, 104, 0.1);
+
+  color: #416049;
+}
+
+
+/* ============================================================
+   FORMULÁRIO
+============================================================ */
+
+.configuracoes-notificacoes-form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+
+  width: 100%;
+}
+
+
+/* ============================================================
+   SEÇÕES
+============================================================ */
+
+.configuracoes-notificacoes-section {
+  width: 100%;
+
+  padding: 17px 20px;
+
+  border: 1px solid rgba(54, 64, 66, 0.08);
+
+  border-radius: 15px;
+
+  background-color: #ffffff;
+
+  box-shadow:
+    0 3px 14px rgba(54, 64, 66, 0.035);
+}
+
+
+/* ============================================================
+   CABEÇALHO DAS SEÇÕES
+============================================================ */
+
+.configuracoes-notificacoes-section-header {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 11px;
+
+  margin-bottom: 10px;
+
+  min-width: 0;
+}
+
+.configuracoes-notificacoes-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 35px;
+  height: 35px;
+
+  flex: 0 0 35px;
+
+  border-radius: 9px;
+
+  background-color: rgba(91, 109, 147, 0.1);
+
+  color: var(--color-primary);
+}
+
+.configuracoes-notificacoes-section-header > div:last-child {
+  min-width: 0;
+
+  flex: 1 1 auto;
+}
+
+.configuracoes-notificacoes-section-header h2 {
+  margin: 0 0 3px;
+
+  color: var(--color-text);
+
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+
+.configuracoes-notificacoes-section-header p {
+  margin: 0;
+
+  color: rgba(54, 64, 66, 0.6);
+
+  font-size: 0.77rem;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   LISTA DE OPÇÕES
+============================================================ */
+
+.configuracoes-notificacoes-options {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+}
+
+
+/* ============================================================
+   OPÇÃO
+============================================================ */
+
+.notificacao-option {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 60px;
+
+  padding: 8px 0;
+
+  cursor: pointer;
+}
+
+.notificacao-option + .notificacao-option {
+  border-top: 1px solid rgba(54, 64, 66, 0.07);
+}
+
+
+/* ============================================================
+   ÍCONE DA OPÇÃO
+============================================================ */
+
+.notificacao-option-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 35px;
+  height: 35px;
+
+  flex: 0 0 35px;
+
+  border-radius: 9px;
+
+  background-color: rgba(213, 227, 230, 0.5);
+
+  color: var(--color-primary);
+}
+
+
+/* ============================================================
+   CONTEÚDO DA OPÇÃO
+============================================================ */
+
+.notificacao-option-content {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1 1 auto;
+
+  gap: 2px;
+
+  min-width: 0;
+}
+
+.notificacao-option-content--without-icon {
+  padding-left: 1px;
+}
+
+.notificacao-option-content strong {
+  display: block;
+
+  min-width: 0;
+
+  color: var(--color-text);
+
+  font-size: 0.87rem;
+  font-weight: 650;
+
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
+}
+
+.notificacao-option-content span {
+  display: block;
+
+  min-width: 0;
+
+  color: rgba(54, 64, 66, 0.6);
+
+  font-size: 0.75rem;
+  line-height: 1.38;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   INPUT REAL DO TOGGLE
+============================================================ */
+
+.notificacao-toggle-input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  margin: -1px;
+
+  padding: 0;
+
+  overflow: hidden;
+
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;
+
+  border: 0;
+
+  opacity: 0;
+}
+
+
+/* ============================================================
+   TOGGLE
+============================================================ */
+
+.notificacao-toggle {
+  display: flex;
+  align-items: center;
+
+  width: 44px;
+  height: 25px;
+
+  flex: 0 0 44px;
+
+  padding: 3px;
+
+  border-radius: 999px;
+
+  background-color: #c7ced0;
+
+  transition:
+    background-color 0.2s ease;
+}
+
+.notificacao-toggle span {
+  display: block;
+
+  width: 19px;
+  height: 19px;
+
+  flex: 0 0 19px;
+
+  border-radius: 50%;
+
+  background-color: #ffffff;
+
+  box-shadow:
+    0 2px 5px rgba(54, 64, 66, 0.18);
+
+  transform: translateX(0);
+
+  transition:
+    transform 0.2s ease;
+}
+
+.notificacao-toggle-input:checked + .notificacao-toggle {
+  background-color: var(--color-primary);
+}
+
+.notificacao-toggle-input:checked + .notificacao-toggle span {
+  transform: translateX(19px);
+}
+
+.notificacao-toggle-input:focus-visible + .notificacao-toggle {
+  outline: 3px solid rgba(91, 109, 147, 0.25);
+
+  outline-offset: 3px;
+}
+
+
+/* ============================================================
+   RETENÇÃO
+============================================================ */
+
+.retencao-notificacoes {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  width: 100%;
+}
+
+.retencao-notificacoes-label {
+  color: var(--color-text);
+
+  font-size: 0.84rem;
+  font-weight: 650;
+
+  line-height: 1.3;
+}
+
+.retencao-notificacoes-select {
+  width: 100%;
+  min-height: 43px;
+
+  padding: 0 12px;
+
+  border: 1px solid rgba(54, 64, 66, 0.14);
+
+  border-radius: 10px;
+
+  background-color: #ffffff;
+
+  color: var(--color-text);
+
+  font: inherit;
+
+  font-size: 0.84rem;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.retencao-notificacoes-select:hover {
+  border-color: rgba(91, 109, 147, 0.4);
+}
+
+.retencao-notificacoes-select:focus {
+  outline: 3px solid rgba(91, 109, 147, 0.16);
+
+  outline-offset: 1px;
+
+  border-color: var(--color-primary);
+}
+
+.retencao-notificacoes-description {
+  margin: 0;
+
+  color: rgba(54, 64, 66, 0.58);
+
+  font-size: 0.73rem;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   FOOTER
+============================================================ */
+
+.configuracoes-notificacoes-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  gap: 9px;
+
+  width: 100%;
+
+  padding-top: 2px;
+}
+
+.configuracoes-notificacoes-cancelar,
+.configuracoes-notificacoes-salvar {
+  min-height: 42px;
+
+  padding: 0 17px;
+
+  border-radius: 10px;
+
+  font: inherit;
+
+  font-size: 0.83rem;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.configuracoes-notificacoes-cancelar {
+  border: 1px solid rgba(54, 64, 66, 0.13);
+
+  background-color: #ffffff;
+
+  color: var(--color-text);
+}
+
+.configuracoes-notificacoes-cancelar:hover {
+  background-color: var(--color-secondary);
+}
+
+.configuracoes-notificacoes-cancelar:focus-visible {
+  outline: 3px solid rgba(91, 109, 147, 0.25);
+
+  outline-offset: 3px;
+}
+
+.configuracoes-notificacoes-salvar {
+  border: 1px solid var(--color-primary);
+
+  background-color: var(--color-primary);
+
+  color: #ffffff;
+}
+
+.configuracoes-notificacoes-salvar:hover {
+  opacity: 0.92;
+}
+
+.configuracoes-notificacoes-salvar:focus-visible {
+  outline: 3px solid rgba(91, 109, 147, 0.3);
+
+  outline-offset: 3px;
+}
+
+.configuracoes-notificacoes-cancelar:active,
+.configuracoes-notificacoes-salvar:active {
+  transform: translateY(1px);
+}
+
+.configuracoes-notificacoes-cancelar:disabled,
+.configuracoes-notificacoes-salvar:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.6;
+}
+
+
+/* ============================================================
+   LOADING
+============================================================ */
+
+.configuracoes-notificacoes-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  min-height: 45vh;
+
+  color: rgba(54, 64, 66, 0.62);
+
+  text-align: center;
+}
+
+.configuracoes-notificacoes-loading p {
+  margin: 0;
+
+  font-size: 0.84rem;
+
+  line-height: 1.4;
+}
+
+
+/* ============================================================
+   TABLET
+============================================================ */
+
+@media (max-width: 768px) {
+  .configuracoes-notificacoes-page {
+    /*
+     * Navbar mobile costuma ser menor,
+     * mas ainda precisa de área de segurança.
+     */
+    padding-top: 88px;
+
+    padding-bottom: 108px;
+  }
+
+  .configuracoes-notificacoes-container {
+    width: min(
+      680px,
+      calc(100% - 28px)
+    );
+  }
+
+  .configuracoes-notificacoes-section {
+    padding: 16px 18px;
+
+    border-radius: 14px;
+  }
+
+  .configuracoes-notificacoes-form {
+    gap: 11px;
+  }
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 600px) {
+  .configuracoes-notificacoes-page {
+    padding-top: 82px;
+
+    padding-bottom: 106px;
+  }
+
+  .configuracoes-notificacoes-container {
+    width: calc(100% - 20px);
+
+    padding-bottom: 18px;
+  }
+
+  .configuracoes-notificacoes-form {
+    gap: 10px;
+  }
+
+  .configuracoes-notificacoes-feedback {
+    margin-bottom: 10px;
+
+    padding: 10px 11px;
+
+    font-size: 0.79rem;
+  }
+
+  .configuracoes-notificacoes-section {
+    padding: 14px 14px;
+
+    border-radius: 13px;
+  }
+
+  .configuracoes-notificacoes-section-header {
+    gap: 9px;
+
+    margin-bottom: 8px;
+  }
+
+  .configuracoes-notificacoes-section-icon {
+    width: 33px;
+    height: 33px;
+
+    flex-basis: 33px;
+
+    border-radius: 8px;
+  }
+
+  .configuracoes-notificacoes-section-header h2 {
+    font-size: 0.89rem;
+  }
+
+  .configuracoes-notificacoes-section-header p {
+    font-size: 0.73rem;
+  }
+
+  .notificacao-option {
+    gap: 9px;
+
+    min-height: 57px;
+
+    padding: 7px 0;
+  }
+
+  .notificacao-option-icon {
+    width: 33px;
+    height: 33px;
+
+    flex-basis: 33px;
+
+    border-radius: 8px;
+  }
+
+  .notificacao-option-content strong {
+    font-size: 0.83rem;
+  }
+
+  .notificacao-option-content span {
+    font-size: 0.71rem;
+  }
+
+  .notificacao-toggle {
+    width: 42px;
+    height: 24px;
+
+    flex-basis: 42px;
+  }
+
+  .notificacao-toggle span {
+    width: 18px;
+    height: 18px;
+
+    flex-basis: 18px;
+  }
+
+  .notificacao-toggle-input:checked + .notificacao-toggle span {
+    transform: translateX(18px);
+  }
+
+  .retencao-notificacoes {
+    gap: 6px;
+  }
+
+  .retencao-notificacoes-label {
+    font-size: 0.81rem;
+  }
+
+  .retencao-notificacoes-select {
+    min-height: 42px;
+
+    padding: 0 11px;
+
+    font-size: 0.81rem;
+  }
+
+  .retencao-notificacoes-description {
+    font-size: 0.7rem;
+  }
+
+  .configuracoes-notificacoes-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+
+    gap: 7px;
+
+    padding-top: 1px;
+  }
+
+  .configuracoes-notificacoes-cancelar,
+  .configuracoes-notificacoes-salvar {
+    width: 100%;
+
+    min-height: 43px;
+
+    font-size: 0.82rem;
+  }
+}
+
+
+/* ============================================================
+   MOBILE PEQUENO
+============================================================ */
+
+@media (max-width: 480px) {
+  .configuracoes-notificacoes-page {
+    padding-top: 78px;
+
+    padding-bottom: 104px;
+  }
+
+  .configuracoes-notificacoes-container {
+    width: calc(100% - 16px);
+  }
+
+  .configuracoes-notificacoes-section {
+    padding: 13px 12px;
+
+    border-radius: 12px;
+  }
+
+  .configuracoes-notificacoes-section-header {
+    gap: 8px;
+  }
+
+  .configuracoes-notificacoes-section-icon {
+    width: 31px;
+    height: 31px;
+
+    flex-basis: 31px;
+  }
+
+  .configuracoes-notificacoes-section-header h2 {
+    font-size: 0.86rem;
+  }
+
+  .configuracoes-notificacoes-section-header p {
+    font-size: 0.7rem;
+  }
+
+  .notificacao-option {
+    gap: 7px;
+
+    min-height: 55px;
+  }
+
+  .notificacao-option-icon {
+    width: 31px;
+    height: 31px;
+
+    flex-basis: 31px;
+  }
+
+  .notificacao-option-content strong {
+    font-size: 0.8rem;
+  }
+
+  .notificacao-option-content span {
+    font-size: 0.68rem;
+  }
+
+  .notificacao-toggle {
+    width: 40px;
+    height: 23px;
+
+    flex-basis: 40px;
+  }
+
+  .notificacao-toggle span {
+    width: 17px;
+    height: 17px;
+
+    flex-basis: 17px;
+  }
+
+  .notificacao-toggle-input:checked + .notificacao-toggle span {
+    transform: translateX(17px);
+  }
+
+  .retencao-notificacoes-label {
+    font-size: 0.79rem;
+  }
+
+  .retencao-notificacoes-select {
+    min-height: 40px;
+
+    padding: 0 10px;
+
+    font-size: 0.77rem;
+  }
+
+  .retencao-notificacoes-description {
+    font-size: 0.67rem;
+  }
+}
+
+
+/* ============================================================
+   TELAS MUITO PEQUENAS
+============================================================ */
+
+@media (max-width: 380px) {
+  .configuracoes-notificacoes-page {
+    padding-top: 74px;
+
+    padding-bottom: 102px;
+  }
+
+  .configuracoes-notificacoes-container {
+    width: calc(100% - 12px);
+  }
+
+  .configuracoes-notificacoes-form {
+    gap: 8px;
+  }
+
+  .configuracoes-notificacoes-section {
+    padding: 11px 10px;
+
+    border-radius: 11px;
+  }
+
+  /*
+   * Em telas muito estreitas, os ícones secundários
+   * são removidos para preservar espaço para o texto.
+   */
+  .configuracoes-notificacoes-section-icon {
+    display: none;
+  }
+
+  .configuracoes-notificacoes-section-header {
+    margin-bottom: 6px;
+  }
+
+  .configuracoes-notificacoes-section-header h2 {
+    font-size: 0.83rem;
+  }
+
+  .configuracoes-notificacoes-section-header p {
+    font-size: 0.67rem;
+  }
+
+  .notificacao-option {
+    gap: 6px;
+
+    min-height: 53px;
+
+    padding: 6px 0;
+  }
+
+  .notificacao-option-icon {
+    display: none;
+  }
+
+  .notificacao-option-content--without-icon {
+    padding-left: 0;
+  }
+
+  .notificacao-option-content strong {
+    font-size: 0.77rem;
+  }
+
+  .notificacao-option-content span {
+    font-size: 0.65rem;
+  }
+
+  .notificacao-toggle {
+    width: 38px;
+    height: 22px;
+
+    flex-basis: 38px;
+  }
+
+  .notificacao-toggle span {
+    width: 16px;
+    height: 16px;
+
+    flex-basis: 16px;
+  }
+
+  .notificacao-toggle-input:checked + .notificacao-toggle span {
+    transform: translateX(16px);
+  }
+
+  .retencao-notificacoes-label {
+    font-size: 0.77rem;
+  }
+
+  .retencao-notificacoes-select {
+    min-height: 39px;
+
+    padding: 0 9px;
+
+    font-size: 0.75rem;
+  }
+
+  .retencao-notificacoes-description {
+    font-size: 0.65rem;
+  }
+
+  .configuracoes-notificacoes-cancelar,
+  .configuracoes-notificacoes-salvar {
+    min-height: 41px;
+
+    font-size: 0.79rem;
+  }
+}
+
+
+/* ============================================================
+   REDUÇÃO DE MOVIMENTO
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .notificacao-toggle,
+  .notificacao-toggle span,
+  .retencao-notificacoes-select,
+  .configuracoes-notificacoes-cancelar,
+  .configuracoes-notificacoes-salvar {
+    transition: none;
+  }
+}

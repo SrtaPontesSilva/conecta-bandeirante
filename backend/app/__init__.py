@@ -4,6 +4,8 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 
+from datetime import timedelta
+
 import cloudinary
 import os
 
@@ -61,6 +63,15 @@ def create_app():
 
     app.config["JWT_SECRET_KEY"] = os.getenv(
         "SECRET_KEY"
+    )
+
+    # O token de acesso permanece válido por 1 dia.
+    #
+    # Isso evita que as consultas automáticas do frontend,
+    # como as notificações e solicitações, encerrem a sessão
+    # após os 15 minutos padrão.
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(
+        days=1
     )
 
     # =========================================
@@ -159,7 +170,9 @@ def create_app():
         AnuncioDisponibilidade,
         AnuncioImagem,
         Solicitacao,
-        Notificacao
+        Notificacao,
+        PreferenciaNotificacao,
+        PushSubscription
     )
 
     # =========================================
