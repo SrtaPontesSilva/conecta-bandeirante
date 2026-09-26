@@ -367,3 +367,22 @@ export function IconTrash(props) {
     </IconBase>
   );
 }
+
+export function IconCamera(props) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 8.2A1.7 1.7 0 0 1 5.7 6.5h1.8l1-1.7h7l1 1.7h1.8A1.7 1.7 0 0 1 20 8.2v9.1a1.7 1.7 0 0 1-1.7 1.7H5.7A1.7 1.7 0 0 1 4 17.3V8.2Z" />
+      <circle cx="12" cy="12.5" r="3.4" />
+    </IconBase>
+  );
+}
+
+export function IconAlertTriangle(props) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 4.2 3 19.5h18L12 4.2Z" />
+      <line x1="12" y1="10" x2="12" y2="14.2" />
+      <circle cx="12" cy="17" r="0.15" fill="currentColor" stroke="currentColor" strokeWidth="2" />
+    </IconBase>
+  );
+}

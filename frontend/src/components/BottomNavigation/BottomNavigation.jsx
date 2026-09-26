@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
 
-import { IconTicket, IconVideo, IconPlus } from "../Icons/Icons";
+import {
+  IconTicket,
+  IconUser,
+  IconPlus,
+} from "../Icons/Icons";
 
 import "./BottomNavigation.css";
 
@@ -41,18 +45,18 @@ function BottomNavigation() {
       </button>
 
       {/* ====================================================
-          VÍDEO AULAS
+          PERFIL DO USUÁRIO
       ===================================================== */}
 
       <button
         type="button"
         className="bottom-navigation-item"
-        onClick={() => navigate("/videoaulas")}
-        aria-label="Ir para vídeo aulas"
+        onClick={() => navigate("/perfil")}
+        aria-label="Ir para o perfil"
       >
-        <IconVideo size={21} />
+        <IconUser size={21} />
 
-        <small>Aulas</small>
+        <small>Perfil</small>
       </button>
     </nav>
   );

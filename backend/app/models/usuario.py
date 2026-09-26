@@ -38,6 +38,11 @@ class Usuario(db.Model):
         nullable=False
     )
 
+    imagem_perfil = db.Column(
+        db.String(500),
+        nullable=True
+    )
+
     criado_em = db.Column(
         db.DateTime,
         default=datetime.utcnow,

@@ -23,6 +23,8 @@ import NotificationsDropdown from "../NotificationsDropdown/NotificationsDropdow
 
 import { useAuth } from "../../auth/AuthContext";
 
+import api from "../../services/api";
+
 import "./MarketplaceNavbar.css";
 
 
@@ -56,6 +58,18 @@ function MarketplaceNavbar({
     pessoaExterna ||
     pessoaAutenticada ||
     null;
+
+
+  /* ============================================================
+     IMAGEM DE PERFIL
+  ============================================================ */
+
+  const [
+    imagemPerfil,
+    setImagemPerfil,
+  ] = useState(
+    pessoa?.imagem_perfil || null
+  );
 
 
   /* ============================================================
@@ -130,13 +144,9 @@ function MarketplaceNavbar({
 
 
     if (setPontosMaxExterno) {
-      setPontosMaxExterno(
-        numero
-      );
+      setPontosMaxExterno(numero);
     } else {
-      setPontosMaxInterno(
-        numero
-      );
+      setPontosMaxInterno(numero);
     }
   }
 
@@ -150,6 +160,181 @@ function MarketplaceNavbar({
 
   const menuRef =
     useRef(null);
+
+
+  /* ============================================================
+     CARREGAR IMAGEM DE PERFIL
+  ============================================================ */
+
+  useEffect(() => {
+    let ativo = true;
+
+
+    async function carregarImagemPerfil() {
+      /*
+       * Se uma pessoa externa foi informada, usamos os dados
+       * recebidos pelo componente.
+       *
+       * A imagem de perfil é específica do usuário autenticado.
+       */
+      if (pessoaExterna) {
+        setImagemPerfil(
+          pessoaExterna?.imagem_perfil ||
+          null
+        );
+
+        return;
+      }
+
+
+      if (!pessoaAutenticada) {
+        setImagemPerfil(null);
+
+        return;
+      }
+
+
+      /*
+       * Aproveita imediatamente uma imagem que já esteja
+       * disponível no estado global.
+       */
+      if (pessoaAutenticada?.imagem_perfil) {
+        setImagemPerfil(
+          pessoaAutenticada.imagem_perfil
+        );
+      }
+
+
+      /*
+       * Busca a versão atual diretamente no backend.
+       *
+       * Isso evita depender do localStorage para armazenar
+       * a imagem e garante que a navbar tenha a URL persistida
+       * no banco.
+       */
+      try {
+        const resposta =
+          await api.get(
+            "/usuarios/me"
+          );
+
+
+        if (
+          ativo &&
+          resposta?.data?.usuario
+        ) {
+          setImagemPerfil(
+            resposta.data.usuario.imagem_perfil ||
+            null
+          );
+        }
+      } catch (erro) {
+        /*
+         * A ausência da imagem não deve impedir a navbar
+         * de funcionar.
+         *
+         * Nesse caso, simplesmente continuamos usando
+         * as iniciais.
+         */
+        if (ativo) {
+          setImagemPerfil(
+            pessoaAutenticada?.imagem_perfil ||
+            null
+          );
+        }
+      }
+    }
+
+
+    carregarImagemPerfil();
+
+
+    return () => {
+      ativo = false;
+    };
+  }, [
+    pessoaExterna,
+    pessoaAutenticada,
+  ]);
+
+
+  /* ============================================================
+     ATUALIZAÇÃO DO PERFIL
+  ============================================================ */
+
+  useEffect(() => {
+    async function atualizarImagemPerfil() {
+      if (pessoaExterna) {
+        setImagemPerfil(
+          pessoaExterna?.imagem_perfil ||
+          null
+        );
+
+        return;
+      }
+
+
+      try {
+        const resposta =
+          await api.get(
+            "/usuarios/me"
+          );
+
+
+        setImagemPerfil(
+          resposta?.data?.usuario?.imagem_perfil ||
+          null
+        );
+      } catch {
+        setImagemPerfil(
+          null
+        );
+      }
+    }
+
+
+    function handlePerfilAtualizado(
+      event
+    ) {
+      const novaImagem =
+        event?.detail?.imagem_perfil;
+
+
+      /*
+       * Se o Perfil já enviar a nova URL através
+       * do evento, atualizamos imediatamente sem
+       * precisar fazer outra requisição.
+       */
+      if (
+        novaImagem !== undefined
+      ) {
+        setImagemPerfil(
+          novaImagem || null
+        );
+
+        return;
+      }
+
+
+      atualizarImagemPerfil();
+    }
+
+
+    window.addEventListener(
+      "perfilAtualizado",
+      handlePerfilAtualizado
+    );
+
+
+    return () => {
+      window.removeEventListener(
+        "perfilAtualizado",
+        handlePerfilAtualizado
+      );
+    };
+  }, [
+    pessoaExterna,
+  ]);
 
 
   /* ============================================================
@@ -324,16 +509,6 @@ function MarketplaceNavbar({
 
     setFiltroAberto(false);
 
-    /*
-     * Usa o logout centralizado do AuthContext.
-     *
-     * Isso remove:
-     * - token
-     * - usuario
-     * - parceiro
-     *
-     * e atualiza o estado global de autenticação.
-     */
     logout();
 
     navigate(
@@ -867,10 +1042,22 @@ function MarketplaceNavbar({
         <div className="marketplace-user-area">
 
           <span
-            className="marketplace-user-avatar"
+            className={
+              imagemPerfil
+                ? "marketplace-user-avatar marketplace-user-avatar--image"
+                : "marketplace-user-avatar"
+            }
             aria-hidden="true"
           >
-            {iniciais}
+            {imagemPerfil ? (
+              <img
+                src={imagemPerfil}
+                alt=""
+                className="marketplace-user-avatar-image"
+              />
+            ) : (
+              iniciais
+            )}
           </span>
 
 
