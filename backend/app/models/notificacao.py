@@ -49,6 +49,16 @@ class Notificacao(db.Model):
         nullable=False
     )
 
+    # ========================================================
+    # CONTROLE DE ENVIO
+    # ========================================================
+
+    push_enviado = db.Column(
+        db.Boolean,
+        nullable=False,
+        default=False
+    )
+
     usuario = db.relationship(
         "Usuario",
         backref=db.backref(

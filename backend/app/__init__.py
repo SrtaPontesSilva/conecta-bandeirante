@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -21,26 +21,39 @@ def create_app():
     # BANCO DE DADOS
     # =========================================
 
-    database_url = os.getenv("DATABASE_URL")
+    database_url = os.getenv(
+        "DATABASE_URL"
+    )
 
     if database_url:
-        if database_url.startswith("postgres://"):
+
+        if database_url.startswith(
+            "postgres://"
+        ):
+
             database_url = database_url.replace(
                 "postgres://",
                 "postgresql+psycopg://",
                 1
             )
 
-        elif database_url.startswith("postgresql://"):
+        elif database_url.startswith(
+            "postgresql://"
+        ):
+
             database_url = database_url.replace(
                 "postgresql://",
                 "postgresql+psycopg://",
                 1
             )
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+    app.config[
+        "SQLALCHEMY_DATABASE_URI"
+    ] = database_url
 
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config[
+        "SQLALCHEMY_TRACK_MODIFICATIONS"
+    ] = False
 
     # =========================================
     # LIMITE DE UPLOAD
@@ -51,26 +64,40 @@ def create_app():
     # O frontend permite até 5 imagens.
     # O backend limita cada imagem individualmente
     # a 4 MB.
-    app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024
+
+    app.config[
+        "MAX_CONTENT_LENGTH"
+    ] = 25 * 1024 * 1024
 
     # =========================================
     # SEGURANÇA
     # =========================================
 
-    app.config["SECRET_KEY"] = os.getenv(
+    app.config[
+        "SECRET_KEY"
+    ] = os.getenv(
         "SECRET_KEY"
     )
 
-    app.config["JWT_SECRET_KEY"] = os.getenv(
+    app.config[
+        "JWT_SECRET_KEY"
+    ] = os.getenv(
         "SECRET_KEY"
     )
+
+    # =========================================
+    # JWT
+    # =========================================
 
     # O token de acesso permanece válido por 1 dia.
     #
     # Isso evita que as consultas automáticas do frontend,
     # como as notificações e solicitações, encerrem a sessão
     # após os 15 minutos padrão.
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(
+
+    app.config[
+        "JWT_ACCESS_TOKEN_EXPIRES"
+    ] = timedelta(
         days=1
     )
 
@@ -79,15 +106,19 @@ def create_app():
     # =========================================
 
     cloudinary.config(
+
         cloud_name=os.getenv(
             "CLOUDINARY_CLOUD_NAME"
         ),
+
         api_key=os.getenv(
             "CLOUDINARY_API_KEY"
         ),
+
         api_secret=os.getenv(
             "CLOUDINARY_API_SECRET"
         ),
+
         secure=True
     )
 
@@ -96,7 +127,9 @@ def create_app():
     # =========================================
 
     CORS(
+
         app,
+
         resources={
             r"/api/*": {
                 "origins": [
@@ -106,7 +139,9 @@ def create_app():
                 ]
             }
         },
+
         supports_credentials=True,
+
         methods=[
             "GET",
             "POST",
@@ -115,6 +150,7 @@ def create_app():
             "DELETE",
             "OPTIONS"
         ],
+
         allow_headers=[
             "Content-Type",
             "Authorization"
@@ -125,21 +161,28 @@ def create_app():
     # EXTENSÕES
     # =========================================
 
-    db.init_app(app)
+    db.init_app(
+        app
+    )
 
     Migrate(
         app,
         db
     )
 
-    jwt = JWTManager(app)
+    jwt = JWTManager(
+        app
+    )
 
     # =========================================
     # ERROS JWT
     # =========================================
 
     @jwt.invalid_token_loader
-    def invalid_token_callback(error):
+    def invalid_token_callback(
+        error
+    ):
+
         return jsonify({
             "erro": "Token inválido."
         }), 401
@@ -149,14 +192,21 @@ def create_app():
         jwt_header,
         jwt_payload
     ):
+
         return jsonify({
             "erro": "Token expirado."
         }), 401
 
     @jwt.unauthorized_loader
-    def missing_token_callback(error):
+    def missing_token_callback(
+        error
+    ):
+
         return jsonify({
-            "erro": "Token de autenticação não enviado."
+            "erro": (
+                "Token de autenticação "
+                "não enviado."
+            )
         }), 401
 
     # =========================================
@@ -179,12 +229,29 @@ def create_app():
     # ROUTES
     # =========================================
 
-    from .routes.usuarios import usuarios_bp
-    from .routes.parceiros import parceiros_bp
-    from .routes.auth import auth_bp
-    from .routes.anuncios import anuncios_bp
-    from .routes.solicitacoes import solicitacoes_bp
-    from .routes.notificacoes import notificacoes_bp
+    from .routes.usuarios import (
+        usuarios_bp
+    )
+
+    from .routes.parceiros import (
+        parceiros_bp
+    )
+
+    from .routes.auth import (
+        auth_bp
+    )
+
+    from .routes.anuncios import (
+        anuncios_bp
+    )
+
+    from .routes.solicitacoes import (
+        solicitacoes_bp
+    )
+
+    from .routes.notificacoes import (
+        notificacoes_bp
+    )
 
     # =========================================
     # REGISTRO COM /api
@@ -246,18 +313,30 @@ def create_app():
     # HEALTH
     # =========================================
 
-    @app.get("/api/health")
+    @app.get(
+        "/api/health"
+    )
     def health():
+
         return {
             "status": "ok",
-            "message": "Conecta Bandeirante API funcionando"
+            "message": (
+                "Conecta Bandeirante API "
+                "funcionando"
+            )
         }
 
-    @app.get("/api/health/database")
+    @app.get(
+        "/api/health/database"
+    )
     def database_health():
+
         try:
+
             db.session.execute(
-                db.text("SELECT 1")
+                db.text(
+                    "SELECT 1"
+                )
             )
 
             return {
@@ -266,9 +345,12 @@ def create_app():
             }
 
         except Exception as error:
+
             return {
                 "status": "error",
-                "database": "não conectado",
+                "database": (
+                    "não conectado"
+                ),
                 "message": str(error)
             }, 500
 
