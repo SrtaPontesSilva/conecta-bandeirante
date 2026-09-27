@@ -3,10 +3,16 @@
 ============================================================ */
 
 .accessibility {
+  --accessibility-button-size: 52px;
+  --accessibility-right: 20px;
+  --accessibility-bottom: 20px;
+  --accessibility-panel-gap: 12px;
+  --accessibility-screen-margin: 24px;
+
   position: fixed;
 
-  right: 20px;
-  bottom: 20px;
+  right: var(--accessibility-right);
+  bottom: var(--accessibility-bottom);
 
   z-index: 1000;
 }
@@ -17,8 +23,9 @@
 ============================================================ */
 
 .accessibility-button {
-  min-width: 52px;
-  min-height: 52px;
+  width: auto;
+  min-width: var(--accessibility-button-size);
+  min-height: var(--accessibility-button-size);
 
   display: flex;
   align-items: center;
@@ -47,6 +54,8 @@
     transform 0.2s ease,
     box-shadow 0.2s ease,
     background-color 0.2s ease;
+
+  box-sizing: border-box;
 }
 
 .accessibility-button:hover {
@@ -70,6 +79,8 @@
   align-items: center;
   justify-content: center;
 
+  flex-shrink: 0;
+
   font-size: 25px;
   line-height: 1;
 }
@@ -84,27 +95,77 @@
 ============================================================ */
 
 .accessibility-panel {
-  position: absolute;
-
-  right: 0;
+  /*
+   * O painel passa a ser fixed em todos os tamanhos.
+   *
+   * Isso evita que ele dependa da largura/altura do elemento
+   * .accessibility e elimina os problemas nos breakpoints
+   * intermediários, como 500px.
+   */
+  position: fixed;
 
   /*
-    O painel fica imediatamente acima do botão.
-    Isso evita precisar calcular novamente a altura
-    do botão em cada breakpoint.
-  */
-  bottom: calc(100% + 12px);
+   * Alinha o painel com o botão.
+   */
+  right: var(--accessibility-right);
 
-  width: min(
-    calc(100vw - 32px),
-    390px
+  /*
+   * Coloca o painel imediatamente acima do botão.
+   */
+  bottom: calc(
+    var(--accessibility-bottom) +
+    var(--accessibility-button-size) +
+    var(--accessibility-panel-gap)
   );
 
-  max-height: calc(100vh - 110px);
-  max-height: calc(100dvh - 110px);
+  /*
+   * Nunca ultrapassa a largura da viewport.
+   */
+  width: min(
+    390px,
+    calc(100vw - (var(--accessibility-screen-margin) * 2))
+  );
 
+  /*
+   * A altura disponível é calculada considerando:
+   *
+   * - espaço inferior;
+   * - botão;
+   * - distância entre botão e painel;
+   * - margem superior.
+   *
+   * Isso é o ponto principal da correção.
+   */
+  max-height: calc(
+    100vh -
+    var(--accessibility-bottom) -
+    var(--accessibility-button-size) -
+    var(--accessibility-panel-gap) -
+    var(--accessibility-screen-margin)
+  );
+
+  /*
+   * Em navegadores modernos, dvh representa melhor a área
+   * realmente visível em celulares.
+   *
+   * O 100dvh vem depois do 100vh de propósito.
+   */
+  max-height: calc(
+    100dvh -
+    var(--accessibility-bottom) -
+    var(--accessibility-button-size) -
+    var(--accessibility-panel-gap) -
+    var(--accessibility-screen-margin)
+  );
+
+  min-height: 0;
+
+  overflow-x: hidden;
   overflow-y: auto;
+
   overscroll-behavior: contain;
+
+  -webkit-overflow-scrolling: touch;
 
   padding: 18px;
 
@@ -118,6 +179,10 @@
     0 12px 35px rgba(0, 0, 0, 0.18);
 
   scrollbar-width: thin;
+
+  box-sizing: border-box;
+
+  z-index: 1001;
 }
 
 
@@ -132,11 +197,6 @@
 
   gap: 12px;
 
-  /*
-    Antes havia mais espaço aqui.
-    Agora o primeiro bloco começa mais próximo
-    do cabeçalho.
-  */
   margin-bottom: 4px;
 }
 
@@ -184,6 +244,8 @@
   cursor: pointer;
 
   font: inherit;
+
+  box-sizing: border-box;
 }
 
 .accessibility-close span {
@@ -224,10 +286,9 @@
   display: flex;
   flex-direction: column;
 
-  /*
-    Reduzido de 22px.
-  */
   gap: 18px;
+
+  min-width: 0;
 }
 
 
@@ -239,10 +300,9 @@
   display: flex;
   flex-direction: column;
 
-  /*
-    Reduzido de 14px.
-  */
   gap: 11px;
+
+  min-width: 0;
 }
 
 .accessibility-section h3 {
@@ -291,9 +351,13 @@
     repeat(3, minmax(0, 1fr));
 
   gap: 8px;
+
+  min-width: 0;
 }
 
 .accessibility-option {
+  width: 100%;
+  min-width: 0;
   min-height: 44px;
 
   padding: 8px 10px;
@@ -313,6 +377,8 @@
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease;
+
+  box-sizing: border-box;
 }
 
 .accessibility-option:hover {
@@ -343,6 +409,8 @@
 
   gap: 12px;
 
+  min-width: 0;
+
   padding-bottom: 11px;
 
   border-bottom: 1px solid var(--color-border);
@@ -356,6 +424,8 @@
 
 .accessibility-setting-text {
   min-width: 0;
+
+  flex: 1;
 
   display: flex;
   flex-direction: column;
@@ -403,6 +473,8 @@
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease;
+
+  box-sizing: border-box;
 }
 
 .accessibility-toggle:hover {
@@ -438,6 +510,8 @@
   border-radius: 12px;
 
   background-color: var(--color-background);
+
+  box-sizing: border-box;
 }
 
 .accessibility-reading-text {
@@ -476,6 +550,8 @@
   font-weight: 700;
 
   cursor: pointer;
+
+  box-sizing: border-box;
 }
 
 .accessibility-read-button:hover {
@@ -512,6 +588,8 @@
   font-weight: 800;
 
   cursor: pointer;
+
+  box-sizing: border-box;
 }
 
 .accessibility-reset:hover {
@@ -564,23 +642,15 @@ html[data-enhanced-focus="true"] :focus-visible {
 
 
 /* ============================================================
-   RESPONSIVIDADE
+   TABLET / TELAS COM BOTTOM NAVIGATION
 ============================================================ */
 
 @media (max-width: 768px) {
 
   .accessibility {
-    right: 16px;
-
-    /*
-      Mantém o botão acima do BottomNavigation.
-    */
-    bottom: 92px;
-  }
-
-  .accessibility-panel {
-    max-height: calc(100vh - 130px);
-    max-height: calc(100dvh - 130px);
+    --accessibility-right: 16px;
+    --accessibility-bottom: 92px;
+    --accessibility-screen-margin: 24px;
   }
 
 }
@@ -593,16 +663,17 @@ html[data-enhanced-focus="true"] :focus-visible {
 @media (max-width: 480px) {
 
   .accessibility {
-    right: 14px;
-    bottom: 86px;
+    --accessibility-right: 14px;
+    --accessibility-bottom: 86px;
+    --accessibility-screen-margin: 20px;
   }
 
   .accessibility-button {
-    width: 52px;
-    min-width: 52px;
+    width: var(--accessibility-button-size);
+    min-width: var(--accessibility-button-size);
 
-    height: 52px;
-    min-height: 52px;
+    height: var(--accessibility-button-size);
+    min-height: var(--accessibility-button-size);
 
     padding: 0;
 
@@ -628,19 +699,19 @@ html[data-enhanced-focus="true"] :focus-visible {
   }
 
   .accessibility-panel {
-    right: -2px;
-
+    /*
+     * Mantemos a mesma fórmula usada no tablet.
+     * Não há mais um cálculo separado que possa causar
+     * diferença entre 480px e 500px.
+     */
     width: min(
-      calc(100vw - 28px),
-      370px
+      390px,
+      calc(100vw - (var(--accessibility-screen-margin) * 2))
     );
 
     padding: 16px;
 
     border-radius: 16px;
-
-    max-height: calc(100vh - 120px);
-    max-height: calc(100dvh - 120px);
   }
 
   .accessibility-panel-header {
@@ -669,17 +740,26 @@ html[data-enhanced-focus="true"] :focus-visible {
 
 
 /* ============================================================
-   MOBILE MUITO PEQUENO
+   CELULARES PEQUENOS
 ============================================================ */
 
 @media (max-width: 360px) {
 
-  .accessibility-panel {
-    right: -2px;
+  .accessibility {
+    --accessibility-right: 10px;
+    --accessibility-bottom: 82px;
+    --accessibility-screen-margin: 20px;
+  }
 
-    width: calc(100vw - 20px);
+  .accessibility-panel {
+    width: calc(
+      100vw -
+      (var(--accessibility-screen-margin) * 2)
+    );
 
     padding: 14px;
+
+    border-radius: 15px;
   }
 
   .accessibility-button-group {
@@ -696,6 +776,38 @@ html[data-enhanced-focus="true"] :focus-visible {
 
   .accessibility-toggle {
     width: 100%;
+  }
+
+}
+
+
+/* ============================================================
+   TELAS MUITO BAIXAS
+============================================================ */
+
+@media (max-height: 600px) {
+
+  .accessibility-panel {
+    /*
+     * Não usamos mais top + bottom + max-height:none.
+     *
+     * O cálculo principal já limita o painel corretamente.
+     */
+    max-height: calc(
+      100vh -
+      var(--accessibility-bottom) -
+      var(--accessibility-button-size) -
+      var(--accessibility-panel-gap) -
+      16px
+    );
+
+    max-height: calc(
+      100dvh -
+      var(--accessibility-bottom) -
+      var(--accessibility-button-size) -
+      var(--accessibility-panel-gap) -
+      16px
+    );
   }
 
 }
