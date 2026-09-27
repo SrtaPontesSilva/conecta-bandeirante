@@ -7,6 +7,11 @@ import Button from '../../components/Button/Button';
 import api from '../../services/api';
 import { useAuth } from '../../auth/AuthContext';
 
+import {
+  IconEye,
+  IconEyeOff,
+} from '../../components/Icons/Icons';
+
 import './Login.css';
 
 function Login() {
@@ -20,6 +25,7 @@ function Login() {
 
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -111,16 +117,46 @@ function Login() {
               autoComplete="email"
             />
 
-            <Input
-              label="Senha"
-              name="senha"
-              type="password"
-              value={formulario.senha}
-              onChange={handleChange}
-              placeholder="Digite sua senha"
-              required
-              autoComplete="current-password"
-            />
+            <div className="login-password-field">
+              <Input
+                label="Senha"
+                name="senha"
+                type={mostrarSenha ? 'text' : 'password'}
+                value={formulario.senha}
+                onChange={handleChange}
+                placeholder="Digite sua senha"
+                required
+                autoComplete="current-password"
+              />
+
+              <button
+                type="button"
+                className="login-password-toggle"
+                onClick={() => setMostrarSenha((estado) => !estado)}
+                aria-label={
+                  mostrarSenha
+                    ? 'Ocultar senha'
+                    : 'Visualizar senha'
+                }
+                title={
+                  mostrarSenha
+                    ? 'Ocultar senha'
+                    : 'Visualizar senha'
+                }
+              >
+                {mostrarSenha ? (
+                  <IconEyeOff size={18} />
+                ) : (
+                  <IconEye size={18} />
+                )}
+              </button>
+            </div>
+
+            <div className="login-forgot-password">
+              <Link to="/recuperar-senha">
+                Esqueci minha senha
+              </Link>
+            </div>
 
             {erro && (
               <div

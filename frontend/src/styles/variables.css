@@ -60,29 +60,13 @@
      CONDIÇÃO DOS ITENS
   ========================================================== */
 
-  /*
-    As cores das condições são variações da identidade
-    visual do Conecta.
-
-    Novo:
-    Azul derivado da cor primária.
-
-    Bom estado:
-    Verde derivado da cor de sucesso.
-
-    Usado:
-    Dourado/marrom derivado da cor de atenção.
-  */
-
   --color-condition-new: #4F6287;
 
   --color-condition-new-bg: #E8ECF3;
 
-
   --color-condition-good: #4F7059;
 
   --color-condition-good-bg: #E7EEE9;
-
 
   --color-condition-used: #8A6638;
 
@@ -93,7 +77,11 @@
      TIPOGRAFIA
   ========================================================== */
 
-  --font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-family:
+    "Inter",
+    "Segoe UI",
+    Arial,
+    sans-serif;
 
 
   /* ==========================================================
@@ -145,7 +133,8 @@
      SOMBRAS
   ========================================================== */
 
-  --shadow-card: 0 8px 30px rgba(54, 64, 66, 0.08);
+  --shadow-card:
+    0 8px 30px rgba(54, 64, 66, 0.08);
 
 
   /* ==========================================================
@@ -204,5 +193,4 @@
   --accessibility-condition-used: #704800;
 
   --accessibility-condition-background: #FFFFFF;
-
 }

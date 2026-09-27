@@ -3,6 +3,8 @@
 ========================================= */
 
 .bottom-navigation {
+  --bottom-navigation-height: 72px;
+
   position: fixed;
 
   right: 0;
@@ -11,7 +13,7 @@
 
   z-index: 30;
 
-  min-height: 72px;
+  min-height: var(--bottom-navigation-height);
 
   display: flex;
   align-items: center;
@@ -34,10 +36,12 @@
 
 .bottom-navigation-item {
   min-width: 58px;
+  min-height: 44px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 
   gap: 3px;
 
@@ -73,6 +77,14 @@
   color: var(--color-primary);
 
   font-weight: 700;
+}
+
+.bottom-navigation-item:focus-visible,
+.bottom-navigation-add:focus-visible {
+  outline:
+    3px solid var(--accessibility-focus);
+
+  outline-offset: 3px;
 }
 
 
@@ -130,8 +142,9 @@
 ========================================= */
 
 @media (max-width: 700px) {
+
   .bottom-navigation {
-    min-height: 68px;
+    --bottom-navigation-height: 68px;
 
     gap: 20vw;
   }
@@ -157,14 +170,16 @@
 ========================================= */
 
 @media (max-width: 520px) {
+
   .bottom-navigation {
-    min-height: 64px;
+    --bottom-navigation-height: 64px;
 
     gap: 17vw;
   }
 
   .bottom-navigation-item {
     min-width: 48px;
+    min-height: 44px;
 
     gap: 2px;
   }
@@ -195,8 +210,9 @@
 ========================================= */
 
 @media (max-width: 420px) {
+
   .bottom-navigation {
-    min-height: 60px;
+    --bottom-navigation-height: 60px;
 
     gap: 14vw;
   }
@@ -227,7 +243,22 @@
 ========================================= */
 
 @media (max-width: 350px) {
+
   .bottom-navigation {
     gap: 10vw;
   }
+}
+
+
+/* =========================================
+   REDUÇÃO DE MOVIMENTO
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .bottom-navigation-item,
+  .bottom-navigation-add {
+    transition: none;
+  }
+
 }

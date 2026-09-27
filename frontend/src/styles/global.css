@@ -29,6 +29,7 @@ body {
 
   font-family: var(--font-family);
   font-size: var(--font-size-md);
+
   color: var(--color-text);
 
   background-color: var(--color-background);
@@ -43,7 +44,9 @@ body {
 ============================================================ */
 
 button,
-input {
+input,
+textarea,
+select {
   font: inherit;
 }
 
@@ -82,21 +85,8 @@ img {
 
 
 /* ============================================================
-   ACESSIBILIDADE
-============================================================ */
-
-
-/* ============================================================
    TAMANHO DO TEXTO
 ============================================================ */
-
-/*
-  O tamanho base continua sendo 16px.
-
-  As configurações abaixo alteram o tamanho raiz do documento.
-  Como boa parte do projeto utiliza rem, os elementos que usam
-  rem acompanham automaticamente essa alteração.
-*/
 
 html[data-font-size="large"] {
   font-size: 112.5%;
@@ -108,17 +98,49 @@ html[data-font-size="larger"] {
 
 
 /* ============================================================
-   REDUZIR MOVIMENTO
+   FONTE PARA LEITURA
 ============================================================ */
 
 /*
-  Remove praticamente todas as animações e transições quando
-  o usuário solicita redução de movimento.
+  Não adicionamos uma fonte externa.
 
-  !important é intencional aqui para que a preferência de
-  acessibilidade tenha prioridade sobre estilos específicos
-  dos componentes.
+  A opção utiliza uma pilha de fontes simples e amplamente
+  disponível, priorizando fontes com desenho limpo.
 */
+
+html[data-reading-font="true"] body,
+html[data-reading-font="true"] button,
+html[data-reading-font="true"] input,
+html[data-reading-font="true"] textarea,
+html[data-reading-font="true"] select {
+  font-family:
+    Arial,
+    "Segoe UI",
+    sans-serif;
+}
+
+
+/* ============================================================
+   ESPAÇAMENTO DE TEXTO
+============================================================ */
+
+html[data-increased-spacing="true"] body {
+  letter-spacing: 0.025em;
+  word-spacing: 0.08em;
+  line-height: 1.6;
+}
+
+html[data-increased-spacing="true"] p,
+html[data-increased-spacing="true"] li,
+html[data-increased-spacing="true"] label,
+html[data-increased-spacing="true"] span {
+  line-height: 1.6;
+}
+
+
+/* ============================================================
+   REDUZIR MOVIMENTO
+============================================================ */
 
 html[data-reduced-motion="true"] *,
 html[data-reduced-motion="true"] *::before,
@@ -139,6 +161,7 @@ html[data-reduced-motion="true"] *::after {
 
 html[data-highlight-links="true"] a {
   text-decoration: underline;
+
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
 }
@@ -148,12 +171,10 @@ html[data-highlight-links="true"] a {
    FOCO VISÍVEL
 ============================================================ */
 
-/*
-  O foco deve continuar visível para navegação por teclado.
-*/
-
 :focus-visible {
-  outline: 3px solid var(--accessibility-focus);
+  outline:
+    3px solid var(--accessibility-focus);
+
   outline-offset: 3px;
 }
 
@@ -162,34 +183,45 @@ html[data-highlight-links="true"] a {
    ALTO CONTRASTE
 ============================================================ */
 
-/*
-  O alto contraste utiliza variáveis próprias definidas no
-  VARIABLES.css.
-
-  Dessa forma, não precisamos alterar a paleta original do
-  Conecta permanentemente.
-*/
-
 html[data-high-contrast="true"] {
-  --color-background: var(--accessibility-background);
-  --color-background-warm: var(--accessibility-background);
-  --color-surface: var(--accessibility-surface);
+  --color-background:
+    var(--accessibility-background);
 
-  --color-text: var(--accessibility-text);
-  --color-text-secondary: var(--accessibility-text-secondary);
+  --color-background-warm:
+    var(--accessibility-background);
 
-  --color-primary: var(--accessibility-primary);
-  --color-secondary: var(--accessibility-secondary);
+  --color-surface:
+    var(--accessibility-surface);
 
-  --color-accent: var(--accessibility-accent);
+  --color-text:
+    var(--accessibility-text);
 
-  --color-success: var(--accessibility-success);
-  --color-error: var(--accessibility-error);
-  --color-warning: var(--accessibility-warning);
+  --color-text-secondary:
+    var(--accessibility-text-secondary);
 
-  --color-border: var(--accessibility-border);
+  --color-primary:
+    var(--accessibility-primary);
 
-  --accessibility-focus: var(--accessibility-focus-high-contrast);
+  --color-secondary:
+    var(--accessibility-secondary);
+
+  --color-accent:
+    var(--accessibility-accent);
+
+  --color-success:
+    var(--accessibility-success);
+
+  --color-error:
+    var(--accessibility-error);
+
+  --color-warning:
+    var(--accessibility-warning);
+
+  --color-border:
+    var(--accessibility-border);
+
+  --accessibility-focus:
+    var(--accessibility-focus-high-contrast);
 }
 
 
@@ -198,8 +230,11 @@ html[data-high-contrast="true"] {
 ============================================================ */
 
 html[data-high-contrast="true"] body {
-  background-color: var(--accessibility-background);
-  color: var(--accessibility-text);
+  background-color:
+    var(--accessibility-background);
+
+  color:
+    var(--accessibility-text);
 }
 
 
@@ -210,9 +245,14 @@ html[data-high-contrast="true"] body {
 html[data-high-contrast="true"] input,
 html[data-high-contrast="true"] textarea,
 html[data-high-contrast="true"] select {
-  border-color: var(--accessibility-border);
-  background-color: var(--accessibility-surface);
-  color: var(--accessibility-text);
+  border-color:
+    var(--accessibility-border);
+
+  background-color:
+    var(--accessibility-surface);
+
+  color:
+    var(--accessibility-text);
 }
 
 
@@ -221,7 +261,8 @@ html[data-high-contrast="true"] select {
 ============================================================ */
 
 html[data-high-contrast="true"] button {
-  border-color: var(--accessibility-border);
+  border-color:
+    var(--accessibility-border);
 }
 
 
@@ -230,8 +271,11 @@ html[data-high-contrast="true"] button {
 ============================================================ */
 
 html[data-high-contrast="true"] a {
-  color: var(--accessibility-link);
+  color:
+    var(--accessibility-link);
+
   text-decoration: underline;
+
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
 }
@@ -242,6 +286,23 @@ html[data-high-contrast="true"] a {
 ============================================================ */
 
 html[data-high-contrast="true"] :focus-visible {
-  outline: 3px solid var(--accessibility-focus-high-contrast);
-  outline-offset: 3px;
+  outline:
+    4px solid
+    var(--accessibility-focus-high-contrast);
+
+  outline-offset: 4px;
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE — ELEMENTOS COM SOMBRA
+============================================================ */
+
+html[data-high-contrast="true"] .accessibility-panel,
+html[data-high-contrast="true"] .bottom-navigation {
+  border-color:
+    var(--accessibility-border);
+
+  box-shadow:
+    none;
 }

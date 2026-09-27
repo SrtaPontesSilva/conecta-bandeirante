@@ -57,8 +57,7 @@ function App() {
 
 
           {/* ================================
-              ROTAS PARA QUALQUER
-              USUÁRIO AUTENTICADO
+              ROTAS PARA USUÁRIO AUTENTICADO
           ================================= */}
 
           <Route element={<ProtectedRoute />}>
