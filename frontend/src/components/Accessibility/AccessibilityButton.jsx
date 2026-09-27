@@ -42,7 +42,34 @@ function AccessibilityButton() {
 
 
   /* ==========================================================
-     ESC + FOCO
+     ABRIR / FECHAR
+  ========================================================== */
+
+  function abrirPainel() {
+    setAberto(true);
+    setMensagem("");
+  }
+
+  function fecharPainel() {
+    setAberto(false);
+
+    requestAnimationFrame(() => {
+      buttonRef.current?.focus();
+    });
+  }
+
+  function handleTogglePainel() {
+    if (aberto) {
+      fecharPainel();
+      return;
+    }
+
+    abrirPainel();
+  }
+
+
+  /* ==========================================================
+     FOCO + ESC + CLIQUE FORA
   ========================================================== */
 
   useEffect(() => {
@@ -50,23 +77,164 @@ function AccessibilityButton() {
       return;
     }
 
+    const painel = painelRef.current;
+
+    if (!painel) {
+      return;
+    }
+
+    /*
+     * Impede que o conteúdo da página continue sendo
+     * rolado enquanto o painel estiver aberto.
+     */
+    const overflowAnterior =
+      document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
+
+    /*
+     * Coloca o foco no primeiro controle do painel.
+     */
+    const animationFrame =
+      requestAnimationFrame(() => {
+        const primeiroElemento =
+          painel.querySelector(
+            "button, input, select, textarea, a[href], [tabindex]:not([tabindex='-1'])"
+          );
+
+        primeiroElemento?.focus();
+      });
+
+
+    function obterElementosFocaveis() {
+      return Array.from(
+        painel.querySelectorAll(
+          "button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex='-1'])"
+        )
+      ).filter(
+        (element) =>
+          !element.hasAttribute("aria-hidden") &&
+          element.offsetParent !== null
+      );
+    }
+
+
     function handleKeyDown(event) {
+
+      /* -----------------------------------------------
+         ESC
+      ------------------------------------------------ */
+
       if (event.key === "Escape") {
-        setAberto(false);
-        buttonRef.current?.focus();
+        event.preventDefault();
+
+        fecharPainel();
+
+        return;
+      }
+
+
+      /* -----------------------------------------------
+         TAB / SHIFT + TAB
+      ------------------------------------------------ */
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const elementos =
+        obterElementosFocaveis();
+
+      if (!elementos.length) {
+        event.preventDefault();
+        return;
+      }
+
+      const primeiro =
+        elementos[0];
+
+      const ultimo =
+        elementos[elementos.length - 1];
+
+      if (
+        event.shiftKey &&
+        document.activeElement === primeiro
+      ) {
+        event.preventDefault();
+
+        ultimo.focus();
+
+        return;
+      }
+
+      if (
+        !event.shiftKey &&
+        document.activeElement === ultimo
+      ) {
+        event.preventDefault();
+
+        primeiro.focus();
       }
     }
+
+
+    function handlePointerDown(event) {
+      const target = event.target;
+
+      /*
+       * Clique dentro do painel:
+       * não fecha.
+       */
+      if (painel.contains(target)) {
+        return;
+      }
+
+      /*
+       * Clique no próprio botão:
+       * o onClick do botão é responsável por
+       * abrir/fechar.
+       */
+      if (buttonRef.current?.contains(target)) {
+        return;
+      }
+
+      /*
+       * Qualquer outro lugar da página:
+       * fecha o painel.
+       */
+      fecharPainel();
+    }
+
 
     document.addEventListener(
       "keydown",
       handleKeyDown
     );
 
+    document.addEventListener(
+      "pointerdown",
+      handlePointerDown
+    );
+
+
     return () => {
+      cancelAnimationFrame(
+        animationFrame
+      );
+
       document.removeEventListener(
         "keydown",
         handleKeyDown
       );
+
+      document.removeEventListener(
+        "pointerdown",
+        handlePointerDown
+      );
+
+      document.body.style.overflow =
+        overflowAnterior;
     };
   }, [aberto]);
 
@@ -84,7 +252,15 @@ function AccessibilityButton() {
       return;
     }
 
-    setMensagem("");
+    /*
+     * Não sobrescreve mensagens como
+     * "Leitura interrompida" imediatamente.
+     */
+    if (
+      mensagem === "Leitura em andamento."
+    ) {
+      setMensagem("");
+    }
   }, [reading]);
 
 
@@ -103,7 +279,8 @@ function AccessibilityButton() {
       return;
     }
 
-    const started = readSelectedText();
+    const started =
+      readSelectedText();
 
     if (!started) {
       setMensagem(
@@ -133,12 +310,98 @@ function AccessibilityButton() {
 
 
   /* ==========================================================
-     FECHAR
+     ALTERAÇÕES DE ACESSIBILIDADE
   ========================================================== */
 
-  function handleClose() {
-    setAberto(false);
-    buttonRef.current?.focus();
+  function handleFontSizeChange(size) {
+    setFontSize(size);
+
+    const mensagens = {
+      normal: "Tamanho do texto definido como normal.",
+      large: "Tamanho do texto aumentado.",
+      larger: "Tamanho do texto ampliado."
+    };
+
+    setMensagem(
+      mensagens[size] || ""
+    );
+  }
+
+
+  function handleToggleIncreasedSpacing() {
+    toggleIncreasedSpacing();
+
+    setMensagem(
+      settings.increasedSpacing
+        ? "Espaçamento reduzido."
+        : "Mais espaçamento ativado."
+    );
+  }
+
+
+  function handleToggleReadingFont() {
+    toggleReadingFont();
+
+    setMensagem(
+      settings.readingFont
+        ? "Fonte padrão restaurada."
+        : "Fonte para leitura ativada."
+    );
+  }
+
+
+  function handleToggleHighContrast() {
+    toggleHighContrast();
+
+    setMensagem(
+      settings.highContrast
+        ? "Alto contraste desativado."
+        : "Alto contraste ativado."
+    );
+  }
+
+
+  function handleToggleHighlightLinks() {
+    toggleHighlightLinks();
+
+    setMensagem(
+      settings.highlightLinks
+        ? "Destaque de links desativado."
+        : "Links destacados."
+    );
+  }
+
+
+  function handleToggleLargeCursor() {
+    toggleLargeCursor();
+
+    setMensagem(
+      settings.largeCursor
+        ? "Cursor ampliado desativado."
+        : "Cursor ampliado ativado."
+    );
+  }
+
+
+  function handleToggleEnhancedFocus() {
+    toggleEnhancedFocus();
+
+    setMensagem(
+      settings.enhancedFocus
+        ? "Foco reforçado desativado."
+        : "Foco reforçado ativado."
+    );
+  }
+
+
+  function handleToggleReducedMotion() {
+    toggleReducedMotion();
+
+    setMensagem(
+      settings.reducedMotion
+        ? "Redução de movimento desativada."
+        : "Redução de movimento ativada."
+    );
   }
 
 
@@ -153,10 +416,7 @@ function AccessibilityButton() {
         ref={buttonRef}
         type="button"
         className="accessibility-button"
-        onClick={() => {
-          setAberto((current) => !current);
-          setMensagem("");
-        }}
+        onClick={handleTogglePainel}
         aria-label={
           aberto
             ? "Fechar opções de acessibilidade"
@@ -188,7 +448,10 @@ function AccessibilityButton() {
           id={painelId}
           ref={painelRef}
           className="accessibility-panel"
+          role="dialog"
+          aria-modal="true"
           aria-labelledby={`${painelId}-title`}
+          aria-describedby={`${painelId}-description`}
         >
 
           {/* ==================================================
@@ -202,7 +465,7 @@ function AccessibilityButton() {
                 Acessibilidade
               </h2>
 
-              <p>
+              <p id={`${painelId}-description`}>
                 Personalize sua experiência no
                 Conecta Bandeirante.
               </p>
@@ -211,7 +474,7 @@ function AccessibilityButton() {
             <button
               type="button"
               className="accessibility-close"
-              onClick={handleClose}
+              onClick={fecharPainel}
               aria-label="Fechar opções de acessibilidade"
               title="Fechar"
             >
@@ -227,14 +490,21 @@ function AccessibilityButton() {
               STATUS
           ================================================== */}
 
-          <div
-            className="accessibility-status"
-            role="status"
-            aria-live="polite"
-          >
-            {mensagem}
-          </div>
+          {mensagem && (
+            <div
+              className="accessibility-status"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {mensagem}
+            </div>
+          )}
 
+
+          {/* ==================================================
+              OPÇÕES
+          ================================================== */}
 
           <div className="accessibility-options">
 
@@ -265,7 +535,7 @@ function AccessibilityButton() {
                         : "accessibility-option"
                     }
                     onClick={() =>
-                      setFontSize("normal")
+                      handleFontSizeChange("normal")
                     }
                     aria-pressed={
                       settings.fontSize === "normal"
@@ -282,7 +552,7 @@ function AccessibilityButton() {
                         : "accessibility-option"
                     }
                     onClick={() =>
-                      setFontSize("large")
+                      handleFontSizeChange("large")
                     }
                     aria-pressed={
                       settings.fontSize === "large"
@@ -299,7 +569,7 @@ function AccessibilityButton() {
                         : "accessibility-option"
                     }
                     onClick={() =>
-                      setFontSize("larger")
+                      handleFontSizeChange("larger")
                     }
                     aria-pressed={
                       settings.fontSize === "larger"
@@ -316,6 +586,7 @@ function AccessibilityButton() {
               <div className="accessibility-setting">
 
                 <div className="accessibility-setting-text">
+
                   <strong>
                     Mais espaçamento
                   </strong>
@@ -324,6 +595,7 @@ function AccessibilityButton() {
                     Aumenta o espaço entre linhas,
                     letras e palavras.
                   </span>
+
                 </div>
 
                 <button
@@ -333,7 +605,9 @@ function AccessibilityButton() {
                       ? "accessibility-toggle active"
                       : "accessibility-toggle"
                   }
-                  onClick={toggleIncreasedSpacing}
+                  onClick={
+                    handleToggleIncreasedSpacing
+                  }
                   aria-pressed={
                     settings.increasedSpacing
                   }
@@ -356,6 +630,7 @@ function AccessibilityButton() {
               <div className="accessibility-setting">
 
                 <div className="accessibility-setting-text">
+
                   <strong>
                     Fonte para leitura
                   </strong>
@@ -364,6 +639,7 @@ function AccessibilityButton() {
                     Usa uma fonte simples e
                     mais espaçada para leitura.
                   </span>
+
                 </div>
 
                 <button
@@ -373,7 +649,9 @@ function AccessibilityButton() {
                       ? "accessibility-toggle active"
                       : "accessibility-toggle"
                   }
-                  onClick={toggleReadingFont}
+                  onClick={
+                    handleToggleReadingFont
+                  }
                   aria-pressed={
                     settings.readingFont
                   }
@@ -409,6 +687,7 @@ function AccessibilityButton() {
               <div className="accessibility-setting">
 
                 <div className="accessibility-setting-text">
+
                   <strong>
                     Alto contraste
                   </strong>
@@ -417,6 +696,7 @@ function AccessibilityButton() {
                     Aumenta a diferença entre
                     texto, fundo e elementos.
                   </span>
+
                 </div>
 
                 <button
@@ -426,7 +706,9 @@ function AccessibilityButton() {
                       ? "accessibility-toggle active"
                       : "accessibility-toggle"
                   }
-                  onClick={toggleHighContrast}
+                  onClick={
+                    handleToggleHighContrast
+                  }
                   aria-pressed={
                     settings.highContrast
                   }
@@ -449,6 +731,7 @@ function AccessibilityButton() {
               <div className="accessibility-setting">
 
                 <div className="accessibility-setting-text">
+
                   <strong>
                     Destacar links
                   </strong>
@@ -457,6 +740,7 @@ function AccessibilityButton() {
                     Adiciona destaque visual aos
                     links da página.
                   </span>
+
                 </div>
 
                 <button
@@ -466,7 +750,9 @@ function AccessibilityButton() {
                       ? "accessibility-toggle active"
                       : "accessibility-toggle"
                   }
-                  onClick={toggleHighlightLinks}
+                  onClick={
+                    handleToggleHighlightLinks
+                  }
                   aria-pressed={
                     settings.highlightLinks
                   }
@@ -489,6 +775,7 @@ function AccessibilityButton() {
               <div className="accessibility-setting">
 
                 <div className="accessibility-setting-text">
+
                   <strong>
                     Cursor ampliado
                   </strong>
@@ -497,6 +784,7 @@ function AccessibilityButton() {
                     Aumenta o tamanho do cursor
                     para facilitar sua localização.
                   </span>
+
                 </div>
 
                 <button
@@ -506,7 +794,9 @@ function AccessibilityButton() {
                       ? "accessibility-toggle active"
                       : "accessibility-toggle"
                   }
-                  onClick={toggleLargeCursor}
+                  onClick={
+                    handleToggleLargeCursor
+                  }
                   aria-pressed={
                     settings.largeCursor
                   }
@@ -529,6 +819,7 @@ function AccessibilityButton() {
               <div className="accessibility-setting">
 
                 <div className="accessibility-setting-text">
+
                   <strong>
                     Foco reforçado
                   </strong>
@@ -537,6 +828,7 @@ function AccessibilityButton() {
                     Torna o foco do teclado mais
                     visível durante a navegação.
                   </span>
+
                 </div>
 
                 <button
@@ -546,7 +838,9 @@ function AccessibilityButton() {
                       ? "accessibility-toggle active"
                       : "accessibility-toggle"
                   }
-                  onClick={toggleEnhancedFocus}
+                  onClick={
+                    handleToggleEnhancedFocus
+                  }
                   aria-pressed={
                     settings.enhancedFocus
                   }
@@ -582,6 +876,7 @@ function AccessibilityButton() {
               <div className="accessibility-setting">
 
                 <div className="accessibility-setting-text">
+
                   <strong>
                     Reduzir movimento
                   </strong>
@@ -589,6 +884,7 @@ function AccessibilityButton() {
                   <span>
                     Reduz animações e transições.
                   </span>
+
                 </div>
 
                 <button
@@ -598,7 +894,9 @@ function AccessibilityButton() {
                       ? "accessibility-toggle active"
                       : "accessibility-toggle"
                   }
-                  onClick={toggleReducedMotion}
+                  onClick={
+                    handleToggleReducedMotion
+                  }
                   aria-pressed={
                     settings.reducedMotion
                   }
@@ -636,7 +934,9 @@ function AccessibilityButton() {
                 <button
                   type="button"
                   className="accessibility-read-button"
-                  onClick={handleReadSelectedText}
+                  onClick={
+                    handleReadSelectedText
+                  }
                 >
                   {reading
                     ? "Parar leitura"
