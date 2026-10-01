@@ -1,13 +1,21 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from "react-router-dom";
 
-import { useAuth } from './AuthContext';
+import { useAuth } from "./AuthContext";
 
-function ProtectedRoute({ tipoPermitido }) {
+
+function ProtectedRoute({
+  tipoPermitido
+}) {
+
   const {
     autenticado,
-    usuario,
-    parceiro
+    tipo
   } = useAuth();
+
+
+  /* ==========================================================
+     NÃO AUTENTICADO
+  ========================================================== */
 
   if (!autenticado) {
     return (
@@ -18,25 +26,67 @@ function ProtectedRoute({ tipoPermitido }) {
     );
   }
 
-  if (tipoPermitido === 'usuario' && !usuario) {
+
+  /* ==========================================================
+     CONTA DE USUÁRIO
+  ========================================================== */
+
+  if (
+    tipoPermitido === "usuario" &&
+    tipo !== "usuario"
+  ) {
+
+    if (tipo === "parceiro") {
+      return (
+        <Navigate
+          to="/parceiro/inicio"
+          replace
+        />
+      );
+    }
+
     return (
       <Navigate
-        to="/inicio"
+        to="/login"
         replace
       />
     );
   }
 
-  if (tipoPermitido === 'parceiro' && !parceiro) {
+
+  /* ==========================================================
+     CONTA DE PARCEIRO
+  ========================================================== */
+
+  if (
+    tipoPermitido === "parceiro" &&
+    tipo !== "parceiro"
+  ) {
+
+    if (tipo === "usuario") {
+      return (
+        <Navigate
+          to="/inicio"
+          replace
+        />
+      );
+    }
+
     return (
       <Navigate
-        to="/inicio"
+        to="/login"
         replace
       />
     );
   }
+
+
+  /* ==========================================================
+     ACESSO AUTORIZADO
+  ========================================================== */
 
   return <Outlet />;
 }
+
 
 export default ProtectedRoute;

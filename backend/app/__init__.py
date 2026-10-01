@@ -222,7 +222,8 @@ def create_app():
         Solicitacao,
         Notificacao,
         PreferenciaNotificacao,
-        PushSubscription
+        PushSubscription,
+        Cupom
     )
 
     # =========================================
@@ -251,6 +252,10 @@ def create_app():
 
     from .routes.notificacoes import (
         notificacoes_bp
+    )
+
+    from .routes.cupons import (
+        cupons_bp
     )
 
     # =========================================
@@ -285,6 +290,11 @@ def create_app():
     app.register_blueprint(
         notificacoes_bp,
         name="notificacoes_api"
+    )
+
+    app.register_blueprint(
+        cupons_bp,
+        name="cupons_api"
     )
 
     # =========================================

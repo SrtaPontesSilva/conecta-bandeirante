@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import api from "../../services/api";
 import Logo from "../../components/Logo/Logo";
+import {
+  IconArrowLeft,
+  IconEye,
+  IconEyeOff,
+} from "../../components/Icons/Icons";
+
 import "./CadastroParceiro.css";
 
 function CadastroParceiro() {
@@ -9,6 +16,7 @@ function CadastroParceiro() {
 
   const [formulario, setFormulario] = useState({
     nome_estabelecimento: "",
+    cnpj: "",
     email: "",
     telefone_comercial: "",
     senha: "",
@@ -18,6 +26,42 @@ function CadastroParceiro() {
   const [sucesso, setSucesso] = useState("");
   const [carregando, setCarregando] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
+
+  function formatarCNPJ(valor) {
+    const numeros = valor
+      .replace(/\D/g, "")
+      .slice(0, 14);
+
+    if (numeros.length <= 2) {
+      return numeros;
+    }
+
+    if (numeros.length <= 5) {
+      return `${numeros.slice(0, 2)}.${numeros.slice(2)}`;
+    }
+
+    if (numeros.length <= 8) {
+      return `${numeros.slice(0, 2)}.${numeros.slice(
+        2,
+        5
+      )}.${numeros.slice(5)}`;
+    }
+
+    if (numeros.length <= 12) {
+      return `${numeros.slice(0, 2)}.${numeros.slice(
+        2,
+        5
+      )}.${numeros.slice(5, 8)}/${numeros.slice(8)}`;
+    }
+
+    return `${numeros.slice(0, 2)}.${numeros.slice(
+      2,
+      5
+    )}.${numeros.slice(5, 8)}/${numeros.slice(
+      8,
+      12
+    )}-${numeros.slice(12)}`;
+  }
 
   function formatarTelefone(valor) {
     const numeros = valor
@@ -50,12 +94,19 @@ function CadastroParceiro() {
   function handleChange(event) {
     const { name, value } = event.target;
 
+    let valorFormatado = value;
+
+    if (name === "cnpj") {
+      valorFormatado = formatarCNPJ(value);
+    }
+
+    if (name === "telefone_comercial") {
+      valorFormatado = formatarTelefone(value);
+    }
+
     setFormulario((estadoAnterior) => ({
       ...estadoAnterior,
-      [name]:
-        name === "telefone_comercial"
-          ? formatarTelefone(value)
-          : value,
+      [name]: valorFormatado,
     }));
   }
 
@@ -69,6 +120,12 @@ function CadastroParceiro() {
     try {
       const dadosCadastro = {
         ...formulario,
+
+        cnpj: formulario.cnpj.replace(
+          /\D/g,
+          ""
+        ),
+
         telefone_comercial:
           formulario.telefone_comercial.replace(
             /\D/g,
@@ -85,10 +142,13 @@ function CadastroParceiro() {
 
       setFormulario({
         nome_estabelecimento: "",
+        cnpj: "",
         email: "",
         telefone_comercial: "",
         senha: "",
       });
+
+      setMostrarSenha(false);
     } catch (error) {
       if (error.response?.data?.erro) {
         setErro(error.response.data.erro);
@@ -117,7 +177,10 @@ function CadastroParceiro() {
             className="back-button"
             onClick={() => navigate("/cadastro")}
           >
-            ← Cadastrar outro tipo de usuário
+            <IconArrowLeft size={18} />
+            <span>
+              Cadastrar outro tipo de usuário
+            </span>
           </button>
         </div>
 
@@ -174,6 +237,7 @@ function CadastroParceiro() {
                 onChange={handleChange}
                 placeholder="Nome do comércio"
                 autoComplete="organization"
+                maxLength={150}
                 required
               />
             </div>
@@ -181,7 +245,7 @@ function CadastroParceiro() {
           </div>
 
           {/* =====================================
-              02 — CONTATO
+              02 — IDENTIFICAÇÃO E CONTATO
           ====================================== */}
 
           <div className="form-section">
@@ -191,14 +255,37 @@ function CadastroParceiro() {
 
               <div>
                 <strong>
-                  Dados de contato
+                  Dados de identificação e contato
                 </strong>
 
                 <small>
-                  Como os clientes poderão encontrar
-                  seu comércio.
+                  Informações comerciais para identificação
+                  e contato com seu estabelecimento.
                 </small>
               </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="cnpj">
+                CNPJ
+              </label>
+
+              <input
+                id="cnpj"
+                name="cnpj"
+                type="text"
+                value={formulario.cnpj}
+                onChange={handleChange}
+                placeholder="00.000.000/0000-00"
+                inputMode="numeric"
+                autoComplete="off"
+                maxLength={18}
+                required
+              />
+
+              <small className="field-hint">
+                Informe o CNPJ do estabelecimento.
+              </small>
             </div>
 
             <div className="form-group">
@@ -214,6 +301,7 @@ function CadastroParceiro() {
                 onChange={handleChange}
                 placeholder="comercio@email.com"
                 autoComplete="email"
+                maxLength={150}
                 required
               />
             </div>
@@ -271,7 +359,11 @@ function CadastroParceiro() {
                 <input
                   id="senha"
                   name="senha"
-                  type={mostrarSenha ? "text" : "password"}
+                  type={
+                    mostrarSenha
+                      ? "text"
+                      : "password"
+                  }
                   minLength={8}
                   value={formulario.senha}
                   onChange={handleChange}
@@ -283,30 +375,22 @@ function CadastroParceiro() {
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() => setMostrarSenha(!mostrarSenha)}
+                  onClick={() =>
+                    setMostrarSenha(
+                      !mostrarSenha
+                    )
+                  }
                   aria-label={
                     mostrarSenha
                       ? "Ocultar senha"
                       : "Visualizar senha"
                   }
+                  aria-pressed={mostrarSenha}
                 >
                   {mostrarSenha ? (
-                    <svg
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z" />
-                      <path d="M9 9l6 6" />
-                      <path d="M15 9l-6 6" />
-                    </svg>
+                    <IconEyeOff size={18} />
                   ) : (
-                    <svg
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z" />
-                      <circle cx="12" cy="12" r="2.8" />
-                    </svg>
+                    <IconEye size={18} />
                   )}
                 </button>
               </div>
@@ -328,7 +412,10 @@ function CadastroParceiro() {
           )}
 
           {sucesso && (
-            <p className="form-message form-success">
+            <p
+              className="form-message form-success"
+              role="status"
+            >
               {sucesso}
             </p>
           )}

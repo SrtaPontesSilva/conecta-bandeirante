@@ -1844,3 +1844,76 @@
   }
 
 }
+
+/* ============================================================
+   MODO PARCEIRO
+============================================================ */
+
+.marketplace-navbar--partner
+.marketplace-user-avatar {
+  background-color: var(--color-accent);
+}
+
+
+.marketplace-navbar--partner
+.marketplace-user-avatar--image {
+  background-color: var(--color-secondary);
+}
+
+
+.marketplace-navbar--partner
+.marketplace-user-community {
+  color: var(--color-success);
+}
+
+
+/* ============================================================
+   AÇÃO DE CUPONS DO PARCEIRO
+============================================================ */
+
+.marketplace-navbar--partner
+.marketplace-points {
+  color: var(--color-primary);
+}
+
+
+.marketplace-navbar--partner
+.marketplace-points:hover {
+  color: var(--color-primary);
+
+  background-color: var(--color-secondary);
+}
+
+
+/* ============================================================
+   MENU DO PARCEIRO
+============================================================ */
+
+.marketplace-navbar--partner
+.marketplace-user-menu-avatar {
+  background-color: var(--color-primary);
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE
+============================================================ */
+
+[data-high-contrast="true"]
+.marketplace-navbar--partner
+.marketplace-user-avatar {
+  color: var(--accessibility-text);
+
+  background-color:
+    var(--accessibility-surface);
+
+  border-color:
+    var(--accessibility-border);
+}
+
+
+[data-high-contrast="true"]
+.marketplace-navbar--partner
+.marketplace-user-community {
+  color: var(--accessibility-text);
+}

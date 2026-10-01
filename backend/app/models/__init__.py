@@ -13,3 +13,5 @@ from .notificacao import Notificacao
 from .preferencia_notificacao import PreferenciaNotificacao
 
 from .push_subscription import PushSubscription
+
+from .cupom import Cupom

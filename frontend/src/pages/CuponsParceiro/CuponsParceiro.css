@@ -1,0 +1,1018 @@
+/* ============================================================
+   PÁGINA
+============================================================ */
+
+.cupons-parceiro-page {
+  min-height: 100vh;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-family);
+}
+
+
+.cupons-parceiro-main {
+    padding: 112px 20px 120px;
+}
+
+
+.cupons-parceiro-container {
+  width: min(
+    1180px,
+    100%
+  );
+
+  margin: 0 auto;
+}
+
+
+/* ============================================================
+   CABEÇALHO
+============================================================ */
+
+.cupons-parceiro-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+
+.cupons-parceiro-eyebrow {
+  display: inline-block;
+
+  margin-bottom: 7px;
+
+  color: var(--color-primary);
+
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+
+.cupons-parceiro-header h1 {
+  margin: 0;
+
+  font-size: clamp(
+    1.8rem,
+    3vw,
+    2.5rem
+  );
+
+  line-height: 1.1;
+}
+
+
+.cupons-parceiro-header p {
+  max-width: 650px;
+
+  margin: 10px 0 0;
+
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-md);
+  line-height: 1.6;
+}
+
+
+/* ============================================================
+   BOTÃO NOVO CUPOM
+============================================================ */
+
+.cupons-parceiro-new-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 46px;
+
+  padding: 0 18px;
+
+  border: 0;
+  border-radius: var(--radius-md);
+
+  background: var(--color-primary);
+  color: var(--color-text-light);
+
+  font: inherit;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform var(--transition-fast),
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+
+.cupons-parceiro-new-button:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 20px
+    rgba(54, 64, 66, 0.12);
+}
+
+
+.cupons-parceiro-new-button:focus-visible,
+.cupons-parceiro-empty-button:focus-visible,
+.cupom-parceiro-action:focus-visible,
+.cupons-parceiro-tab:focus-visible,
+.cupons-parceiro-search input:focus-visible {
+  outline: 3px solid var(--accessibility-focus);
+  outline-offset: 3px;
+}
+
+
+/* ============================================================
+   FEEDBACK
+============================================================ */
+
+.cupons-parceiro-feedback {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 20px;
+
+  padding: 13px 15px;
+
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+
+.cupons-parceiro-feedback--success {
+  border-color: rgba(
+    95,
+    128,
+    104,
+    0.3
+  );
+
+  background: #edf4ef;
+  color: var(--color-success);
+}
+
+
+.cupons-parceiro-feedback--error {
+  border-color: rgba(
+    184,
+    92,
+    92,
+    0.3
+  );
+
+  background: #faeeee;
+  color: var(--color-error);
+}
+
+
+/* ============================================================
+   CONTROLES
+============================================================ */
+
+.cupons-parceiro-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+
+  margin-bottom: 12px;
+}
+
+
+.cupons-parceiro-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 5px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+
+  background: var(--color-surface);
+}
+
+
+.cupons-parceiro-tab {
+  min-height: 40px;
+
+  padding: 0 17px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+  color: var(--color-text-secondary);
+
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+.cupons-parceiro-tab--active {
+  background: var(--color-primary);
+  color: var(--color-text-light);
+}
+
+
+.cupons-parceiro-search {
+  width: min(
+    330px,
+    100%
+  );
+}
+
+
+.cupons-parceiro-search input {
+  width: 100%;
+  min-height: 44px;
+
+  box-sizing: border-box;
+
+  padding: 0 14px;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  background: var(--color-surface);
+  color: var(--color-text);
+
+  font: inherit;
+}
+
+
+.cupons-parceiro-search input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+
+/* ============================================================
+   RESUMO
+============================================================ */
+
+.cupons-parceiro-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 18px;
+
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-sm);
+}
+
+
+.cupons-parceiro-summary span:first-child {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   GRID
+============================================================ */
+
+.cupons-parceiro-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(
+        280px,
+        1fr
+      )
+    );
+
+  gap: 20px;
+}
+
+
+/* ============================================================
+   CARD
+============================================================ */
+
+.cupom-parceiro-card {
+  overflow: hidden;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background: var(--color-surface);
+
+  box-shadow: var(--shadow-card);
+
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+
+.cupom-parceiro-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 34px
+    rgba(54, 64, 66, 0.11);
+}
+
+
+.cupom-parceiro-card--archived {
+  opacity: 0.88;
+}
+
+
+/* ============================================================
+   IMAGEM
+============================================================ */
+
+.cupom-parceiro-image {
+  position: relative;
+
+  aspect-ratio: 1 / 1;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--color-secondary),
+      var(--color-background-warm)
+    );
+}
+
+
+.cupom-parceiro-image img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+
+.cupom-parceiro-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+
+  color: var(--color-primary);
+}
+
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+.cupom-parceiro-status {
+  position: absolute;
+
+  top: 12px;
+  right: 12px;
+
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 28px;
+
+  padding: 0 10px;
+
+  border-radius: 999px;
+
+  backdrop-filter: blur(8px);
+
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+}
+
+
+.cupom-parceiro-status--active {
+  background: rgba(
+    95,
+    128,
+    104,
+    0.94
+  );
+
+  color: #fff;
+}
+
+
+.cupom-parceiro-status--archived {
+  background: rgba(
+    54,
+    64,
+    66,
+    0.82
+  );
+
+  color: #fff;
+}
+
+
+/* ============================================================
+   CONTEÚDO
+============================================================ */
+
+.cupom-parceiro-content {
+  padding: 18px;
+}
+
+
+.cupom-parceiro-category {
+  display: inline-block;
+
+  margin-bottom: 7px;
+
+  color: var(--color-primary);
+
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+
+.cupom-parceiro-content h2 {
+  margin: 0;
+
+  font-size: 1.18rem;
+  line-height: 1.3;
+}
+
+
+.cupom-parceiro-description {
+  display: -webkit-box;
+
+  min-height: 44px;
+
+  margin: 9px 0 14px;
+
+  overflow: hidden;
+
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+
+/* ============================================================
+   PONTOS
+============================================================ */
+
+.cupom-parceiro-points {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+
+  margin-bottom: 15px;
+}
+
+
+.cupom-parceiro-points strong {
+  color: var(--color-accent);
+
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+
+.cupom-parceiro-points span {
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   DETALHES
+============================================================ */
+
+.cupom-parceiro-details {
+  display: grid;
+  gap: 9px;
+
+  margin: 0 0 14px;
+
+  padding: 13px 0;
+
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+
+.cupom-parceiro-details div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+
+.cupom-parceiro-details dt {
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+}
+
+
+.cupom-parceiro-details dd {
+  margin: 0;
+
+  color: var(--color-text);
+
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+
+  text-align: right;
+}
+
+
+/* ============================================================
+   EXPIRADO
+============================================================ */
+
+.cupom-parceiro-expired {
+  display: block;
+
+  margin-bottom: 12px;
+
+  color: var(--color-error);
+
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+}
+
+
+/* ============================================================
+   AÇÕES
+============================================================ */
+
+.cupom-parceiro-actions {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap: 8px;
+}
+
+
+.cupom-parceiro-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 40px;
+
+  padding: 0 10px;
+
+  border-radius: var(--radius-md);
+
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+
+.cupom-parceiro-action:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+
+.cupom-parceiro-action--secondary {
+  border: 1px solid var(--color-border);
+
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+
+.cupom-parceiro-action--secondary:hover {
+  background: var(--color-background);
+}
+
+
+.cupom-parceiro-action--archive {
+  border: 1px solid rgba(
+    184,
+    92,
+    92,
+    0.28
+  );
+
+  background: #fff5f5;
+  color: var(--color-error);
+}
+
+
+.cupom-parceiro-action--archive:hover {
+  background: #fbeaea;
+}
+
+
+.cupom-parceiro-action--activate {
+  grid-column: 1 / -1;
+
+  border: 1px solid rgba(
+    95,
+    128,
+    104,
+    0.3
+  );
+
+  background: #edf4ef;
+  color: var(--color-success);
+}
+
+
+.cupom-parceiro-action--activate:hover {
+  background: #e2eee6;
+}
+
+
+/* ============================================================
+   ESTADOS
+============================================================ */
+
+.cupons-parceiro-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 300px;
+
+  padding: 40px;
+
+  color: var(--color-text-secondary);
+
+  text-align: center;
+}
+
+
+.cupons-parceiro-spinner {
+  width: 30px;
+  height: 30px;
+
+  margin-bottom: 15px;
+
+  border: 3px solid var(--color-secondary);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+
+  animation:
+    cupons-parceiro-spin
+    0.8s linear infinite;
+}
+
+
+@keyframes cupons-parceiro-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ============================================================
+   VAZIO
+============================================================ */
+
+.cupons-parceiro-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 64px 24px;
+
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.62
+  );
+
+  text-align: center;
+}
+
+
+.cupons-parceiro-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 68px;
+  height: 68px;
+
+  margin-bottom: 18px;
+
+  border-radius: 18px;
+
+  background: var(--color-secondary);
+  color: var(--color-primary);
+}
+
+
+.cupons-parceiro-empty-eyebrow {
+  margin-bottom: 6px;
+
+  color: var(--color-primary);
+
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+
+  letter-spacing: 0.1em;
+}
+
+
+.cupons-parceiro-empty h2 {
+  margin: 0;
+
+  font-size: 1.35rem;
+}
+
+
+.cupons-parceiro-empty p {
+  max-width: 520px;
+
+  margin: 10px auto 0;
+
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+
+.cupons-parceiro-empty-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 44px;
+
+  margin-top: 22px;
+
+  padding: 0 16px;
+
+  border: 0;
+  border-radius: var(--radius-md);
+
+  background: var(--color-primary);
+  color: var(--color-text-light);
+
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+/* ============================================================
+   ACESSIBILIDADE
+============================================================ */
+
+.sr-only {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(
+    0,
+    0,
+    0,
+    0
+  );
+
+  white-space: nowrap;
+
+  border: 0;
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+============================================================ */
+
+[data-reduced-motion="true"]
+.cupom-parceiro-card,
+[data-reduced-motion="true"]
+.cupons-parceiro-new-button,
+[data-reduced-motion="true"]
+.cupom-parceiro-action {
+  transition: none;
+}
+
+
+[data-reduced-motion="true"]
+.cupons-parceiro-spinner {
+  animation: none;
+}
+
+
+/* ============================================================
+   ALTO CONTRASTE
+============================================================ */
+
+[data-high-contrast="true"]
+.cupons-parceiro-page {
+  background: var(--accessibility-background);
+  color: var(--accessibility-text);
+}
+
+
+[data-high-contrast="true"]
+.cupom-parceiro-card,
+[data-high-contrast="true"]
+.cupons-parceiro-tabs,
+[data-high-contrast="true"]
+.cupons-parceiro-search input {
+  border-color: var(--accessibility-border);
+  background: var(--accessibility-surface);
+  color: var(--accessibility-text);
+}
+
+
+[data-high-contrast="true"]
+.cupons-parceiro-header p,
+[data-high-contrast="true"]
+.cupom-parceiro-description,
+[data-high-contrast="true"]
+.cupom-parceiro-details dt,
+[data-high-contrast="true"]
+.cupons-parceiro-summary,
+[data-high-contrast="true"]
+.cupons-parceiro-empty p {
+  color: var(--accessibility-text-secondary);
+}
+
+
+[data-high-contrast="true"]
+.cupons-parceiro-new-button,
+[data-high-contrast="true"]
+.cupons-parceiro-tab--active,
+[data-high-contrast="true"]
+.cupons-parceiro-empty-button {
+  background: var(--accessibility-primary);
+  color: #fff;
+}
+
+
+[data-high-contrast="true"]
+.cupom-parceiro-action--archive {
+  border-color: var(--accessibility-error);
+  background: #fff;
+  color: var(--accessibility-error);
+}
+
+
+[data-high-contrast="true"]
+.cupom-parceiro-action--activate {
+  border-color: var(--accessibility-success);
+  background: #fff;
+  color: var(--accessibility-success);
+}
+
+
+/* ============================================================
+   RESPONSIVO
+============================================================ */
+
+@media (max-width: 760px) {
+
+  .cupons-parceiro-main {
+    padding:
+      104px
+      16px
+      110px;
+  }
+
+
+  .cupons-parceiro-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+
+  .cupons-parceiro-new-button {
+    width: 100%;
+  }
+
+
+  .cupons-parceiro-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+
+  .cupons-parceiro-tabs {
+    width: 100%;
+  }
+
+
+  .cupons-parceiro-tab {
+    flex: 1;
+  }
+
+
+  .cupons-parceiro-search {
+    width: 100%;
+  }
+
+
+  .cupons-parceiro-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 430px) {
+
+  .cupons-parceiro-main {
+    padding:
+      104px
+      12px
+      105px;
+  }
+
+
+  .cupons-parceiro-header h1 {
+    font-size: 1.75rem;
+  }
+
+
+  .cupons-parceiro-summary {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+
+  .cupom-parceiro-content {
+    padding: 15px;
+  }
+
+
+  .cupom-parceiro-actions {
+    grid-template-columns: 1fr;
+  }
+
+
+  .cupom-parceiro-action--activate {
+    grid-column: auto;
+  }
+
+}

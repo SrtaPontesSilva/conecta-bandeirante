@@ -8,38 +8,195 @@ import {
 
 import "./BottomNavigation.css";
 
-function BottomNavigation() {
+
+function BottomNavigation({
+  tipo = "usuario",
+}) {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const ehParceiro = tipo === "parceiro";
+
 
   /* ==========================================================
-     ROTAS ATIVAS
+     ROTAS ATIVAS — USUÁRIO
   ========================================================== */
 
   const resgatesAtivo =
-    location.pathname === "/resgates";
+    !ehParceiro &&
+    (
+      location.pathname === "/resgates" ||
+      location.pathname.startsWith("/resgates/")
+    );
 
-  const perfilAtivo =
+
+  const perfilUsuarioAtivo =
+    !ehParceiro &&
     location.pathname === "/perfil";
 
 
   /* ==========================================================
-     NAVEGAÇÃO
+     ROTAS ATIVAS — PARCEIRO
+  ========================================================== */
+
+  const cuponsParceiroAtivo =
+    ehParceiro &&
+    (
+      location.pathname === "/parceiro/cupons" ||
+      location.pathname.startsWith("/parceiro/cupons/")
+    );
+
+
+  const perfilParceiroAtivo =
+    ehParceiro &&
+    location.pathname === "/parceiro/perfil";
+
+
+  /* ==========================================================
+     NAVEGAÇÃO — USUÁRIO
   ========================================================== */
 
   function handleResgates() {
     navigate("/resgates");
   }
 
-  function handlePublicar() {
+
+  function handlePublicarUsuario() {
     navigate("/anuncios/novo");
   }
 
-  function handlePerfil() {
+
+  function handlePerfilUsuario() {
     navigate("/perfil");
   }
 
+
+  /* ==========================================================
+     NAVEGAÇÃO — PARCEIRO
+  ========================================================== */
+
+  function handleCuponsParceiro() {
+    navigate("/parceiro/cupons");
+  }
+
+
+  function handleNovoCupom() {
+    navigate("/parceiro/cupons/novo");
+  }
+
+
+  function handlePerfilParceiro() {
+    navigate("/parceiro/perfil");
+  }
+
+
+  /* ==========================================================
+     RENDER — PARCEIRO
+     
+     O parceiro possui somente 3 opções no bottom:
+     
+     1. Cupons
+     2. Novo Cupom
+     3. Perfil
+     
+     O Dashboard é a tela inicial em:
+     /parceiro/inicio
+     
+     Ele não ocupa uma posição no bottom.
+  ========================================================== */
+
+  if (ehParceiro) {
+    return (
+      <nav
+        className="bottom-navigation bottom-navigation--partner"
+        aria-label="Navegação principal do parceiro"
+      >
+
+        {/* ====================================================
+            CUPONS
+        ===================================================== */}
+
+        <button
+          type="button"
+          className={
+            cuponsParceiroAtivo
+              ? "bottom-navigation-item bottom-navigation-item--active"
+              : "bottom-navigation-item"
+          }
+          onClick={handleCuponsParceiro}
+          aria-label="Ir para os cupons"
+          aria-current={
+            cuponsParceiroAtivo
+              ? "page"
+              : undefined
+          }
+        >
+          <IconTicket
+            size={21}
+            aria-hidden="true"
+          />
+
+          <small>
+            Cupons
+          </small>
+        </button>
+
+
+        {/* ====================================================
+            BOTÃO CENTRAL — NOVO CUPOM
+        ===================================================== */}
+
+        <button
+          type="button"
+          className="bottom-navigation-add"
+          onClick={handleNovoCupom}
+          aria-label="Criar novo cupom"
+          title="Criar novo cupom"
+        >
+          <IconPlus
+            size={24}
+            aria-hidden="true"
+          />
+        </button>
+
+
+        {/* ====================================================
+            PERFIL
+        ===================================================== */}
+
+        <button
+          type="button"
+          className={
+            perfilParceiroAtivo
+              ? "bottom-navigation-item bottom-navigation-item--active"
+              : "bottom-navigation-item"
+          }
+          onClick={handlePerfilParceiro}
+          aria-label="Ir para o perfil do parceiro"
+          aria-current={
+            perfilParceiroAtivo
+              ? "page"
+              : undefined
+          }
+        >
+          <IconUser
+            size={21}
+            aria-hidden="true"
+          />
+
+          <small>
+            Perfil
+          </small>
+        </button>
+
+      </nav>
+    );
+  }
+
+
+  /* ==========================================================
+     RENDER — USUÁRIO
+  ========================================================== */
 
   return (
     <nav
@@ -48,7 +205,7 @@ function BottomNavigation() {
     >
 
       {/* ====================================================
-          RESGATE DE PONTOS
+          RESGATES
       ===================================================== */}
 
       <button
@@ -78,14 +235,15 @@ function BottomNavigation() {
 
 
       {/* ====================================================
-          BOTÃO CENTRAL DE PUBLICAR
+          BOTÃO CENTRAL — NOVO ANÚNCIO
       ===================================================== */}
 
       <button
         type="button"
         className="bottom-navigation-add"
-        onClick={handlePublicar}
+        onClick={handlePublicarUsuario}
         aria-label="Publicar novo anúncio"
+        title="Publicar novo anúncio"
       >
         <IconPlus
           size={24}
@@ -101,14 +259,14 @@ function BottomNavigation() {
       <button
         type="button"
         className={
-          perfilAtivo
+          perfilUsuarioAtivo
             ? "bottom-navigation-item bottom-navigation-item--active"
             : "bottom-navigation-item"
         }
-        onClick={handlePerfil}
+        onClick={handlePerfilUsuario}
         aria-label="Ir para o perfil"
         aria-current={
-          perfilAtivo
+          perfilUsuarioAtivo
             ? "page"
             : undefined
         }
@@ -126,5 +284,6 @@ function BottomNavigation() {
     </nav>
   );
 }
+
 
 export default BottomNavigation;

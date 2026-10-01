@@ -14,6 +14,7 @@ import {
 
 import './Login.css';
 
+
 function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -27,6 +28,7 @@ function Login() {
   const [carregando, setCarregando] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
+
   function handleChange(event) {
     const { name, value } = event.target;
 
@@ -36,13 +38,14 @@ function Login() {
     }));
   }
 
+
   async function handleSubmit(event) {
     event.preventDefault();
 
-    setErro('');
+    setErro("");
 
     if (!formulario.email || !formulario.senha) {
-      setErro('Preencha seu e-mail e sua senha.');
+      setErro("Preencha seu e-mail e sua senha.");
       return;
     }
 
@@ -50,34 +53,102 @@ function Login() {
 
     try {
       const resposta = await api.post(
-        '/auth/login',
+        "/auth/login",
         formulario
       );
 
-      // Centraliza o armazenamento da sessão
-      // através do AuthContext.
-      login(resposta.data);
+      const dados = resposta.data;
 
-      navigate('/inicio');
+
+      /* ========================================================
+        CENTRALIZA O ARMAZENAMENTO DA SESSÃO
+      ======================================================== */
+
+      login(dados);
+
+
+      /* ========================================================
+        IDENTIFICA O TIPO DA CONTA
+        
+        Usa o campo "tipo" da API.
+        Caso ele não exista, utiliza o objeto retornado.
+      ======================================================== */
+
+      const tipoConta =
+        dados?.tipo ||
+        (dados?.parceiro ? "parceiro" : null) ||
+        (dados?.usuario ? "usuario" : null);
+
+
+      /* ========================================================
+        REDIRECIONAMENTO
+      ======================================================== */
+
+      if (tipoConta === "parceiro") {
+
+        navigate(
+          "/parceiro/inicio",
+          {
+            replace: true
+          }
+        );
+
+        return;
+      }
+
+
+      if (tipoConta === "usuario") {
+
+        navigate(
+          "/inicio",
+          {
+            replace: true
+          }
+        );
+
+        return;
+      }
+
+
+      /* ========================================================
+        RESPOSTA SEM TIPO IDENTIFICÁVEL
+      ======================================================== */
+
+      setErro(
+        "Não foi possível identificar o tipo da conta."
+      );
+
     } catch (error) {
+
       if (error.response?.data?.erro) {
-        setErro(error.response.data.erro);
-      } else {
+
         setErro(
-          'Não foi possível realizar o login. Tente novamente.'
+          error.response.data.erro
+        );
+
+      } else {
+
+        setErro(
+          "Não foi possível realizar o login. Tente novamente."
         );
       }
+
     } finally {
+
       setCarregando(false);
     }
   }
 
+
   return (
     <main className="login-page">
+
       <section className="login-brand">
+
         <Logo />
 
         <div className="login-brand-content">
+
           <span className="login-eyebrow">
             Comunidade • Educação • Circularidade
           </span>
@@ -92,20 +163,34 @@ function Login() {
             Uma plataforma para compartilhar, trocar e encontrar
             recursos dentro da comunidade do Núcleo Bandeirante.
           </p>
+
         </div>
+
       </section>
 
+
       <section className="login-content">
+
         <div className="login-card">
+
           <div className="login-header">
-            <h2>Entrar</h2>
+
+            <h2>
+              Entrar
+            </h2>
 
             <p>
               Acesse sua conta para continuar no Conecta Bandeirante.
             </p>
+
           </div>
 
-          <form onSubmit={handleSubmit} className="login-form">
+
+          <form
+            onSubmit={handleSubmit}
+            className="login-form"
+          >
+
             <Input
               label="E-mail"
               name="email"
@@ -117,11 +202,17 @@ function Login() {
               autoComplete="email"
             />
 
+
             <div className="login-password-field">
+
               <Input
                 label="Senha"
                 name="senha"
-                type={mostrarSenha ? 'text' : 'password'}
+                type={
+                  mostrarSenha
+                    ? 'text'
+                    : 'password'
+                }
                 value={formulario.senha}
                 onChange={handleChange}
                 placeholder="Digite sua senha"
@@ -132,7 +223,11 @@ function Login() {
               <button
                 type="button"
                 className="login-password-toggle"
-                onClick={() => setMostrarSenha((estado) => !estado)}
+                onClick={() =>
+                  setMostrarSenha(
+                    (estado) => !estado
+                  )
+                }
                 aria-label={
                   mostrarSenha
                     ? 'Ocultar senha'
@@ -150,13 +245,18 @@ function Login() {
                   <IconEye size={18} />
                 )}
               </button>
+
             </div>
 
+
             <div className="login-forgot-password">
+
               <Link to="/recuperar-senha">
                 Esqueci minha senha
               </Link>
+
             </div>
+
 
             {erro && (
               <div
@@ -168,25 +268,39 @@ function Login() {
               </div>
             )}
 
+
             <Button
               type="submit"
               disabled={carregando}
             >
-              {carregando ? 'Entrando...' : 'Entrar'}
+              {carregando
+                ? 'Entrando...'
+                : 'Entrar'
+              }
             </Button>
+
           </form>
 
+
           <div className="login-register">
-            <span>Ainda não possui uma conta?</span>
+
+            <span>
+              Ainda não possui uma conta?
+            </span>
 
             <Link to="/cadastro">
               Criar conta
             </Link>
+
           </div>
+
         </div>
+
       </section>
+
     </main>
   );
 }
+
 
 export default Login;

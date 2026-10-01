@@ -17,6 +17,7 @@ import {
   IconClipboard,
   IconLogout,
   IconArrowLeft,
+  IconTicket,
 } from "../Icons/Icons";
 
 import NotificationsDropdown from "../NotificationsDropdown/NotificationsDropdown";
@@ -41,6 +42,7 @@ function MarketplaceNavbar({
   setPontosMax: setPontosMaxExterno,
   tituloPagina,
   aoVoltarPagina,
+  tipo = "usuario",
 }) {
   const navigate = useNavigate();
 
@@ -48,6 +50,14 @@ function MarketplaceNavbar({
     pessoa: pessoaAutenticada,
     logout,
   } = useAuth();
+
+
+  /* ============================================================
+     MODO
+  ============================================================ */
+
+  const ehParceiro =
+    tipo === "parceiro";
 
 
   /* ============================================================
@@ -93,7 +103,7 @@ function MarketplaceNavbar({
 
 
   /* ============================================================
-     MODO DA NAVBAR
+     MODO DO TÍTULO
   ============================================================ */
 
   const modoTitulo =
@@ -143,8 +153,8 @@ function MarketplaceNavbar({
       Number(valor);
 
 
-    if (setPontosMaxExterno) {
-      setPontosMaxExterno(numero);
+    if (setPontosMaxExterna) {
+      setPontosMaxExterna(numero);
     } else {
       setPontosMaxInterno(numero);
     }
@@ -171,15 +181,31 @@ function MarketplaceNavbar({
 
 
     async function carregarImagemPerfil() {
+
       /*
-       * Se uma pessoa externa foi informada, usamos os dados
-       * recebidos pelo componente.
-       *
-       * A imagem de perfil é específica do usuário autenticado.
+       * Se uma pessoa externa foi informada,
+       * usamos os dados fornecidos pelo componente.
        */
       if (pessoaExterna) {
         setImagemPerfil(
           pessoaExterna?.imagem_perfil ||
+          null
+        );
+
+        return;
+      }
+
+
+      /*
+       * Para parceiros, neste momento usamos
+       * diretamente os dados da autenticação.
+       *
+       * Não fazemos chamada para /usuarios/me,
+       * pois essa rota pertence ao fluxo do usuário.
+       */
+      if (ehParceiro) {
+        setImagemPerfil(
+          pessoaAutenticada?.imagem_perfil ||
           null
         );
 
@@ -195,8 +221,8 @@ function MarketplaceNavbar({
 
 
       /*
-       * Aproveita imediatamente uma imagem que já esteja
-       * disponível no estado global.
+       * Aproveita imediatamente uma imagem
+       * que já esteja disponível.
        */
       if (pessoaAutenticada?.imagem_perfil) {
         setImagemPerfil(
@@ -206,11 +232,7 @@ function MarketplaceNavbar({
 
 
       /*
-       * Busca a versão atual diretamente no backend.
-       *
-       * Isso evita depender do localStorage para armazenar
-       * a imagem e garante que a navbar tenha a URL persistida
-       * no banco.
+       * Busca a versão atual do perfil do usuário.
        */
       try {
         const resposta =
@@ -228,14 +250,7 @@ function MarketplaceNavbar({
             null
           );
         }
-      } catch (erro) {
-        /*
-         * A ausência da imagem não deve impedir a navbar
-         * de funcionar.
-         *
-         * Nesse caso, simplesmente continuamos usando
-         * as iniciais.
-         */
+      } catch {
         if (ativo) {
           setImagemPerfil(
             pessoaAutenticada?.imagem_perfil ||
@@ -252,9 +267,11 @@ function MarketplaceNavbar({
     return () => {
       ativo = false;
     };
+
   }, [
     pessoaExterna,
     pessoaAutenticada,
+    ehParceiro,
   ]);
 
 
@@ -263,10 +280,16 @@ function MarketplaceNavbar({
   ============================================================ */
 
   useEffect(() => {
-    async function atualizarImagemPerfil() {
-      if (pessoaExterna) {
+
+    function atualizarImagemPerfil() {
+
+      /*
+       * O parceiro não utiliza a rota de perfil
+       * do usuário.
+       */
+      if (ehParceiro) {
         setImagemPerfil(
-          pessoaExterna?.imagem_perfil ||
+          pessoa?.imagem_perfil ||
           null
         );
 
@@ -274,22 +297,27 @@ function MarketplaceNavbar({
       }
 
 
-      try {
-        const resposta =
-          await api.get(
-            "/usuarios/me"
+      async function buscarImagem() {
+
+        try {
+          const resposta =
+            await api.get(
+              "/usuarios/me"
+            );
+
+
+          setImagemPerfil(
+            resposta?.data?.usuario?.imagem_perfil ||
+            null
           );
 
-
-        setImagemPerfil(
-          resposta?.data?.usuario?.imagem_perfil ||
-          null
-        );
-      } catch {
-        setImagemPerfil(
-          null
-        );
+        } catch {
+          setImagemPerfil(null);
+        }
       }
+
+
+      buscarImagem();
     }
 
 
@@ -300,11 +328,6 @@ function MarketplaceNavbar({
         event?.detail?.imagem_perfil;
 
 
-      /*
-       * Se o Perfil já enviar a nova URL através
-       * do evento, atualizamos imediatamente sem
-       * precisar fazer outra requisição.
-       */
       if (
         novaImagem !== undefined
       ) {
@@ -332,13 +355,15 @@ function MarketplaceNavbar({
         handlePerfilAtualizado
       );
     };
+
   }, [
-    pessoaExterna,
+    pessoa,
+    ehParceiro,
   ]);
 
 
   /* ============================================================
-     NOME DO USUÁRIO
+     NOME DA PESSOA
   ============================================================ */
 
   const nomePessoa =
@@ -397,7 +422,7 @@ function MarketplaceNavbar({
 
 
   /* ============================================================
-     FILTROS / NICHOS
+     FILTROS
   ============================================================ */
 
   const filtrosAnuncios = [
@@ -466,7 +491,9 @@ function MarketplaceNavbar({
   function selecionarFiltro(
     valor
   ) {
-    setFiltro(valor);
+    if (setFiltro) {
+      setFiltro(valor);
+    }
 
     setFiltroAberto(false);
   }
@@ -488,11 +515,14 @@ function MarketplaceNavbar({
   ============================================================ */
 
   function handleVoltarPagina() {
+
     if (aoVoltarPagina) {
       aoVoltarPagina();
-    } else {
-      navigate(-1);
+
+      return;
     }
+
+    navigate(-1);
   }
 
 
@@ -501,6 +531,7 @@ function MarketplaceNavbar({
   ============================================================ */
 
   function handleLogout() {
+
     setMenuAberto(false);
 
     setNotificacoesAbertas(
@@ -525,9 +556,11 @@ function MarketplaceNavbar({
   ============================================================ */
 
   useEffect(() => {
+
     function handleClickOutside(
       event
     ) {
+
       if (
         filtroRef.current &&
         !filtroRef.current.contains(
@@ -561,6 +594,7 @@ function MarketplaceNavbar({
         handleClickOutside
       );
     };
+
   }, []);
 
 
@@ -569,9 +603,11 @@ function MarketplaceNavbar({
   ============================================================ */
 
   useEffect(() => {
+
     function handleKeyDown(
       event
     ) {
+
       if (
         event.key === "Escape"
       ) {
@@ -598,32 +634,91 @@ function MarketplaceNavbar({
         handleKeyDown
       );
     };
+
   }, []);
 
 
   /* ============================================================
-     NAVEGAÇÃO
+     NAVEGAÇÃO — PERFIL
   ============================================================ */
 
   function irParaPerfil() {
+
     setMenuAberto(false);
 
     setNotificacoesAbertas(
       false
     );
+
+    if (ehParceiro) {
+      navigate(
+        "/parceiro/perfil"
+      );
+
+      return;
+    }
 
     navigate("/perfil");
   }
 
 
+  /* ============================================================
+     NAVEGAÇÃO — HISTÓRICO
+  ============================================================ */
+
   function irParaHistorico() {
+
     setMenuAberto(false);
 
     setNotificacoesAbertas(
       false
     );
 
+    if (ehParceiro) {
+      navigate(
+        "/parceiro/cupons"
+      );
+
+      return;
+    }
+
     navigate("/historico");
+  }
+
+
+  /* ============================================================
+     DASHBOARD DO PARCEIRO
+  ============================================================ */
+
+  function irParaDashboardParceiro() {
+
+    setMenuAberto(false);
+
+    setNotificacoesAbertas(
+      false
+    );
+
+    navigate(
+      "/parceiro/dashboard"
+    );
+  }
+
+
+  /* ============================================================
+     CUPONS DO PARCEIRO
+  ============================================================ */
+
+  function irParaCuponsParceiro() {
+
+    setMenuAberto(false);
+
+    setNotificacoesAbertas(
+      false
+    );
+
+    navigate(
+      "/parceiro/cupons"
+    );
   }
 
 
@@ -634,6 +729,7 @@ function MarketplaceNavbar({
   function alternarNotificacoes(
     estadoForcado
   ) {
+
     const novoEstado =
       typeof estadoForcado ===
       "boolean"
@@ -656,6 +752,7 @@ function MarketplaceNavbar({
   ============================================================ */
 
   function alternarMenu() {
+
     setMenuAberto(
       (estado) => !estado
     );
@@ -673,7 +770,13 @@ function MarketplaceNavbar({
   ============================================================ */
 
   return (
-    <header className="marketplace-navbar">
+    <header
+      className={
+        ehParceiro
+          ? "marketplace-navbar marketplace-navbar--partner"
+          : "marketplace-navbar"
+      }
+    >
 
       <div className="marketplace-navbar-inner">
 
@@ -685,11 +788,23 @@ function MarketplaceNavbar({
           type="button"
           className="marketplace-navbar-logo"
           onClick={() =>
-            navigate("/inicio")
+            navigate(
+              ehParceiro
+                ? "/parceiro/dashboard"
+                : "/inicio"
+            )
           }
-          aria-label="Ir para o início"
+          aria-label={
+            ehParceiro
+              ? "Ir para o dashboard do parceiro"
+              : "Ir para o início"
+          }
         >
-          <Logo variant="navbar" />
+
+          <Logo
+            variant="navbar"
+          />
+
         </button>
 
 
@@ -709,9 +824,11 @@ function MarketplaceNavbar({
               }
               aria-label="Voltar"
             >
+
               <IconArrowLeft
                 size={18}
               />
+
             </button>
 
 
@@ -745,6 +862,7 @@ function MarketplaceNavbar({
                 type="button"
                 className="marketplace-search-filter-button"
                 onClick={() => {
+
                   setFiltroAberto(
                     (estado) =>
                       !estado
@@ -785,6 +903,7 @@ function MarketplaceNavbar({
 
 
               {filtroAberto && (
+
                 <div
                   className={
                     contexto === "resgates"
@@ -811,6 +930,7 @@ function MarketplaceNavbar({
 
                       {filtros.map(
                         (item) => (
+
                           <button
                             key={
                               item.valor
@@ -842,15 +962,18 @@ function MarketplaceNavbar({
 
                             {filtro ===
                               item.valor && (
+
                               <span
                                 aria-hidden="true"
                                 className="marketplace-filter-check"
                               >
                                 ✓
                               </span>
+
                             )}
 
                           </button>
+
                         )
                       )}
 
@@ -972,6 +1095,7 @@ function MarketplaceNavbar({
                   )}
 
                 </div>
+
               )}
 
             </div>
@@ -987,19 +1111,23 @@ function MarketplaceNavbar({
               htmlFor="marketplace-search-input"
               className="sr-only"
             >
-              Pesquisar anúncios
+              Pesquisar
             </label>
 
 
             <input
               id="marketplace-search-input"
               type="search"
-              value={busca}
-              onChange={(event) =>
-                setBusca(
-                  event.target.value
-                )
-              }
+              value={busca || ""}
+              onChange={(event) => {
+
+                if (setBusca) {
+                  setBusca(
+                    event.target.value
+                  );
+                }
+
+              }}
               placeholder={
                 placeholder
               }
@@ -1008,6 +1136,7 @@ function MarketplaceNavbar({
 
 
             {busca && (
+
               <button
                 type="button"
                 className="marketplace-search-clear"
@@ -1018,6 +1147,7 @@ function MarketplaceNavbar({
               >
                 ×
               </button>
+
             )}
 
 
@@ -1026,17 +1156,20 @@ function MarketplaceNavbar({
               className="marketplace-search-button"
               aria-label="Pesquisar"
             >
+
               <IconSearch
                 size={17}
               />
+
             </button>
 
           </form>
+
         )}
 
 
         {/* ======================================================
-            BLOCO DO USUÁRIO
+            BLOCO DA PESSOA
         ====================================================== */}
 
         <div className="marketplace-user-area">
@@ -1049,29 +1182,41 @@ function MarketplaceNavbar({
             }
             aria-hidden="true"
           >
+
             {imagemPerfil ? (
+
               <img
                 src={imagemPerfil}
                 alt=""
                 className="marketplace-user-avatar-image"
               />
+
             ) : (
+
               iniciais
+
             )}
+
           </span>
 
 
           <span className="marketplace-user-greeting">
 
             <strong>
-              Olá, {primeiroNome}!
-              Vamos conectar?
+              {ehParceiro
+                ? `Olá, ${primeiroNome}! Vamos Conectar?`
+                : `Olá, ${primeiroNome}! Vamos conectar?`
+              }
             </strong>
 
 
             <span className="marketplace-user-community">
-              Juntos, fazemos a
-              comunidade circular.
+
+              {ehParceiro
+                ? "Gerencie seus cupons e benefícios."
+                : "Juntos, fazemos a comunidade circular."
+              }
+
             </span>
 
           </span>
@@ -1086,38 +1231,73 @@ function MarketplaceNavbar({
         <div className="marketplace-user-actions">
 
           {/* ====================================================
-              PONTOS
-          ===================================================== */}
+              PONTOS — SOMENTE USUÁRIO
+          ==================================================== */}
 
-          <button
-            type="button"
-            className="marketplace-action marketplace-points"
-            aria-label="Saldo de pontos"
-            title="Saldo de pontos"
-            onClick={() =>
-              navigate(
-                "/historico"
-              )
-            }
-          >
+          {!ehParceiro && (
 
-            <span className="marketplace-action-icon">
-              <IconWallet
-                size={18}
-              />
-            </span>
+            <button
+              type="button"
+              className="marketplace-action marketplace-points"
+              aria-label="Saldo de pontos"
+              title="Saldo de pontos"
+              onClick={() =>
+                navigate(
+                  "/historico"
+                )
+              }
+            >
+
+              <span className="marketplace-action-icon">
+
+                <IconWallet
+                  size={18}
+                />
+
+              </span>
 
 
-            <span className="marketplace-points-value">
-              —
-            </span>
+              <span className="marketplace-points-value">
+                —
+              </span>
 
-          </button>
+            </button>
+
+          )}
+
+
+          {/* ====================================================
+              PARCEIRO — CUPONS
+          ==================================================== */}
+
+          {ehParceiro && (
+
+            <button
+              type="button"
+              className="marketplace-action marketplace-points"
+              aria-label="Meus cupons"
+              title="Meus cupons"
+              onClick={
+                irParaCuponsParceiro
+              }
+            >
+
+              <span className="marketplace-action-icon">
+
+                <IconTicket
+                  size={18}
+                />
+
+              </span>
+
+            </button>
+
+          )}
 
 
           {/* ====================================================
               NOTIFICAÇÕES
-          ===================================================== */}
+          ==================================================== */}
 
           <div className="marketplace-action-wrapper">
 
@@ -1164,7 +1344,7 @@ function MarketplaceNavbar({
 
           {/* ====================================================
               MENU
-          ===================================================== */}
+          ==================================================== */}
 
           <div
             className="marketplace-action-wrapper"
@@ -1201,10 +1381,15 @@ function MarketplaceNavbar({
 
 
             {menuAberto && (
+
               <div
                 className="marketplace-user-menu"
                 role="menu"
-                aria-label="Menu do usuário"
+                aria-label={
+                  ehParceiro
+                    ? "Menu do parceiro"
+                    : "Menu do usuário"
+                }
               >
 
                 <div className="marketplace-user-menu-profile">
@@ -1240,54 +1425,150 @@ function MarketplaceNavbar({
                 />
 
 
-                <button
-                  type="button"
-                  className="marketplace-menu-option"
-                  onClick={
-                    irParaPerfil
-                  }
-                  role="menuitem"
-                >
+                {/* =================================================
+                    MENU DO PARCEIRO
+                ================================================== */}
 
-                  <span className="marketplace-menu-option-icon">
+                {ehParceiro ? (
 
-                    <IconUser
-                      size={17}
-                    />
+                  <>
 
-                  </span>
+                    <button
+                      type="button"
+                      className="marketplace-menu-option"
+                      onClick={
+                        irParaDashboardParceiro
+                      }
+                      role="menuitem"
+                    >
 
+                      <span className="marketplace-menu-option-icon">
 
-                  <span>
-                    Meus dados
-                  </span>
+                        <IconClipboard
+                          size={17}
+                        />
 
-                </button>
-
-
-                <button
-                  type="button"
-                  className="marketplace-menu-option"
-                  onClick={
-                    irParaHistorico
-                  }
-                  role="menuitem"
-                >
-
-                  <span className="marketplace-menu-option-icon">
-
-                    <IconClipboard
-                      size={17}
-                    />
-
-                  </span>
+                      </span>
 
 
-                  <span>
-                    Histórico
-                  </span>
+                      <span>
+                        Dashboard
+                      </span>
 
-                </button>
+                    </button>
+
+
+                    <button
+                      type="button"
+                      className="marketplace-menu-option"
+                      onClick={
+                        irParaCuponsParceiro
+                      }
+                      role="menuitem"
+                    >
+
+                      <span className="marketplace-menu-option-icon">
+
+                        <IconTicket
+                          size={17}
+                        />
+
+                      </span>
+
+
+                      <span>
+                        Meus cupons
+                      </span>
+
+                    </button>
+
+
+                    <button
+                      type="button"
+                      className="marketplace-menu-option"
+                      onClick={
+                        irParaPerfil
+                      }
+                      role="menuitem"
+                    >
+
+                      <span className="marketplace-menu-option-icon">
+
+                        <IconUser
+                          size={17}
+                        />
+
+                      </span>
+
+
+                      <span>
+                        Dados do parceiro
+                      </span>
+
+                    </button>
+
+                  </>
+
+                ) : (
+
+                  /* ===============================================
+                     MENU DO USUÁRIO
+                  ================================================ */
+
+                  <>
+
+                    <button
+                      type="button"
+                      className="marketplace-menu-option"
+                      onClick={
+                        irParaPerfil
+                      }
+                      role="menuitem"
+                    >
+
+                      <span className="marketplace-menu-option-icon">
+
+                        <IconUser
+                          size={17}
+                        />
+
+                      </span>
+
+
+                      <span>
+                        Meus dados
+                      </span>
+
+                    </button>
+
+
+                    <button
+                      type="button"
+                      className="marketplace-menu-option"
+                      onClick={
+                        irParaHistorico
+                      }
+                      role="menuitem"
+                    >
+
+                      <span className="marketplace-menu-option-icon">
+
+                        <IconClipboard
+                          size={17}
+                        />
+
+                      </span>
+
+
+                      <span>
+                        Histórico
+                      </span>
+
+                    </button>
+
+                  </>
+
+                )}
 
 
                 <div
@@ -1321,6 +1602,7 @@ function MarketplaceNavbar({
                 </button>
 
               </div>
+
             )}
 
           </div>

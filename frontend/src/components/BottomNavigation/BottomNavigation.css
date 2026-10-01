@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: center;
 
-  gap: clamp(28px, 8vw, 100px);
+  gap: clamp(40px, 12vw, 120px);
 
   padding-top: 4px;
   padding-bottom: env(safe-area-inset-bottom);
@@ -78,6 +78,11 @@
 
   font-weight: 700;
 }
+
+
+/* =========================================
+   FOCO ACESSÍVEL
+========================================= */
 
 .bottom-navigation-item:focus-visible,
 .bottom-navigation-add:focus-visible {
@@ -146,7 +151,7 @@
   .bottom-navigation {
     --bottom-navigation-height: 68px;
 
-    gap: 20vw;
+    gap: clamp(34px, 14vw, 90px);
   }
 
   .bottom-navigation-item {
@@ -166,7 +171,7 @@
 
 
 /* =========================================
-   MOBILE PEQUENO
+   MOBILE
 ========================================= */
 
 @media (max-width: 520px) {
@@ -174,7 +179,7 @@
   .bottom-navigation {
     --bottom-navigation-height: 64px;
 
-    gap: 17vw;
+    gap: clamp(28px, 16vw, 72px);
   }
 
   .bottom-navigation-item {
@@ -214,7 +219,11 @@
   .bottom-navigation {
     --bottom-navigation-height: 60px;
 
-    gap: 14vw;
+    gap: clamp(22px, 14vw, 54px);
+  }
+
+  .bottom-navigation-item {
+    min-width: 44px;
   }
 
   .bottom-navigation-item svg {
@@ -245,7 +254,11 @@
 @media (max-width: 350px) {
 
   .bottom-navigation {
-    gap: 10vw;
+    gap: 18px;
+  }
+
+  .bottom-navigation-item {
+    min-width: 42px;
   }
 }
 

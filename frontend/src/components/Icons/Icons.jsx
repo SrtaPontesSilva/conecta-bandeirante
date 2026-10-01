@@ -412,3 +412,54 @@ export function IconEyeOff(props) {
     </IconBase>
   );
 }
+
+export function IconImage(props) {
+  return (
+    <IconBase {...props}>
+      <rect
+        x="3"
+        y="4"
+        width="18"
+        height="16"
+        rx="1.5"
+      />
+
+      <circle
+        cx="8.5"
+        cy="9"
+        r="1.5"
+      />
+
+      <path d="m4.5 17 4.2-4.2a1.5 1.5 0 0 1 2.1 0l2.2 2.2 1.3-1.3a1.5 1.5 0 0 1 2.1 0l3.1 3.1" />
+    </IconBase>
+  );
+}
+
+export function IconX(props) {
+  return (
+    <IconBase {...props}>
+      <line
+        x1="6"
+        y1="6"
+        x2="18"
+        y2="18"
+      />
+
+      <line
+        x1="18"
+        y1="6"
+        x2="6"
+        y2="18"
+      />
+    </IconBase>
+  );
+}
+
+export function IconEdit(props) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z" />
+      <path d="m14.5 7.5 2 2" />
+    </IconBase>
+  );
+}

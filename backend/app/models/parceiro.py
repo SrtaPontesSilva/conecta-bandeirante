@@ -16,6 +16,12 @@ class Parceiro(db.Model):
         nullable=False
     )
 
+    cnpj = db.Column(
+        db.String(14),
+        nullable=False,
+        unique=True
+    )
+
     email = db.Column(
         db.String(150),
         nullable=False,
@@ -36,4 +42,11 @@ class Parceiro(db.Model):
         db.DateTime,
         default=datetime.utcnow,
         nullable=False
+    )
+
+    cupons = db.relationship(
+        "Cupom",
+        back_populates="parceiro",
+        cascade="all, delete-orphan",
+        lazy=True
     )
